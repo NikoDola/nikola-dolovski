@@ -1,6 +1,5 @@
 "use client"
 
-
 import Image from "next/image";
 import { useRef } from "react";
 
@@ -18,7 +17,8 @@ export default function Home() {
     <main className="relative w-[80%] mx-auto">
       <div className="flex mx-auto items-center justify-center gap-4 w-1/2 mt-24">
         <h5 className="text-5xl text-right flex-1">Incident Counter WebApp</h5>
-        <Image src={'./portfolio/niks/niks.svg'} alt="niks logo" width={450} height={100}></Image>
+        <Image src={'/portfolio/niks/1.jpg'} width={600} height={400} alt="niks image" />
+
       </div>
 
       <div className="mt-24 mx-auto flex gap-24 justify-center ">
