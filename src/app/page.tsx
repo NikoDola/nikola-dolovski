@@ -115,7 +115,7 @@ export default function Home() {
               my skills with it.
           </h2>
 
-          <div className="mt-14 w-full  flex justify-start gap-4">
+          <div className="mt-14 w-full  flex justify-start gap-4 ">
             <h5 className="text-left text-4xl">Firebase</h5>
             <Image src={"/icons/firebase.svg"} width={30} height={30} alt="Firebase icon svg"/>
           </div>
