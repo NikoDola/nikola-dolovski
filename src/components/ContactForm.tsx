@@ -9,9 +9,9 @@ export default function ContactForm (){
     return(
         <section className="flex justify-around my-24 max-[1200px]:flex-col gap-8" >
             <div>
-                <h5 className="text-4xl font-bold mb-8">Have a project in mind?</h5>
-                <h5> I’d love to hear from you. <br/>
-                    Drop a message, and let's make something amazing together!</h5>
+            <h5 className="text-4xl font-bold mb-8">Have a project in mind?</h5>
+            <h5> I&apos;d love to hear from you. <br />
+                Drop a message, and let&apos;s make something amazing together!</h5>
             </div>
             <form className="flex flex-col gap-4 rounded-3xl-group">
                 <div className="flex gap-4 max-[900px]:flex-col">
