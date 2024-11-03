@@ -4,12 +4,13 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1e1e1e;
+  --brand-color:#3ce5e5;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #1e1e1e;
     --foreground: #ededed;
   }
 }
@@ -19,3 +20,32 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+form{
+  background-color: #2c2c2c;
+  padding: 2rem;
+  border-radius: 1rem;
+  border-top: solid rgb(225, 225, 225, 0.1);
+}
+
+button{
+  padding: 0.5rem;
+  background-color: #1e1e1e;
+  color: var(--background);
+  border-radius: 0.5rem;
+  color: #f4f4f4;
+  border-top: solid rgb(225, 225, 225, 0.1);
+}
+
+
+input, textarea{
+  border-radius: 0.5rem;
+  background-color: #1e1e1e;
+  border-top: solid rgb(225, 225, 225, 0.1);
+}
+
+input:focus, textarea:focus{
+  outline: solid  0.1rem var(--brand-color);
+}
+
+

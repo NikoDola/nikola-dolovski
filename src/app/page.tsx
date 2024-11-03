@@ -1,6 +1,7 @@
 "use client"
 import Image from "next/image";
 import { useRef } from "react";
+import ContactForm from '@/components/ContactForm'
 
 export default function Home() {  
   const sections = {
@@ -42,7 +43,7 @@ export default function Home() {
       </div>
 
         {/* App introducing */}
-      <div ref={sections.appDescription} className="mt-24 mx-auto text-center flex gap-24 items-center">
+      <div ref={sections.appDescription} className="mt-24 mx-auto text-center flex gap-24 items-start max-[1200px]:flex-col">
         <div >
           <h5 className="text-left text-gray-600 mb-4">1. App Description</h5>
           <h5 className="text-4xl text-left text-pink-400">Incident Counter</h5>
@@ -79,7 +80,7 @@ export default function Home() {
        
           <div className="mt-24 w-full  flex justify-start gap-4">
             <h5 className="text-left text-4xl">Figma</h5>
-            <Image src={"/icons/figma.svg"} width={30} height={30} alt="figma"/>
+            <Image src={"/icons/figma.svg"} width={20} height={20} alt="figma"/>
           </div>
           <h2 className="text-left">In addition to building the app, I used Figma to design its layout and user interface. Figma allowed me to plan and visualize the app’s
             structure before coding, ensuring a smoother development process. As someone who values good design, it was essential to create a user-friendly 
@@ -89,7 +90,7 @@ export default function Home() {
 
           <div className="mt-14 w-full  flex justify-start gap-4">
             <h5 className="text-left text-4xl">Next.js</h5>
-            <Image src={"/icons/next.svg"} width={30} height={30} alt="figma"/>
+            <Image src={"/icons/next.svg"} width={30} height={30} alt="Next.js icon svg"/>
           </div>
           <h2 className="text-left">While I could have easily built this using React, 
             I deliberately chose Next.js to expand my skills in a more structured and feature-rich environment.
@@ -101,7 +102,7 @@ export default function Home() {
 
           <div className="mt-14 w-full  flex justify-start gap-4">
             <h5 className="text-left text-4xl">Typescript</h5>
-            <Image src={"/icons/typescript.svg"} width={30} height={30} alt="figma"/>
+            <Image src={"/icons/typescript.svg"} width={30} height={30} alt="Typescript icon svg"/>
           </div>
           <h2 className="text-left">I decided to use TypeScript for this project, even though I’m still 
             a beginner with it. While it was challenging at first, especially in 
@@ -116,7 +117,7 @@ export default function Home() {
 
           <div className="mt-14 w-full  flex justify-start gap-4">
             <h5 className="text-left text-4xl">Firebase</h5>
-            <Image src={"/icons/firebase.svg"} width={30} height={30} alt="figma"/>
+            <Image src={"/icons/firebase.svg"} width={30} height={30} alt="Firebase icon svg"/>
           </div>
           <h2 className="text-left">I chose Firebase for its versatile backend 
             services, particularly Authentication, Firestore, and Storage. 
@@ -133,7 +134,7 @@ export default function Home() {
       <div>
         <video></video>
       </div>
-
+    <ContactForm/>
     </main>
   );
 }
