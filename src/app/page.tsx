@@ -16,14 +16,14 @@ export default function Home() {
   return (
     <main className="relative w-[80%] mx-auto">
       <div className="flex mx-auto items-center justify-center gap-4 w-1/2 mt-24">
-        <h5 className="text-5xl text-right flex-1">Incident Counter WebApp</h5>
+        <h5 className="text-4xl text-right flex-1 max-[1000px]:text-xl">Incident Counter WebApp</h5>
         <Image src={'/portfolio/niks/niks.svg'} alt="niks logo" width={450} height={0} />
       </div>
 
       <div className="mt-24 mx-auto flex gap-24 justify-center">
         <ul className="list-disc flex flex-col gap-8">
-          <li className="cursor-pointer" onClick={()=> handleScroll("appDescription")}>App description</li>
-          <li className="cursor-pointer" onClick={()=> handleScroll("tools")}>Tools</li>
+          <li className="cursor-pointer hover:text-pink-400" onClick={()=> handleScroll("appDescription")}>App description</li>
+          <li className="cursor-pointer hover:text-pink-400" onClick={()=> handleScroll("tools")}>Tools</li>
           <li>Code Structure</li>
           <li>Style</li>
           <li>Colors</li>
@@ -78,7 +78,7 @@ export default function Home() {
           <Image src={"/icons/firebase.svg"} width={40} height={40} alt="firebase"/>
         </div>
        
-          <div className="mt-24 w-full  flex justify-start gap-4">
+          <div className="mt-4 w-full  flex justify-start gap-4">
             <h5 className="text-left text-4xl">Figma</h5>
             <Image src={"/icons/figma.svg"} width={20} height={20} alt="figma"/>
           </div>
