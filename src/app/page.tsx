@@ -6,7 +6,8 @@ import ContactForm from '@/components/ContactForm'
 export default function Home() {  
   const sections = {
     appDescription: useRef<HTMLDivElement | null>(null),
-    tools: useRef<HTMLDivElement | null>(null)
+    tools: useRef<HTMLDivElement | null>(null),
+    codeStracture: useRef<HTMLDivElement | null>(null)
   };
 
   const handleScroll = (section: keyof typeof sections) => {
@@ -14,41 +15,68 @@ export default function Home() {
   };
 
   return (
-    <main className="relative w-[80%] mx-auto">
-      <div className="flex mx-auto items-center justify-center gap-4 w-1/2 mt-24">
-        <h5 className="text-4xl text-right flex-1 max-[1000px]:text-xl">Incident Counter WebApp</h5>
-        <Image src={'/portfolio/niks/niks.svg'} alt="niks logo" width={450} height={0} />
+    <main >
+      <div className="text-center items-center flex flex-col justify-center">
+        
+        <div className="flex gap-2 mt-3 text-4xl font-bold max-[1000px]:flex-col">
+          <p className="selection:bg-pink-500">Incident Counter Web App</p>
+        </div>
+        <p className="font-bold tracking-widest text-lg">For</p>
+        <img className=" w-1/6 mt-2 max-[1000px]:w-1/2" src={'/portfolio/niks/niks.svg'}/>
+  
       </div>
 
-      <div className="mt-24 mx-auto flex gap-24 justify-center">
-        <ul className="list-disc flex flex-col gap-8">
-          <li className="cursor-pointer hover:text-pink-400" onClick={()=> handleScroll("appDescription")}>App description</li>
-          <li className="cursor-pointer hover:text-pink-400" onClick={()=> handleScroll("tools")}>Tools</li>
-          <li>Code Structure</li>
-          <li>Style</li>
-          <li>Colors</li>
-          <li>Fonts</li>
-          <li>Css</li>
-        </ul>
-        <ul className="list-disc flex flex-col gap-8">
-          <li>Wireframes</li>
-          <li>Desktop Screens</li>
-          <li>Mobile Screens</li>
-          <li>Icons</li>
-          <li>UI elements</li>
-          <li>Source Links</li>
-          <li>Loading Screen</li>
-          <li>Thank You</li>
-        </ul>
-      </div>
+
+
+
+      <section>
+        <h5 className=" mt-24 mb-8 text-4xl text-center text-[#ff32ab]">Table Of Contents</h5>
+        <div  className=" mx-auto flex w-full justify-center gap-24 max-[1000px]:text-lg max-[1000px]:w-[88%] ">
+          <ul className="list-disc flex flex-col gap-6" >
+            <li className="cursor-pointer hover:text-[#ff32ab]" onClick={()=> handleScroll("appDescription")}> Description</li>
+            <li className="cursor-pointer hover:text-[#ff32ab] m-0 leading-3"  onClick={()=> handleScroll("tools")}>Tools
+              <ul className="list-decimal flex flex-col gap-4 mt-4 pl-6  text-gray-400">
+                <li>Figma</li>
+                <li>Next.js</li>
+                <li>Typescript</li>
+                <li>Firebase</li>
+                </ul>
+            </li>
+            <li className="cursor-pointer hover:text-[#ff32ab]" onClick={()=> handleScroll("codeStracture")}>Code Structure 
+              <ul className="list-decimal flex flex-col gap-2 mt-4 pl-6 text-lg text-gray-400">
+                <li>Folder Structure</li>
+                <li>App Flow</li>
+              </ul>
+            </li>
+            <li>Style
+              <ul className="list-decimal flex flex-col gap-4 mt-4 pl-6">
+                <li>Colors</li>
+                <li>Fonts</li>
+                <li>Css</li>
+              </ul>
+            </li>
+          
+          </ul>
+          <ul className="list-disc flex flex-col gap-8">
+            <li>Wireframes</li>
+            <li>Desktop Screens</li>
+            <li>Mobile Screens</li>
+            <li>Icons</li>
+            <li>UI elements</li>
+            <li>Source Links</li>
+            <li>Loading Screen</li>
+            <li>Thank You</li>
+          </ul>
+        </div>
+      </section>
 
         {/* App introducing */}
       <div ref={sections.appDescription} className="mt-24 mx-auto text-center flex gap-24 items-start max-[1200px]:flex-col">
         <div >
           <h5 className="text-left text-gray-600 mb-4">1. App Description</h5>
-          <h5 className="text-4xl text-left text-pink-400">Incident Counter</h5>
-          <h5 className="text-4xl text-left text-pink-400 mb-8">Web App</h5>
-          <h5 className="text-left text-gray-300">
+          <h5 className="text-4xl text-left text-[#ff32ab]">Incident Counter</h5>
+          <h5 className="text-4xl text-left text-[#ff32ab] mb-8">Web App</h5>
+          <h5 className="text-left text-gray-300 ">
             Days Without Incident is a web application initially developed for Nik’s,
              a Swedish chocolate company, to promote safety and track incident-free days in
               the workplace. The primary function of the app is to log and display the number of 
@@ -66,7 +94,7 @@ export default function Home() {
       <div ref={sections.tools} className="mt-24 mx-auto text-center flex flex-col gap-8 items-center">
         <div >
           <h5 className=" text-gray-600 mb-4 text-center">1. Tolls</h5>
-          <h5 className="text-4xl  text-pink-400 mb-8 text-center">Tools Used</h5>
+          <h5 className="text-4xl  text-[#ff32ab] mb-8 text-center">Tools Used</h5>
         </div>
         <div className="flex justify-between w-[40%]">
           <Image src={"/icons/figma.svg"} width={30} height={30} alt="figma"/>
@@ -79,7 +107,7 @@ export default function Home() {
         </div>
        
           <div className="mt-4 w-full  flex justify-start gap-4">
-            <h5 className="text-left text-4xl">Figma</h5>
+            <h5 className="text-left text-3xl">Figma</h5>
             <Image src={"/icons/figma.svg"} width={20} height={20} alt="figma"/>
           </div>
           <h2 className="text-left">In addition to building the app, I used Figma to design its layout and user interface. Figma allowed me to plan and visualize the app’s
@@ -89,7 +117,7 @@ export default function Home() {
           </h2>
 
           <div className="mt-14 w-full  flex justify-start gap-4">
-            <h5 className="text-left text-4xl">Next.js</h5>
+            <h5 className="text-left text-3xl">Next.js</h5>
             <Image src={"/icons/next.svg"} width={30} height={30} alt="Next.js icon svg"/>
           </div>
           <h2 className="text-left">While I could have easily built this using React, 
@@ -101,7 +129,7 @@ export default function Home() {
           </h2>
 
           <div className="mt-14 w-full  flex justify-start gap-4">
-            <h5 className="text-left text-4xl">Typescript</h5>
+            <h5 className="text-left text-3xl">Typescript</h5>
             <Image src={"/icons/typescript.svg"} width={30} height={30} alt="Typescript icon svg"/>
           </div>
           <h2 className="text-left">I decided to use TypeScript for this project, even though I’m still 
@@ -116,7 +144,7 @@ export default function Home() {
           </h2>
 
           <div className="mt-14 w-full  flex justify-start gap-4 ">
-            <h5 className="text-left text-4xl">Firebase</h5>
+            <h5 className="text-left text-3xl">Firebase</h5>
             <Image src={"/icons/firebase.svg"} width={30} height={30} alt="Firebase icon svg"/>
           </div>
           <h2 className="text-left">I chose Firebase for its versatile backend 
@@ -132,7 +160,63 @@ export default function Home() {
       </div>
 
       <div>
-        <video></video>
+      <div ref={sections.codeStracture} className="mt-24 mx-auto text-center ">
+        <div>
+          <h5 className="text-left text-gray-600 mb-4">1. Code Stracture</h5>
+          <h5 className="text-4xl text-left mb-12 text-[#ff32ab]">Developer guidelines</h5>
+
+          <div className="flex gap-8 mt-4 mb-24  max-[1200px]:flex-col ">
+
+          <div className="flex gap-4 items-center ">
+            <div className="w-4 h-4 bg-[#8A8A8A]"></div>
+            <h5>Counter</h5>
+          </div>
+
+          <div className="flex gap-4 items-center">
+            <div className="w-4 h-4 bg-yellow-300"></div>
+            <h5>DashBoard</h5>
+          </div>
+
+          <div className="flex gap-4 items-center">
+            <div className="w-4 h-4 bg-[#ff32ab]"></div>
+            <h5>Authoriziation</h5>
+          </div>
+
+          <div className="flex gap-4 items-center">
+            <div className="w-4 h-4 bg-blue-600"></div>
+            <h5>Departments</h5>
+          </div>
+
+          <div className="flex gap-4 items-center ">
+            <div className="w-4 h-4 bg-teal-400"></div>
+            <h5>Employees</h5>
+          </div>
+
+          <div className="flex gap-4 items-center">
+            <div className="w-4 h-4 bg-[#dc8cff]"></div>
+            <h5>Employees</h5>
+          </div>
+    
+          </div>
+
+        <div className="flex justify-between mb-24 max-[1200px]:flex-col gap-8">
+          <div>
+            <h5 className="text-left mb-8 text-3xl">Folder Stracture</h5>
+            <Image src={"/portfolio/niks/3.png"} width={200} height={40} alt="folder stracture next-app"></Image>
+          </div>
+          <div>
+            <h5 className="text-left mb-8 text-3xl">App Flow</h5>
+            <Image src={"/portfolio/niks/4.png"} width={600} height={40} alt="folder stracture next-app"></Image>
+          </div>
+         
+        </div>
+
+        <div>
+          
+        </div>
+        </div>
+       
+      </div>
       </div>
     <ContactForm/>
     </main>
