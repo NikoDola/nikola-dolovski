@@ -1,5 +1,5 @@
 "use client"
-import { timeStamp } from "console"
+
 import { useState, useEffect } from "react"
 
 export default function Home(){
