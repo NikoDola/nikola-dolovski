@@ -1,0 +1,44 @@
+body{
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    cursor: none;
+}
+
+*{
+    cursor: none;
+}
+
+.dot{
+    background-color: red;
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.talking{
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 90px;
+    position: absolute;
+    transition: 0.5s;
+    width: 100%;
+
+}
+
+
+.scrollsign{
+
+}
+
+#counting{
+    color: white;
+    z-index: 0;
+    font-size: 36px;
+}
