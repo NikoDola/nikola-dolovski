@@ -275,7 +275,10 @@ export default function Home() {
        
       </section>
       <section>
-      <video className="h-[100vh] w-full" src="/images/personal/vide mockup.mp4" autoPlay muted ></video>
+      <video className="h-[100vh] w-full" src="/images/personal/vide%20mockup.mp4" autoPlay muted loop>
+  Your browser does not support the video tag.
+</video>
+
 
       </section>
       
