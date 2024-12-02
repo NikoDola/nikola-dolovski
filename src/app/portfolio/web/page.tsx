@@ -275,7 +275,8 @@ export default function Home() {
        
       </section>
       <section>
-        <video src=""></video>
+      <video className="h-[100vh] w-full" src="/images/personal/vide mockup.mp4" autoPlay muted></video>
+
       </section>
       
     <ContactForm/>
