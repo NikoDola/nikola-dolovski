@@ -137,7 +137,7 @@ export default function bambambambi() {
           <h3 className="text-4xl">Sketching</h3>
           <div className="w-20 h-2 mt-4 mb-8 bg-pink-300"></div>
           <p className="w-full">
-            I put sketching as step 3 but I can't help my self, i alraedy start it. But once we have the full
+            I put sketching as step 3 but I can&apos;t help my self, i alraedy start it. But once we have the full
             picture will be lot easier for me to start sketching and do digital examples from the real deal.
             this turnaround times is around 5 to 7 business days.
            
