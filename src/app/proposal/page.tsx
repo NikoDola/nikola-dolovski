@@ -168,7 +168,7 @@ export default function bambambambi() {
           <h3 className="text-4xl">Presenting</h3>
           <div className="w-20 h-2 mt-4 mb-8 bg-pink-300"></div>
 <p className="w-full">
-t this time, I will create a lot of logo examples, but only 2 to 3 concepts will be presented into 3D mockups.
+At this step, I will create a lot of logo examples, but only 2 to 3 concepts will be presented into 3D mockups.
 
 Hopefully, at this step, we will find the right direction, and from here, you guys can give me feedback if you like the current design.
 
