@@ -25,52 +25,52 @@ export default function bambambambi() {
         <div className="flex flex-wrap gap-8">
           <div>
             {" "}
-            <p>examples:</p>
+            <p className="text-lg mb-[-1rem]">examples:</p>
           </div>
           <div className="flex flex-wrap gap-8">
             <img
               src="https://i.pinimg.com/736x/96/79/c5/9679c50166350afc4b395d5ae1acfebf.jpg"
               alt="butHeart"
-              className="w-[180px] h-auto object-cover"
+              className="w-[150px] h-auto object-cover"
             />
             <img
               src="https://i.pinimg.com/736x/7b/16/7e/7b167ee2579e137842baa0b0ab466818.jpg"
               alt="flower plug"
-              className="w-[180px] h-auto object-cover"
+              className="w-[150px] h-auto object-cover"
             />
 
             <img
               src="https://www.thecustomboxpackaging.com/public/images/front_images/product/large/2200.jpg"
               alt="logo sinful"
-              className="w-[180px] h-auto object-cover"
+              className="w-[150px] h-auto object-cover"
             />
             <img
               src="https://i.pinimg.com/736x/b3/ce/ed/b3ceedd2b52c03bd2c350ceeb2f35079.jpg"
               alt="peach heart"
-              className="w-[180px] h-auto object-cover"
+              className="w-[150px] h-auto object-cover"
             />
 
             <img
               src="	https://i.pinimg.com/236x/e9/dc/d0/e9dcd0a8c27f89320a22622aa570b407.jpg"
               alt=" but"
-              className="w-[180px] h-auto object-cover"
+              className="w-[150px] h-auto object-cover"
             />
 
             <img
               src="https://i.pinimg.com/736x/bb/a2/c1/bba2c18163a535fd55bcce0d96d125b3.jpg"
               alt="peach"
-              className="w-[180px] h-auto object-cover"
+              className="w-[150px] h-auto object-cover"
             />
             <img
               src="https://i.pinimg.com/474x/a4/ea/20/a4ea209a5e0f39220a5bdfd4fa83229f.jpg"
               alt="playboy"
-              className="w-[180px] h-auto object-cover"
+              className="w-[150px] h-auto object-cover"
             />
 
             <img
               src="https://i.pinimg.com/736x/4e/68/8e/4e688e19b3b835f54fe71175f453ebe6.jpg"
               alt="butHeart"
-              className="w-[180px] h-auto object-cover"
+              className="w-[150px] h-auto object-cover"
             />
           </div>
         </div>
@@ -90,25 +90,25 @@ export default function bambambambi() {
         </div>
         <div className="flex flex-wrap gap-8">
           <div>
-            <p>examples:</p>
+            <p className="text-lg mb-[-1rem]">examples:</p>
           </div>
           <div className="flex flex-wrap gap-8">
-            <div className="w-[180px] h-auto object-cover">
+            <div className="w-[250px] h-auto object-cover">
               <img
                 src="https://i.pinimg.com/736x/4e/68/8e/4e688e19b3b835f54fe71175f453ebe6.jpg"
                 alt="butHeart"
-                className="img8 w-[180px] h-auto object-cover"
+                className="img8 w-[250px] h-auto object-cover"
               />
               <p className="w-fit text-green-300 text-lg mt-4">
                 I love this design because it shows the animal...{" "}
               </p>
             </div>
 
-            <div className="w-[180px] h-auto object-cover">
+            <div className="w-[150px] h-auto object-cover">
               <img
                 src="https://i.pinimg.com/474x/a4/ea/20/a4ea209a5e0f39220a5bdfd4fa83229f.jpg"
                 alt="butHeart"
-                className="img8 w-[180px] h-auto object-cover"
+                className="img8 w-[150px] h-auto object-cover"
               />
               <p className="w-fit text-green-300 text-lg mt-4">
                 I love the minimal and geometric feel on the logo, i also like
@@ -116,11 +116,11 @@ export default function bambambambi() {
               </p>
             </div>
 
-            <div className="w-[180px] h-auto object-cover">
+            <div className="w-[150px] h-auto object-cover">
               <img
                 src="https://i.pinimg.com/736x/99/6b/ad/996bad80293f59cab49fc3494e14fa66.jpg"
                 alt="butHeart"
-                className="img8 w-[180px] h-auto object-cover"
+                className="img8 w-[150px] h-auto object-cover"
               />
               <p className="w-fit text-red-300 text-lg mt-4">
                 this one feel generic and i would like to stay away from,
@@ -179,49 +179,50 @@ In case we still did not find the right logo, we will go for one more round of s
    
           <div className="flex flex-wrap gap-8">
           <div className="flex flex-wrap gap-8">
+            <p className="text-lg mb-[-1rem] font-light">examples:</p>
             <img
               src="https://graphicgoogle.com/wp-content/uploads/2016/02/Free-T-Shirt-Mockup-for-Logo-Branding.jpg"
               alt="butHeart"
-              className="w-[300px] h-auto object-cover"
+              className=" h-auto object-cover"
             />
             <img
               src="	https://a.storyblok.com/f/153121/1462x1670/ea3c8d5ae7/male-masturbation-set-pdp-2.png"
               alt="flower plug"
-              className="w-[250px] h-auto object-cover"
+              className=" h-auto object-cover"
             />
 
             <img
               src="https://media.sproutsocial.com/uploads/2021/03/Screen-Shot-2019-06-29-at-7.37.42-PM-768x665-1.png"
               alt="logo sinful"
-              className="w-[300px] h-auto object-cover"
+              className=" h-auto object-cover"
             />
             <img
               src="https://mockuphunt.co/cdn/shop/products/ScreenShot2021-05-17at9.17.06AM_2000x.png?v=1621232845"
               alt="peach heart"
-              className="w-[220px] h-auto object-cover"
+              className="w-[400px] h-auto object-cover"
             />
 
             <img
               src="https://www.mockupworld.co/wp-content/uploads/2015/11/c734bf31053437.563f5116c3c5c.jpg"
               alt="but"
-              className="w-[180px] h-auto object-cover"
+              className=" h-auto object-cover"
             />
 
             <img
               src="https://img.freepik.com/free-psd/restaurant-business-card-template-psd-front-rear-view_53876-129187.jpg"
               alt="peach"
-              className="w-[300px] h-auto object-cover"
+              className=" h-auto object-cover"
             />
             <img
               src="https://unblast.com/wp-content/uploads/2018/09/Cap-Mockup-3.jpg"
               alt="playboy"
-              className="w-[225px] h-auto object-cover"
+              className=" h-auto object-cover"
             />
 
             <img
               src="https://unblast.com/wp-content/uploads/2020/01/Floating-Gift-Card-Mockup.jpg"
               alt="butHeart"
-              className="w-[300px] h-auto object-cover"
+              className="h-auto object-cover"
             />
           </div>
 
