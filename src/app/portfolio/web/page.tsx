@@ -98,7 +98,7 @@ export default function Home() {
 {/* Tolls */}
       <section ref={sections.tools} className="mt-24 mx-auto text-center flex flex-col gap-8 items-center">
         <div >
-          <h5 className=" text-gray-600 mb-4 text-center">1. Tolls</h5>
+          <h5 className=" text-gray-600 mb-4 text-center">2. Tolls</h5>
           <h5 className="text-4xl  text-[#ff32ab] text-center">Tools Used</h5>
         </div>
         <div className="flex justify-between w-[40%]">
@@ -166,7 +166,7 @@ export default function Home() {
 
       <section ref={sections.codeStracture} className="mt-24 mx-auto text-center ">
         <div>
-          <h5 className="text-left text-gray-600 mb-4">1. Code Stracture</h5>
+          <h5 className="text-left text-gray-600 mb-4">3. Guidelines</h5>
           <h5 className="text-4xl text-left mb-12 text-[#ff32ab]">Developer guidelines</h5>
 
           <div className="flex gap-8 mt-4 mb-24  max-[1200px]:flex-col ">
@@ -222,7 +222,7 @@ export default function Home() {
       </section>
 
       <section className="mb-24" ref={sections.style}>
-        <h5 className="text-left text-gray-600 mb-4">1. Style</h5>
+        <h5 className="text-left text-gray-600 mb-4">4. Style</h5>
         <h5 className="text-4xl text-left mb-12 text-[#ff32ab]">Style guildines</h5>
         <div className="mx-auto ">
           <h2 className="text-left text-3xl mb-14">Colors</h2>
@@ -256,7 +256,7 @@ export default function Home() {
       </section>
 
       <section className="mb-24" ref={sections.loader}>
-        <h5 className="text-left text-gray-600 mb-4">1. Loader Animation</h5>
+        <h5 className="text-left text-gray-600 mb-4">5. Loader Animation</h5>
         <h5 className="text-4xl text-left mb-12 text-[#ff32ab]">Loader</h5>
   
         <div className="flex flex-col items-start gap-32  w-full">
