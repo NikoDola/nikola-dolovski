@@ -229,6 +229,48 @@ In case we still did not find the right logo, we will go for one more round of s
           </div>
         </div>
       </section>
+      <section className="mt-[5rem] flex gap-8 justify-between max-[1000px]:flex-col">
+        <div className="w-1/2 max-[1000px]:w-full">
+          <p className="text-gray-400">step 5</p>
+          <h3 className="text-4xl">What Next?</h3>
+          <div className="w-20 h-2 mt-4 mb-8 bg-pink-300"></div>
+          <p className="w-full">
+  Following logo finalization, we can proceed to the next phase. 
+  Based on my research, this brand will benefit significantly from strategic email marketing and social media campaigns. 
+  Considering this is a physical product, packaging design will be crucial. 
+  Furthermore, the brand identity should be adaptable for use on various print elements. 
+  This may involve identifying and engaging relevant influencers and email lists. 
+  Therefore, we will require the following:
+</p>
+
+<ul className="list-disc ml-4 mt-8 mb-8">
+  <li>Social Media Icons for Highlights</li>
+  <li>Social Media Feed Post & Story Post Templates</li>
+  <li>Stationery & Gift Card Designs</li> 
+  <li>Product Packaging Design</li>
+  <li>Development of an E-Commerce Website</li>
+  <li>Creation of an Affiliate Marketing Kit</li>
+  <li>Design and Production of Custom Gifts & Stickers</li>
+  <li>Photo Editing & Product Photography Services</li>
+  <li>Implementation of Points Cards or a VIP Discount Program</li>
+  <li>Development of an Influencer Collaboration Kit</li>
+  <li>Design of Professional Email Signatures</li>
+</ul>
+        </div>
+        <div className="flex flex-wrap gap-8">
+   
+          <div className="flex flex-wrap gap-8">
+            <div className="w-full">
+ 
+              <p className="w-fit text-green-300 text-lg mt-4">
+
+              </p>
+            </div>
+
+
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

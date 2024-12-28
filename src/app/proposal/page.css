@@ -13,3 +13,9 @@
 .img1, .img3, .img4, .img5, .img7 {
   position: relative;
 }
+
+ li::marker{
+  color: pink;
+  font-size: 25px;
+  margin-right: 1rem;
+}
