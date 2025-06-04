@@ -6,7 +6,7 @@ export default function UnderConstraction(){
    
       <div className="underWrapper">
         <h1 className="headline1">UNDER <br/>CONSTRUCTION</h1>
-        <Logo size="90px" link="/home"/>
+        <Logo size="10em" link="/"/>
       </div>
    
   )

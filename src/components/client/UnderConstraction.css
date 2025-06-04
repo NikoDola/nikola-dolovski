@@ -2,11 +2,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -40%);
 }
 
 .underWrapper h1{
   text-align: center;
   line-height: 130%;
+  font-size: 4em;
 }
 
