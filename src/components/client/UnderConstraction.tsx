@@ -5,7 +5,7 @@ export default function UnderConstraction(){
   return(
    
       <div className="underWrapper">
-        <h1 className="headline1">UNDER <br/>CONSTRUCTION</h1>
+        <h1>UNDER <br/>CONSTRUCTION</h1>
         <Logo size="10em" link="/"/>
       </div>
    
