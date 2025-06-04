@@ -1,11 +1,10 @@
-
-import Introduce from "@/components/Introduce"
-
+import UnderConstraction from "@/components/client/UnderConstraction"
 export default function Home(){
   return(
     <main>
-      <Introduce/>
+      <section  className="section-regular">
+        <UnderConstraction />
+      </section>
     </main>
-   
   )
 }

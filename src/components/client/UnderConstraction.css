@@ -1,0 +1,12 @@
+.underWrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.underWrapper h1{
+  text-align: center;
+  line-height: 130%;
+}
+

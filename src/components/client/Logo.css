@@ -1,0 +1,110 @@
+.logoWrapper{
+  position: relative;
+  background-color: #88D2D5;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Animation keyframes for one-way movement */
+@keyframes slideLight {
+  0% { left: -30%; }
+  100% { left: 200%; }
+}
+
+@keyframes slideLightDelayed {
+  0% { left: -30%; }
+  10% { left: -50%; } /* Short delay */
+  100% { left: 200%; }
+}
+
+.logoWrapper:hover .glassessMask::before {
+  animation: slideLight 1s linear forwards infinite;
+}
+
+.logoWrapper:hover .glassessMask::after {
+  animation: slideLightDelayed 1s linear forwards infinite;
+}
+
+.hair, .glasses, .beard, .lips{
+  position: absolute;
+  height: 30%;
+}
+
+.hair{
+  left: 50%;
+  top: 12%;
+  transform: translate(-50%);
+  background: rgb(168, 211, 225, 0.5);
+  width: 45%;
+  background-repeat: no-repeat;
+  background-image: url('/branding/logo/logo_hair.svg');
+}
+
+.glasses{
+  position: relative;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%);
+  width: 45%;
+  height: 13%;
+  background-repeat: no-repeat;
+  background-image: url('/branding/logo/logo_glasess.svg');
+}
+
+.glassessMask {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  clip-path: polygon(
+  1% 32%, 2% 45%, 3% 55%, 4% 61%, 5% 66%, 6% 71%, 7% 75%, 8% 78%, 9% 81%, 10% 84%,
+  11% 87%, 12% 89%, 13% 91%, 14% 93%, 15% 94%, 16% 95%, 17% 96%, 18% 97%, 19% 98%,
+  20% 99%, 21% 100%, 22% 100%, 23% 100%, 24% 100%, 25% 99%, 26% 99%, 27% 98%, 28% 98%,
+  29% 97%, 30% 96%, 31% 94%, 32% 93%, 33% 91%, 34% 89%, 35% 87%, 36% 85%, 37% 82%,
+  38% 80%, 39% 76%, 40% 72%, 41% 68%, 42% 62%, 43% 56%, 44% 33%, 45% 26%, 46% 23%,
+  47% 21%, 48% 20%, 49% 19%, 50% 19%, 51% 20%, 52% 21%, 53% 23%, 54% 26%, 55% 33%,
+  56% 56%, 57% 62%, 58% 68%, 59% 72%, 60% 76%, 61% 80%, 62% 82%, 63% 85%, 64% 87%,
+  65% 89%, 66% 91%, 67% 93%, 68% 94%, 69% 96%, 70% 97%, 71% 98%, 72% 98%, 73% 99%,
+  74% 99%, 75% 100%, 76% 100%, 77% 100%, 78% 100%, 79% 99%, 80% 98%, 81% 97%,
+  82% 96%, 83% 95%, 84% 94%, 85% 93%, 86% 91%, 87% 89%, 88% 87%, 89% 84%, 90% 81%,
+  91% 78%, 92% 75%, 93% 71%, 94% 66%, 95% 61%, 96% 55%, 97% 45%, 98% 32%, 98% 0%, 0% 0%
+  );
+}
+
+.glassessMask::before,
+.glassessMask::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  width: 10%;
+  height: 200%;
+  background-color: white;
+  transform: rotate(45deg);
+}
+
+.glassessMask::before {
+  left: -30%;
+}
+
+.glassessMask::after {
+  left: -50%;
+  width: 5%;
+}
+
+.beard{
+  top: 51%;
+  left: 50%;
+  transform: translate(-50%);
+  width: 45%;
+  height: 45%;
+  background-repeat: no-repeat;
+  background-image: url('/branding/logo/logo_beard.svg');
+}
+
+.lips{
+  top: 69%;
+  left: 50%;
+  transform: translate(-50%);
+  width: 9%;
+  background-repeat: no-repeat;
+  background-image: url('/branding/logo/logo_lips.svg');
+}

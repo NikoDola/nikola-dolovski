@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import ContactForm from '@/components/ContactForm'
 import Loader from "./loader/LoaderScreen"
+import Link from "next/link";
 
 export default function Home() {  
   const sections = {
@@ -27,7 +28,7 @@ export default function Home() {
       <div className="text-center items-center flex flex-col justify-center">
         
         <div className="flex gap-2 mt-3 text-4xl font-bold max-[1000px]:flex-col">
-          <p className="selection:bg-pink-500">Incident Counter Web App</p>
+          <h1 className="selection:bg-pink-500">Incident Counter Web App</h1>
         </div>
         <p className="font-bold tracking-widest text-lg">For</p>
         <img className=" w-1/6 mt-2 max-[1000px]:w-1/2" src={'/portfolio/niks/niks.svg'}/>
@@ -41,10 +42,10 @@ export default function Home() {
             <li className="cursor-pointer hover:text-[#ff32ab]" onClick={()=> handleScroll("appDescription")}> Description</li>
             <li className="cursor-pointer hover:text-[#ff32ab] m-0 leading-3"  onClick={()=> handleScroll("tools")}>Tools
               <ul className="list-decimal flex flex-col gap-4 mt-4 pl-6  text-gray-400">
-                <li>Figma</li>
-                <li>Next.js</li>
-                <li>Typescript</li>
-                <li>Firebase</li>
+                <Link href={"#figma"}>Figma</Link>
+                 <Link href={"#next.js"}>Next.JS</Link>
+                 <Link href={"#Typescript"}>Typescript</Link>
+                <Link href={"#Firebase"}>Firebase</Link>
                 </ul>
             </li>
             <li className="cursor-pointer hover:text-[#ff32ab]" onClick={()=> handleScroll("codeStracture")}>Code Structure 
