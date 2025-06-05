@@ -6,11 +6,12 @@
   top: 40%;
   left: 50%;
   transform: translate(-50%, -40%);
+  justify-content: start;
 }
 
 .underWrapper h1{
   text-align: center;
   line-height: 130%;
-  font-size: 4em;
+  font-size: 3em;
 }
 

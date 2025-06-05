@@ -5,8 +5,13 @@ import { useState } from "react";
 
 export default function Logo({ size, link }: { size: string; link: string }) {
   const [message] = useState<string[]>([
+    '...',
     'Comming Soon',
-    'I also cant wait!',
+    'The website will be awesome',
+    'Website will Clean and Simple',
+    'I will be showcasing my portfolio, reviews nothing to fancy',
+    'Would you like to know more about me ?',
+    'Sorry I cant tell you more...',
     'Be patient...',
     'Please stop.',
     "Please stop!!",
@@ -26,7 +31,7 @@ export default function Logo({ size, link }: { size: string; link: string }) {
  
   }
   return (
-      <Link className="flex flex-col gap-4 items-center" onClick={handleClick} href={link}>
+      <Link className="flex flex-col gap-4 items-center justify-end" onClick={handleClick} href={link}>
         <div style={{ width: size, height: size }} className="logoWrapper">
           <div className="hair"> </div>
           <div className="glasses">
