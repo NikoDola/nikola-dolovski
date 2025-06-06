@@ -1,0 +1,26 @@
+.offersWrapper{
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.offerWrapper{
+  gap: 0;
+  margin-top: 1rem;
+  width: 40%;
+ 
+}
+
+.offerWrapper h2{
+  white-space: nowrap;
+  margin-bottom: 1rem;
+}
+
+.servicesWrapper li{
+  line-height: 2rem;
+}
+
+.servicesWrapper{
+
+}
+
