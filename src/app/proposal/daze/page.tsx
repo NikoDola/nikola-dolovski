@@ -18,7 +18,7 @@ export default function Proposals() {
           <li>9. Clear Space</li>
           <li>10. Brand Colors</li>
           <li>11. Iconography</li>
-          <li>12. "How Not To" usage guide</li>
+          <li>12. &quot;How Not To&quot; usage guide</li>
         </ul>
       </section>
 
