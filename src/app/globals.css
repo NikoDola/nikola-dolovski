@@ -21,8 +21,8 @@ h1{
   font-weight: 200;
   letter-spacing: var(--space-2);
   line-height: var(--text-7xl);
- 
 }
+
 h1::selection{
   background-color: var(--brand-color);
   color: var(--foreground);
@@ -43,10 +43,10 @@ h4{
   font-size: var(--text-3xl);
 }
 
-.p{
+p, li{
   font-size: var(--text-xl);
 }
-.p::selection{
+p::selection{
   background-color: red;
   color: white;
 }
@@ -134,7 +134,7 @@ h6{
   h4{
     font-size: var(--text-xl)
   }
-  .p{
+  li, p{
     font-size: var(--text-m);
   }
   h5{

@@ -1,0 +1,181 @@
+[
+  {
+    "Core Brand Identity": {
+      "Color Palette Design": {
+        "bool": false,
+        "value": 3,
+        "description": "Defines the brand’s primary color scheme to ensure consistency across digital and print materials, creating emotional resonance and visual impact."
+      },
+      "Typography": {
+        "bool": false,
+        "value": 2,
+        "description": "Establishes font families and styling rules to ensure a consistent, professional voice across all brand communications and materials."
+      },
+      "Carning the text (font)": {
+        "bool": false,
+        "value": 2,
+        "description": "Adjusts spacing between letters to improve readability and aesthetic balance across both print and digital assets."
+      },
+      "Grid & Layout System": {
+        "bool": false,
+        "value": 3,
+        "description": "Provides a grid framework for consistent alignment and structure across all designs, helping maintain visual harmony."
+      },
+      "Logo Clear Space Rules": {
+        "bool": false,
+        "value": 0.5,
+        "description": "Specifies the minimum clear space required around the logo to preserve its visibility and ensure it stands out."
+      },
+      "Logo variation (horizontal, vertical, badge)": {
+        "bool": false,
+        "value": 2,
+        "description": "Delivers optimized logo versions for different formats (horizontal, vertical, badge) to ensure adaptability across use cases."
+      },
+      "Creating Aspect Ratio for the logo versions": {
+        "bool": false,
+        "value": 2,
+        "description": "Establishes aspect ratio guidelines so logos maintain proper proportions across all platforms and applications."
+      },
+      "Minimum Logo Size": {
+        "bool": false,
+        "value": 0.5,
+        "description": "Defines the smallest acceptable size for logo usage, ensuring legibility and brand integrity."
+      },
+      "\"How Not To\" usage guide": {
+        "bool": false,
+        "value": 3,
+        "description": "Outlines incorrect logo uses (distortion, improper color use, background clashes) to prevent brand misuse."
+      }
+    }
+  },
+  {
+    "Logo Assets & Interactions": {
+      "Saving the logo in multiple colors (light, dark, mono, etc.)": {
+        "bool": false,
+        "value": 3,
+        "description": "Prepares the logo in various color versions (light, dark, monochrome, transparent) for flexibility across different backgrounds."
+      },
+      "3D mockups for better visual presentation": {
+        "bool": false,
+        "value": 2,
+        "description": "Creates realistic 3D mockups of the logo to showcase it in physical and digital contexts (signage, packaging, screens)."
+      },
+      "Logo animation": {
+        "bool": false,
+        "value": 4,
+        "description": "Develops an animated version of the logo for use in digital presentations, videos, and websites."
+      },
+      "JavaScript hover animation for the logo (home button)": {
+        "bool": false,
+        "value": 2,
+        "description": "Implements subtle hover animations to enhance interactivity and visual appeal on websites."
+      }
+    }
+  },
+  {
+    "Visual Assets & Patterns": {
+      "Creating a brand pattern": {
+        "bool": false,
+        "value": 4,
+        "description": "Designs a unique brand pattern or texture to complement visual identity and enhance brand recognition."
+      },
+      "App Icon Design": {
+        "bool": false,
+        "value": 0.5,
+        "description": "Creates a distinctive app icon that aligns with the brand and stands out in app stores and device screens."
+      },
+      "App Icons (merged with above)": {
+        "bool": false,
+        "value": 3,
+        "description": "Prepares app icons in all required sizes and file formats for various platforms (iOS, Android, Windows)."
+      },
+      "Creative Stickers": {
+        "bool": false,
+        "value": 1,
+        "description": "Designs playful and creative sticker graphics for use in packaging, social media, or promotional material."
+      },
+      "Custom QR Code Design": {
+        "bool": false,
+        "value": 2,
+        "description": "Generates a branded QR code that matches the visual identity while ensuring full functionality and readability."
+      }
+    }
+  },
+  {
+    "Digital & Print Material": {
+      "Stationery Design": {
+        "bool": false,
+        "value": 3,
+        "description": "Designs branded stationery including letterheads, envelopes, folders, and business cards for professional correspondence."
+      },
+      "Package Design (if needed)": {
+        "bool": false,
+        "value": 3,
+        "description": "Creates packaging designs that reflect brand identity, enhance product appeal, and ensure a memorable unboxing experience."
+      },
+      "Print Mini Branding": {
+        "bool": false,
+        "value": 3,
+        "description": "Develops a mini branding kit optimized for print use (logos, colors, typography) for use by third-party vendors or partners."
+      }
+    }
+  },
+  {
+    "Online & Social Presence": {
+      "Creating banners (cover pages) for Facebook, LinkedIn, etc.": {
+        "bool": false,
+        "value": 3,
+        "description": "Designs custom banners for social media profiles to create a consistent and professional brand presence."
+      },
+      "Hotel Portal White-label Branding": {
+        "bool": false,
+        "value": 4,
+        "description": "Customizes branding for hotel portals, ensuring a seamless visual experience aligned with the hotel's brand identity."
+      },
+      "Brand Reel": {
+        "bool": false,
+        "value": 5,
+        "description": "Produces a dynamic brand video reel highlighting key brand elements, products, and values for marketing purposes."
+      }
+    }
+  },
+  {
+    "Email & Web Assets": {
+      "Creating an Email Signature": {
+        "bool": false,
+        "value": 2,
+        "description": "Designs a professional email signature that reinforces brand identity in every email communication."
+      },
+      "Custom Email Templates (Responsive HTML)": {
+        "bool": false,
+        "value": 5,
+        "description": "Develops responsive HTML email templates for various use cases (newsletters, promotions, transactional emails)."
+      },
+      "Email Icon Set": {
+        "bool": false,
+        "value": 2,
+        "description": "Creates a custom set of icons to be used in email communications, aligned with the overall brand style."
+      },
+      "Transactional Email Styling": {
+        "bool": false,
+        "value": 1,
+        "description": "Styles automated transactional emails (order confirmations, password resets) to match the brand aesthetic."
+      },
+      "Newsletter Layout Design": {
+        "bool": false,
+        "value": 5,
+        "description": "Designs an engaging and user-friendly newsletter layout optimized for readability and conversions across devices."
+      },
+      "HTML/CSS Branding Documentation Page": {
+        "bool": false,
+        "value": 3,
+        "description": "Creates an online branding guidelines page (HTML/CSS) to provide clear reference for internal and external teams."
+      },
+      "Loading Animation": {
+        "bool": false,
+        "value": 2,
+        "description": "Designs a branded loading animation to enhance perceived performance and maintain user engagement during content loading."
+      }
+    }
+  }
+]

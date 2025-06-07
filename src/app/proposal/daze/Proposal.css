@@ -1,14 +1,13 @@
 .offersWrapper{
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2,2fr);
+  width: 70%;
+  margin: 0 auto;
 }
 
 .offerWrapper{
   gap: 0;
   margin-top: 1rem;
-  width: 40%;
- 
 }
 
 .offerWrapper h2{
@@ -17,10 +16,110 @@
 }
 
 .servicesWrapper li{
+  cursor: pointer;
   line-height: 2rem;
 }
 
-.servicesWrapper{
-
+.servicesWrapper li:hover{
+  color: white;
+  background-color: var(--brand-color)
 }
 
+.servicesWrapper{
+}
+
+@media (max-width: 1000px){
+  .offersWrapper{
+     grid-template-columns: repeat(1,1fr);
+       width: 95%;
+  }
+  .offerWrapper{
+  
+    margin-top: 4rem;
+  }
+}
+
+/* Tooltip styles */
+.tooltip {
+  position: fixed;
+  background-color: #fff;
+  color: #333;
+  padding: 12px;
+  border-radius: 4px;
+  max-width: 300px;
+  z-index: 1000;
+  pointer-events: none;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  line-height: 1.5;
+  border: 1px solid #eee;
+  transform: translate(15px, 15px);
+}
+
+/* Checkbox styles */
+.servicesWrapper li {
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.servicesWrapper li input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.servicesWrapper li input[type="checkbox"]:checked {
+  background-color: var(--brand-color);
+  border-color: var(--brand-color);
+}
+
+.servicesWrapper li input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  color: white;
+  font-size: 12px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Selected state */
+
+
+/* Keep your existing hover effect */
+.servicesWrapper li:hover {
+  
+}
+
+.estimationsWrapper{
+  position: fixed;
+  background-color: rgb(30, 30, 30, 0.8);
+
+  color: white;
+  backdrop-filter: blur(3px);
+  bottom: 0;
+  margin-bottom: 0;
+  border-radius: 3rem;
+
+  left: 50%;
+  transform: translate(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4rem;
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
