@@ -3,7 +3,7 @@ import Link from "next/link";
 import "./Logo.css";
 import { useState } from "react";
 
-export default function Logo({ size, link }: { size: string; link: string }) {
+export default function Logo({ size, link, playText=false }: { size: string; link: string, playText:boolean }) {
   const [message] = useState<string[]>([
     '...',
     'Comming Soon',
@@ -40,7 +40,8 @@ export default function Logo({ size, link }: { size: string; link: string }) {
           <div className="beard"></div>
           <div className="lips"></div>
         </div>
-              <div>{message[counter]}</div>
+        {playText && <div>{message[counter]}</div>}
+              
       </Link>
   );
 }

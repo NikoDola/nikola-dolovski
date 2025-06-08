@@ -1,7 +1,10 @@
+
 "use client"
+import Image from "next/image";
 
 import { useState } from "react"
 import "./Proposal.css"
+import Logo from "@/components/client/Logo";
 
 type ServiceValue = {
   bool: boolean;
@@ -19,59 +22,61 @@ export default function Proposals() {
   };
 
   const services: Record<string, ServiceValue> = {
-    colorPalete: { bool: false, value: 3, description: "Carefully define and refine the brand's core color palette to ensure visual consistency and flexibility across all media — digital and print. This will include primary, secondary, and supporting colors with proper usage guidelines." },
-    typography: { bool: false, value: 2, description: "Select primary and supporting typefaces that best reflect the brand personality and values. Define font sizes, weights, and hierarchy for use in web, print, and digital materials." },
-    carning: { bool: false, value: 2, description: "Fine-tune the spacing between individual letters in the logo and brand text to improve readability and aesthetic balance. Ensures the brand typography looks polished and professional in all formats." },
-    gridLayout: { bool: false, value: 3, description: "Create a consistent layout system using grids, margins, and spacing rules. This helps to maintain visual harmony across all brand collateral and ensures scalable and reusable design patterns." },
-    logoSpace: { bool: false, value: 0.5, description: "Define the minimum amount of clear space required around the logo to maintain its impact and prevent crowding from other elements." },
-    logoVariation: { bool: false, value: 2, description: "Develop multiple variations of the logo (horizontal, stacked/vertical, badge format) to provide flexibility across different contexts and layouts." },
+    colorPalete: { bool: false, value: 6, description: "Carefully define and refine the brand's core color palette to ensure visual consistency and flexibility across all media — digital and print. This will include primary, secondary, and supporting colors with proper usage guidelines." },
+    typography: { bool: false, value: 8, description: "Select primary and supporting typefaces that best reflect the brand personality and values. Define font sizes, weights, and hierarchy for use in web, print, and digital materials." },
+    carning: { bool: false, value: 4, description: "Fine-tune the spacing between individual letters in the logo and brand text to improve readability and aesthetic balance. Ensures the brand typography looks polished and professional in all formats." },
+    gridLayout: { bool: false, value: 18, description: "Create a consistent layout system using grids, margins, and spacing rules. This helps to maintain visual harmony across all brand collateral and ensures scalable and reusable design patterns." },
+    logoSpace: { bool: false, value: 3, description: "Define the minimum amount of clear space required around the logo to maintain its impact and prevent crowding from other elements." },
+    logoVariation: { bool: false, value: 8, description: "Develop multiple variations of the logo (horizontal, stacked/vertical, badge format) to provide flexibility across different contexts and layouts." },
     aspectRatio: { bool: false, value: 2, description: "Set precise aspect ratios for each logo version to ensure consistent scaling and alignment across different devices and media." },
-    minimumLogoSize: { bool: false, value: 0.5, description: "Define the smallest size at which the logo can be used while preserving its legibility and brand integrity." },
-    howNotTo: { bool: false, value: 3, description: "Provide examples of incorrect logo and brand element usage (distortion, color misuse, overcrowding, wrong backgrounds), helping prevent misuse by partners and designers." },
+    minimumLogoSize: { bool: false, value: 1, description: "Define the smallest size at which the logo can be used while preserving its legibility and brand integrity." },
+    howNotTo: { bool: false, value: 5, description: "Provide examples of incorrect logo and brand element usage (distortion, color misuse, overcrowding, wrong backgrounds), helping prevent misuse by partners and designers." },
     logoColors: { bool: false, value: 3, description: "Export and prepare the logo in various color variations (light, dark, black & white, monochrome) to suit different backgrounds and use cases." },
-    logo3DMockup: { bool: false, value: 2, description: "Create 3D visual mockups of the logo for presentations, product previews, packaging, and marketing materials, enhancing perceived professionalism and brand impact." },
-    logoAnimation: { bool: false, value: 4, description: "Develop simple, tasteful animations of the logo (for example, fade-in, bounce, line drawing effect) for use in videos, intros, websites, and social media." },
-    logoHoverAnimation: { bool: false, value: 2, description: "Add a subtle interactive hover animation to the logo on websites (typically on the home button or header), adding personality and improving engagement." },
-    brandPattern: { bool: false, value: 4, description: "Design a brand pattern (repeating or dynamic visual motif) that complements the brand identity and can be used in backgrounds, packaging, or marketing collateral." },
-    appIcon: { bool: false, value: 0.5, description: "Design a custom app icon based on the brand identity, optimized for both iOS and Android platforms, following app store guidelines." },
-    appIconsMerged: { bool: false, value: 3, description: "Create additional app icon variations and social media avatars derived from the main app icon design." },
-    creativeStickers: { bool: false, value: 1, description: "Design custom digital or print sticker sets for brand promotion, packaging, marketing campaigns, or social media use." },
+    logo3DMockup: { bool: false, value: 8, description: "Create 3D visual mockups of the logo for presentations, product previews, packaging, and marketing materials, enhancing perceived professionalism and brand impact." },
+    logoAnimation: { bool: false, value: 8, description: "Develop simple, tasteful animations of the logo (for example, fade-in, bounce, line drawing effect) for use in videos, intros, websites, and social media." },
+    logoHoverAnimation: { bool: false, value: 4, description: "Add a subtle interactive hover animation to the logo on websites (typically on the home button or header), adding personality and improving engagement." },
+    brandPattern: { bool: false, value: 14, description: "Design a brand pattern (repeating or dynamic visual motif) that complements the brand identity and can be used in backgrounds, packaging, or marketing collateral." },
+    iconography: { bool: false, value: 14, description: "Create a cohesive set of custom icons that align with the brand's visual style, ensuring consistency across all digital and print applications while maintaining clarity and recognizability." },
+    appIcon: { bool: false, value: 1, description: "Design a custom app icon based on the brand identity, optimized for both iOS and Android platforms, following app store guidelines." },
+    appIconsMerged: { bool: false, value: 4, description: "Create additional app icons variations and social media avatars derived from the main app icon design." },
+    creativeStickers: { bool: false, value: 4, description: "Design custom digital or print sticker sets for brand promotion, packaging, marketing campaigns, or social media use." },
     qrCode: { bool: false, value: 2, description: "Design a branded QR code that visually aligns with the brand identity while remaining scannable, for use on packaging, business cards, and marketing materials." },
-    stationeryDesign: { bool: false, value: 3, description: "Design branded stationery such as business cards, letterheads, envelopes, and presentation templates to ensure consistent offline brand presence." },
-    packageDesign: { bool: false, value: 3, description: "Design packaging for products in alignment with brand guidelines, ensuring visual consistency and professional presentation." },
-    printMiniBranding: { bool: false, value: 3, description: "Prepare branded assets optimized for print, including versions of the logo, patterns, typography, and color profiles (CMYK versions)." },
-    socialBanners: { bool: false, value: 3, description: "Design cover images and banners optimized for key social platforms (Facebook, LinkedIn, Twitter, YouTube), ensuring they adapt well to different screen sizes and devices." },
-    hotelBranding: { bool: false, value: 4, description: "Customize the look and feel of a hotel portal (or similar digital platform) with the client's brand elements — logo, colors, typography — to maintain visual consistency and enhance customer trust." },
-    brandReel: { bool: false, value: 5, description: "Produce a short brand video reel (animated logo, key brand visuals, messaging) suitable for use on websites, social channels, and presentations." },
-    emailSignature: { bool: false, value: 2, description: "Design a professional, responsive email signature that reflects the brand identity and can be easily implemented across the organization's email system." },
-    emailTemplates: { bool: false, value: 5, description: "Create custom-branded email templates (newsletter, transactional, announcement) optimized for mobile and desktop, built with responsive HTML and CSS." },
-    emailIcons: { bool: false, value: 2, description: "Design a custom set of icons for use in email templates and digital communication to enhance visual consistency." },
-    transactionalEmails: { bool: false, value: 1, description: "Style and format automated transactional emails (order confirmations, password resets, etc.) to match the brand look and feel." },
-    newsletterLayout: { bool: false, value: 5, description: "Design reusable newsletter layouts for marketing communications, optimized for visual hierarchy and engagement." },
-    brandingDocs: { bool: false, value: 3, description: "Create an internal documentation page (web-based) summarizing the brand's HTML/CSS styling rules, components, and code snippets for developers." },
-    loadingAnimation: { bool: false, value: 2, description: "Design a simple branded loading animation (spinner, bar, logo animation) for use on web apps or mobile apps to maintain brand presence during loading states." },
+    stationeryDesign: { bool: false, value: 6, description: "Design branded stationery such as business cards, letterheads, envelopes, and presentation templates to ensure consistent offline brand presence." },
+    packageDesign: { bool: false, value: 6, description: "Design packaging for products in alignment with brand guidelines, ensuring visual consistency and professional presentation." },
+    printMiniBranding: { bool: false, value: 6, description: "Prepare branded assets optimized for print, including versions of the logo, patterns, typography, and color profiles (CMYK versions)." },
+    socialBanners: { bool: false, value: 6, description: "Design cover images and banners optimized for key social platforms (Facebook, LinkedIn, Twitter, YouTube), ensuring they adapt well to different screen sizes and devices." },
+    hotelBranding: { bool: false, value: 8, description: "Customize the look and feel of a hotel portal (or similar digital platform) with the client's brand elements — logo, colors, typography — to maintain visual consistency and enhance customer trust." },
+    brandReel: { bool: false, value: 10, description: "Produce a short brand video reel (animated logo, key brand visuals, messaging) suitable for use on websites, social channels, and presentations." },
+    emailSignature: { bool: false, value: 4, description: "Design a professional, responsive email signature that reflects the brand identity and can be easily implemented across the organization's email system." },
+    emailTemplates: { bool: false, value: 10, description: "Create custom-branded email templates (newsletter, transactional, announcement) optimized for mobile and desktop, built with responsive HTML and CSS." },
+    emailIcons: { bool: false, value: 4, description: "Design a custom set of icons for use in email templates and digital communication to enhance visual consistency." },
+    transactionalEmails: { bool: false, value: 2, description: "Style and format automated transactional emails (order confirmations, password resets, etc.) to match the brand look and feel." },
+    newsletterLayout: { bool: false, value: 10, description: "Design reusable newsletter layouts for marketing communications, optimized for visual hierarchy and engagement." },
+    brandingDocs: { bool: false, value: 6, description: "Create an internal documentation page (web-based) summarizing the brand's HTML/CSS styling rules, components, and code snippets for developers." },
+    loadingAnimation: { bool: false, value: 4, description: "Design a simple branded loading animation (spinner, bar, logo animation) for use on web apps or mobile apps to maintain brand presence during loading states." },
   };
 
   const [value, setValue] = useState<Record<string, ServiceValue>>(services);
 
-  const handleTime = (key: string) => {
-    setValue((prev) => {
-      const isAlreadySelected = prev[key].bool;
-      if (!isAlreadySelected) {
-        setTime(prevTime => prevTime + prev[key].value);
-      } else {
-        setTime(prevTime => prevTime - prev[key].value);
+const handleTime = (key: string) => {
+  setValue((prev) => {
+    const newValue = {
+      ...prev,
+      [key]: {
+        ...prev[key],
+        bool: !prev[key].bool
       }
-      return {
-        ...prev,
-        [key]: {
-          ...prev[key],
-          bool: !isAlreadySelected
-        }
-      };
-    });
-  };
-
+    };
+    
+    // Recalculate total time from all selected services
+    const newTime = Object.values(newValue)
+      .filter(service => service.bool)
+      .reduce((sum, service) => sum + service.value, 0);
+    
+    setTime(newTime);
+    return newValue;
+  });
+};
   const handleMouseEnter = (key: string) => {
     setHoveredItem(key);
   };
@@ -81,7 +86,15 @@ export default function Proposals() {
   };
 
   return (
-    <main className="offersWrapper" onMouseMove={handleMouseMove}>
+    <>
+        <hr className="mt-8"/>
+    <section className="section-regular flex justify-center gap-[10%]">
+      <Logo size="100px" link="/" playText={false}/>
+      <Image src={"/proposals/daze/daze.svg"} width={90} height={100} alt="daze logo"/>
+    </section>
+    <hr className="mb-8"/>
+        <main className="offersWrapper" onMouseMove={handleMouseMove}>
+ 
       {/* Tooltip */}
       {hoveredItem && (
         <div 
@@ -110,7 +123,8 @@ export default function Proposals() {
               checked={value.colorPalete.bool} 
               readOnly 
             />
-            1. Color Palette Design
+            1. Color Palette Design <span></span>
+            
           </li>
           <li 
             className={value.typography.bool ? "selected" : ""} 
@@ -296,6 +310,19 @@ export default function Proposals() {
             1. Creating a brand pattern
           </li>
           <li 
+            className={value.iconography.bool ? "selected" : ""} 
+            onClick={() => handleTime("iconography")}
+            onMouseEnter={() => handleMouseEnter("iconography")}
+            onMouseLeave={handleMouseLeave}
+          >
+            <input 
+              type="checkbox" 
+              checked={value.iconography.bool} 
+              readOnly 
+            />
+            2. Iconography Set
+          </li>
+          <li 
             className={value.appIcon.bool ? "selected" : ""} 
             onClick={() => handleTime("appIcon")}
             onMouseEnter={() => handleMouseEnter("appIcon")}
@@ -306,7 +333,7 @@ export default function Proposals() {
               checked={value.appIcon.bool} 
               readOnly 
             />
-            2. App Icon Design
+            3. App Icon Design
           </li>
           <li 
             className={value.appIconsMerged.bool ? "selected" : ""} 
@@ -319,7 +346,7 @@ export default function Proposals() {
               checked={value.appIconsMerged.bool} 
               readOnly 
             />
-            3. App Icons (merged with above)
+            4. App Icons
           </li>
           <li 
             className={value.creativeStickers.bool ? "selected" : ""} 
@@ -332,7 +359,7 @@ export default function Proposals() {
               checked={value.creativeStickers.bool} 
               readOnly 
             />
-            4. Creative Stickers
+            5. Creative Sticker 
           </li>
           <li 
             className={value.qrCode.bool ? "selected" : ""} 
@@ -345,7 +372,7 @@ export default function Proposals() {
               checked={value.qrCode.bool} 
               readOnly 
             />
-            5. Custom QR Code Design
+            6. Custom QR Code Design
           </li>
         </ul>
       </section>
@@ -542,9 +569,10 @@ export default function Proposals() {
       </section>
 
      <section className="section-regular   estimationsWrapper">
-        <p>⏳ Days:{Math.round(parseFloat(time.toFixed(1)))}</p>
-        <p>💲 Cost ${Math.round(parseFloat(time.toFixed(1)) * 8 * 5.3)}</p>
+        <p>⏳ <span className="text-gray-200">Hours</span>:{Math.round(parseFloat(time.toFixed(1)))}</p>
+        <p>💲 Cost ${Math.round(parseFloat(time.toFixed(1)) * 4 * 8)}</p>
      </section>
     </main>
+    </>
   );
 }
