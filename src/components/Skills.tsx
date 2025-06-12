@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import NextImage from "next/image";
 import "./Skills.css";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -17,14 +17,61 @@ export default function HeroSection() {
   const [data, setData] = useState<Data[]>([]);
   const [color, setColor] = useState({ main: "#1e1e1e", alt: "#3ce5e5" });
 
-  useEffect(() => {
-    async function fetchData() {
-      const response = await fetch("/components/skills/skills.json");
-      const dataJson = await response.json();
-      setData(dataJson);
-    }
-    fetchData();
-  }, []);
+useEffect(() => {
+  async function fetchData() {
+    const response = await fetch("/components/skills/skills.json");
+    const dataJson = await response.json();
+    setData(dataJson);
+
+    // Preload skill icon images
+    const imageNames = [
+      "skills-icon_illustrator.svg",
+      "skills-icon_photoshop.svg",
+      "skills-icon_figma.svg",
+      "skills-icon_aftereffects.svg",
+      "skills-icon_premiere.svg",
+      "skills-icon_openai.svg",
+      "skills-icon_midjourney.svg",
+      "skills-icon_html.svg",
+      "skills-icon_css.svg",
+      "skills-icon_canvas.svg",
+      "skills-icon_js.svg",
+      "skills-icon_react.svg",
+      "skills-icon_next.svg",
+      "skills-icon_firebase.svg",
+    ];
+
+    imageNames.forEach((img) => {
+      const i = new Image();
+      i.src = `/components/skills/${img}`;
+    });
+
+    // Preload dynamic clothing and head images
+    dataJson.forEach((item: { name: string }) => {
+      const name = item.name.toLowerCase();
+      const clothing = new Image();
+      clothing.src = `/components/skills/clothing-${name}.webp`;
+
+      const head = new Image();
+      head.src = `/components/skills/${
+        name === "photoshop"
+          ? "head-sunglasess"
+          : name === "illustrator"
+          ? "head-illustrator"
+          : "head"
+      }.webp`;
+    });
+
+    // Preload hands
+    ["left-hand.webp", "right-hand.webp"].forEach((img) => {
+      const i = new Image();
+      i.src = `/components/skills/${img}`;
+    });
+  }
+
+  fetchData();
+}, []);
+
 
   const handleImageAndText = (key: string) => {
     const item = data.find(
@@ -67,7 +114,7 @@ export default function HeroSection() {
               Graphic Design <b>▼</b>
             </p>
 
-            <Image
+            <NextImage
               onClick={() => handleImageAndText("illustrator")}
               className="skillIcon"
               src={"/components/skills/skills-icon_illustrator.svg"}
@@ -76,7 +123,7 @@ export default function HeroSection() {
               height={30}
             />
             <div className="hrLine" />
-            <Image
+            <NextImage
               onClick={() => handleImageAndText("photoshop")}
               className="skillIcon"
               src={"/components/skills/skills-icon_photoshop.svg"}
@@ -85,7 +132,7 @@ export default function HeroSection() {
               height={30}
             />
             <div className="hrLine" />
-            <Image
+            <NextImage
               onClick={() => handleImageAndText("figma")}
               className="skillIcon"
               src={"/components/skills/skills-icon_figma.svg"}
@@ -94,7 +141,7 @@ export default function HeroSection() {
               height={30}
             />
             <div className="hrLine" />
-            <Image
+            <NextImage
               onClick={() => handleImageAndText("aftereffects")}
               className="skillIcon"
               src={"/components/skills/skills-icon_aftereffects.svg"}
@@ -103,7 +150,7 @@ export default function HeroSection() {
               height={30}
             />
             <div className="hrLine" />
-            <Image
+            <NextImage
               onClick={() => handleImageAndText("premiere")}
               className="skillIcon"
               src={"/components/skills/skills-icon_premiere.svg"}
@@ -112,7 +159,7 @@ export default function HeroSection() {
               height={30}
             />
             <div className="hrLine" />
-            <Image
+            <NextImage
               onClick={() => handleImageAndText("openai")}
               className="skillIcon"
               src={"/components/skills/skills-icon_openai.svg"}
@@ -121,7 +168,7 @@ export default function HeroSection() {
               height={30}
             />
             <div className="hrLine" />
-            <Image
+            <NextImage
               onClick={() => handleImageAndText("midjourney")}
               className="skillIcon"
               src={"/components/skills/skills-icon_midjourney.svg"}
@@ -135,7 +182,7 @@ export default function HeroSection() {
               Web Developer <b>▼</b>
             </p>
 
-            <Image
+            <NextImage
               onClick={() => handleImageAndText("HTML")}
               className="skillIcon"
               src={"/components/skills/skills-icon_html.svg"}
@@ -144,7 +191,7 @@ export default function HeroSection() {
               height={30}
             />
             <div className="hrLine" />
-            <Image
+            <NextImage
               onClick={() => handleImageAndText("CSS")}
               className="skillIcon"
               src={"/components/skills/skills-icon_css.svg"}
@@ -153,7 +200,7 @@ export default function HeroSection() {
               height={30}
             />
             <div className="hrLine" />
-            <Image
+            <NextImage
               onClick={() => handleImageAndText("canvas")}
               className="skillIcon"
               src={"/components/skills/skills-icon_canvas.svg"}
@@ -162,7 +209,7 @@ export default function HeroSection() {
               height={30}
             />
             <div className="hrLine" />
-            <Image
+            <NextImage
               onClick={() => handleImageAndText("JS")}
               className="skillIcon"
               src={"/components/skills/skills-icon_js.svg"}
@@ -171,7 +218,7 @@ export default function HeroSection() {
               height={30}
             />
             <div className="hrLine" />
-            <Image
+            <NextImage
               onClick={() => handleImageAndText("react")}
               className="skillIcon"
               src={"/components/skills/skills-icon_react.svg"}
@@ -180,7 +227,7 @@ export default function HeroSection() {
               height={30}
             />
             <div className="hrLine" />
-            <Image
+            <NextImage
               onClick={() => handleImageAndText("next")}
               className="skillIcon"
               src={"/components/skills/skills-icon_next.svg"}
@@ -189,7 +236,7 @@ export default function HeroSection() {
               height={30}
             />
             <div className="hrLine" />
-            <Image
+            <NextImage
               onClick={() => handleImageAndText("firebase")}
               className="skillIcon"
               src={"/components/skills/skills-icon_firebase.svg"}
@@ -200,7 +247,7 @@ export default function HeroSection() {
           </div>
         </div>
         <div className="imageWrapper">
-          <Image
+          <NextImage
             className="clothingImage"
             src={`/components/skills/clothing-${currentImage.toLocaleLowerCase()}.webp`}
             alt="Clothing"
@@ -208,7 +255,7 @@ export default function HeroSection() {
             height={120}
           />
           <div className="headWrapper">
-             <Image
+             <NextImage
             className={"headImage"}
             src={`/components/skills/${
               currentImage === "photoshop"
@@ -225,7 +272,7 @@ export default function HeroSection() {
          
 
           <div className="leftHandWrapper">
-            <Image
+            <NextImage
               className="leftHand"
               src={"/components/skills/left-hand.webp"}
               alt="Left hand"
@@ -234,7 +281,7 @@ export default function HeroSection() {
             />
           </div>
 
-          <Image
+          <NextImage
             className="rightHand"
             src={"/components/skills/right-hand.webp"}
             alt="Right hand"
