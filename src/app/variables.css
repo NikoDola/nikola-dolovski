@@ -2,6 +2,8 @@
   --background: #ffffff;
   --foreground: #1e1e1e;
   --brand-color:#3ce5e5;
+  --tan-color: #F7F6E2;
+  --dark-tan-color: rgb(216, 216, 193);
   
   --text-xs:   0.75rem;    /* 12px */
   --text-sm:   0.875rem;   /* 14px */

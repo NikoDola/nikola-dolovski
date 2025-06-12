@@ -1,0 +1,62 @@
+[
+  {
+    "name": "illustrator",
+    "description": "Adobe Illustrator was my gateway into digital design. Though I initially struggled coming from Photoshop, my passion for vector art and logo design made me persist. Now, I leverage its precision for everything from brand identities to complex illustrations, mastering bezier curves and the pen tool until they became second nature."
+  },
+  {
+    "name": "photoshop",
+    "description": "My first professional design tool started as a playground for photo manipulation, but evolved into a versatile creative partner. Over 13+ years, I've used Photoshop for everything from digital painting to UI mockups, developing deep expertise in non-destructive editing, compositing, and preparing perfect assets for any medium."
+  },
+  {
+    "name": "figma",
+    "description": "Initially skeptical, Figma won me over completely. Its collaborative nature and powerful features like variables and auto-layout transformed my UI workflow. Now my go-to for interface design, I create comprehensive design systems where one change propagates beautifully across entire projects—a game changer for efficient, consistent design."
+  },
+  {
+    "name": "aftereffects",
+    "description": "After Effects added motion to my creative vocabulary. Mastering it not only brought my designs to life but unexpectedly improved my CSS/JS animation skills through understanding motion principles. From sleek UI animations to explainer videos, I love using AE to create engaging narratives through movement."
+  },
+  {
+    "name": "premiere",
+    "description": "Though After Effects was my first love for video, Premiere Pro became essential for my YouTube channel and professional projects. I've developed an efficient editing workflow for everything from social reels to long-form content, leveraging its powerful tools for color grading, multi-cam editing, and seamless integration with other Adobe apps."
+  },
+  {
+    "name": "openai",
+    "description": "ChatGPT has become my digital creative partner. Beyond just assistance, I've created specialized agents for various tasks and developed global settings that make its output indistinguishable from human writing. I use it as a springboard for design inspiration and coding help—always cross-referencing with documentation to deepen my understanding."
+  },
+  {
+    "name": "midjourney",
+    "description": "Combined with ChatGPT, Midjourney supercharges my creative process. I've mastered prompt engineering to generate perfect references for illustrations, characters, and concepts. Constantly studying its evolving capabilities, I use it not as a crutch but as a collaborator that helps rapidly visualize ideas that would take days to sketch manually."
+  },
+  {
+    "name": "html",
+    "description": "My coding journey began with C++ and Python, but HTML's immediate visual feedback hooked me. While some dismiss it as simple, I've discovered its hidden depths—semantic structure, accessibility features, and how it forms the foundation of every web experience. My philosophy: solve problems with HTML first, then CSS, and only then reach for JavaScript."
+  },
+  {
+    "name": "css",
+    "description": "CSS transformed how I think about design. Where I once reached for Illustrator, I now visualize solutions in CSS first. Mastering animations, responsive layouts, and modern features like Grid and Flexbox has been revelatory. Tailwind CSS became my secret weapon for rapid prototyping and building maintainable design systems in CMS environments."
+  },
+  {
+    "name": "canvas",
+    "description": "What began as creating simple games for my nephew revealed Canvas API's incredible potential. I now use it for everything from interactive data visualizations to building a custom logo design tool. Its immediate visual feedback and programmatic drawing capabilities make it perfect for creative coding projects that need both precision and flair."
+  },
+  {
+    "name": "js",
+    "description": "JavaScript opened a universe of interactive possibilities. From vanilla JS to modern frameworks, it lets me breathe life into designs. I particularly love working with requestAnimationFrame for buttery animations and the Canvas API for creative coding. JavaScript didn't just make me a better developer—it made me a better designer by expanding what's possible."
+  },
+  {
+    "name": "react",
+    "description": "React revolutionized how I build for the web. After frustrating experiences with WordPress, its component-based architecture was liberating. I create reusable, maintainable UI systems that would be nightmares with traditional CMS tools. Combined with my design background, React lets me build exactly what I envision without compromise."
+  },
+  {
+    "name": "next",
+    "description": "Next.js is my foundation for every web project. Its file-based routing, server-side rendering, and API routes provide the perfect balance of power and simplicity. Whether building a marketing site or web app, Next.js gives me confidence that the solution will be performant, SEO-friendly, and scalable—without unnecessary complexity."
+  },
+  {
+    "name": "firebase",
+    "description": "As a designer who codes, Firebase bridges my frontend skills with backend needs. I've built over 10 production apps with its authentication, Firestore, and hosting. While I plan to explore PostgreSQL, Firebase's real-time NoSQL database and generous free tier make it ideal for MVPs and projects where rapid iteration matters most."
+  },
+  {
+    "name": "daVinci",
+    "description": "During my time at Pinestel, I worked extensively with DaVinci Resolve for color grading and editing. While I prefer Premiere for general editing, DaVinci's color science is unmatched. This experience gave me deep appreciation for color theory in motion graphics and how color affects user perception in UI/UX contexts."
+  }
+]
