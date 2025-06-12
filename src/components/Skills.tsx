@@ -1,7 +1,7 @@
 "use client";
 import NextImage from "next/image";
 import "./Skills.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 
 interface Data {
@@ -16,70 +16,110 @@ export default function HeroSection() {
   );
   const [data, setData] = useState<Data[]>([]);
   const [color, setColor] = useState({ main: "#1e1e1e", alt: "#3ce5e5" });
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [activeSkill, setActiveSkill] = useState<string | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-useEffect(() => {
-  async function fetchData() {
-    const response = await fetch("/components/skills/skills.json");
-    const dataJson = await response.json();
-    setData(dataJson);
+  // Design skills to cycle through
+  const designSkills = [
+    "illustrator",
+    "photoshop",
+    "figma",
+    "aftereffects",
+    "premiere",
+    "openai",
+    "midjourney",
+    "HTML",
+    "CSS",
+    "canvas",
+    "JS",
+    "react",
+    "next",
+    "firebase"
+  ];
 
-    // Preload skill icon images
-    const imageNames = [
-      "skills-icon_illustrator.svg",
-      "skills-icon_photoshop.svg",
-      "skills-icon_figma.svg",
-      "skills-icon_aftereffects.svg",
-      "skills-icon_premiere.svg",
-      "skills-icon_openai.svg",
-      "skills-icon_midjourney.svg",
-      "skills-icon_html.svg",
-      "skills-icon_css.svg",
-      "skills-icon_canvas.svg",
-      "skills-icon_js.svg",
-      "skills-icon_react.svg",
-      "skills-icon_next.svg",
-      "skills-icon_firebase.svg",
-    ];
+ console.log(currentIndex)
 
-    imageNames.forEach((img) => {
-      const i = new Image();
-      i.src = `/components/skills/${img}`;
-    });
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch("/components/skills/skills.json");
+      const dataJson = await response.json();
+      setData(dataJson);
 
-    // Preload dynamic clothing and head images
-    dataJson.forEach((item: { name: string }) => {
-      const name = item.name.toLowerCase();
-      const clothing = new Image();
-      clothing.src = `/components/skills/clothing-${name}.webp`;
+      // Preload skill icon images
+      const imageNames = [
+        "skills-icon_illustrator.svg",
+        "skills-icon_photoshop.svg",
+        "skills-icon_figma.svg",
+        "skills-icon_aftereffects.svg",
+        "skills-icon_premiere.svg",
+        "skills-icon_openai.svg",
+        "skills-icon_midjourney.svg",
+        "skills-icon_html.svg",
+        "skills-icon_css.svg",
+        "skills-icon_canvas.svg",
+        "skills-icon_js.svg",
+        "skills-icon_react.svg",
+        "skills-icon_next.svg",
+        "skills-icon_firebase.svg",
+      ];
 
-      const head = new Image();
-      head.src = `/components/skills/${
-        name === "photoshop"
-          ? "head-sunglasess"
-          : name === "illustrator"
-          ? "head-illustrator"
-          : "head"
-      }.webp`;
-    });
+      imageNames.forEach((img) => {
+        const i = new Image();
+        i.src = `/components/skills/${img}`;
+      });
 
-    // Preload hands
-    ["left-hand.webp", "right-hand.webp"].forEach((img) => {
-      const i = new Image();
-      i.src = `/components/skills/${img}`;
-    });
-  }
+      // Preload dynamic clothing and head images
+      dataJson.forEach((item: { name: string }) => {
+        const name = item.name.toLowerCase();
+        const clothing = new Image();
+        clothing.src = `/components/skills/clothing-${name}.webp`;
 
-  fetchData();
-}, []);
+        const head = new Image();
+        head.src = `/components/skills/${
+          name === "photoshop"
+            ? "head-sunglasess"
+            : name === "illustrator"
+            ? "head-illustrator"
+            : "head"
+        }.webp`;
+      });
 
+      // Preload hands
+      ["left-hand.webp", "right-hand.webp"].forEach((img) => {
+        const i = new Image();
+        i.src = `/components/skills/${img}`;
+      });
+    }
 
-  const handleImageAndText = (key: string) => {
+    fetchData();
+  }, []);
+
+  // Start or restart the auto-rotation
+  const startAutoRotation = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    
+    intervalRef.current = setInterval(() => {
+      setCurrentIndex(prevIndex => {
+        const newIndex = (prevIndex + 1) % designSkills.length;
+        updateSkill(designSkills[newIndex]);
+        return newIndex;
+      });
+    }, 5000);
+  };
+  
+  // Update skill with proper typing
+  const updateSkill = (key: string) => {
     const item = data.find(
       (item) => item.name.toLowerCase() === key.toLowerCase()
     );
     if (item) {
       setCurrentText(item.description.slice(0, 150));
       setCurrentImage(item.name);
+      setActiveSkill(key.toLowerCase());
       if (key === "illustrator") setColor({ main: "#F7991C", alt: "#F7991C" });
       if (key === "photoshop") setColor({ main: "#101519", alt: "#2ECEE8" });
       if (key === "figma") setColor({ main: "#F27264", alt: "#53C0DD" });
@@ -96,6 +136,48 @@ useEffect(() => {
       if (key === "firebase") setColor({ main: "#DA3226", alt: "#FFC40D" });
     }
   };
+
+  // Handle manual skill selection
+  const handleImageAndText = (key: string) => {
+    // Find the index of the selected skill
+    const newIndex = designSkills.indexOf(key.toLowerCase());
+    if (newIndex !== -1) {
+      setCurrentIndex(newIndex);
+    }
+    
+    updateSkill(key);
+    
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    // Restart auto-rotation after 10 seconds of inactivity
+    timeoutRef.current = setTimeout(() => {
+      startAutoRotation();
+    }, 10000);
+    
+    // Clear the current interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+  };
+
+  // Initialize auto-rotation on component mount and data load
+  useEffect(() => {
+    if (data.length > 0) {
+      startAutoRotation();
+    }
+    
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [data]);
 
   return (
     <div className="heroSectionWrapper">
@@ -116,7 +198,7 @@ useEffect(() => {
 
             <NextImage
               onClick={() => handleImageAndText("illustrator")}
-              className="skillIcon"
+              className={`skillIcon ${activeSkill === 'illustrator' ? 'active' : ''}`}
               src={"/components/skills/skills-icon_illustrator.svg"}
               alt="Adobe Illustrator"
               width={30}
@@ -125,7 +207,7 @@ useEffect(() => {
             <div className="hrLine" />
             <NextImage
               onClick={() => handleImageAndText("photoshop")}
-              className="skillIcon"
+              className={`skillIcon ${activeSkill === 'photoshop' ? 'active' : ''}`}
               src={"/components/skills/skills-icon_photoshop.svg"}
               alt="Adobe Photoshop"
               width={30}
@@ -134,7 +216,7 @@ useEffect(() => {
             <div className="hrLine" />
             <NextImage
               onClick={() => handleImageAndText("figma")}
-              className="skillIcon"
+              className={`skillIcon ${activeSkill === 'figma' ? 'active' : ''}`}
               src={"/components/skills/skills-icon_figma.svg"}
               alt="Figma"
               width={30}
@@ -143,7 +225,7 @@ useEffect(() => {
             <div className="hrLine" />
             <NextImage
               onClick={() => handleImageAndText("aftereffects")}
-              className="skillIcon"
+              className={`skillIcon ${activeSkill === 'aftereffects' ? 'active' : ''}`}
               src={"/components/skills/skills-icon_aftereffects.svg"}
               alt="Adobe After Effects"
               width={30}
@@ -152,7 +234,7 @@ useEffect(() => {
             <div className="hrLine" />
             <NextImage
               onClick={() => handleImageAndText("premiere")}
-              className="skillIcon"
+              className={`skillIcon ${activeSkill === 'premiere' ? 'active' : ''}`}
               src={"/components/skills/skills-icon_premiere.svg"}
               alt="Adobe Premiere"
               width={30}
@@ -161,7 +243,7 @@ useEffect(() => {
             <div className="hrLine" />
             <NextImage
               onClick={() => handleImageAndText("openai")}
-              className="skillIcon"
+              className={`skillIcon ${activeSkill === 'openai' ? 'active' : ''}`}
               src={"/components/skills/skills-icon_openai.svg"}
               alt="OpenAI"
               width={30}
@@ -170,7 +252,7 @@ useEffect(() => {
             <div className="hrLine" />
             <NextImage
               onClick={() => handleImageAndText("midjourney")}
-              className="skillIcon"
+              className={`skillIcon ${activeSkill === 'midjourney' ? 'active' : ''}`}
               src={"/components/skills/skills-icon_midjourney.svg"}
               alt="Midjourney"
               width={30}
@@ -178,13 +260,13 @@ useEffect(() => {
             />
           </div>
           <div className="codeIcons">
-            <p  className="skillsText">
+            <p className="skillsText">
               Web Developer <b>▼</b>
             </p>
 
             <NextImage
               onClick={() => handleImageAndText("HTML")}
-              className="skillIcon"
+              className={`skillIcon ${activeSkill === 'html' ? 'active' : ''}`}
               src={"/components/skills/skills-icon_html.svg"}
               alt="HTML"
               width={30}
@@ -193,7 +275,7 @@ useEffect(() => {
             <div className="hrLine" />
             <NextImage
               onClick={() => handleImageAndText("CSS")}
-              className="skillIcon"
+              className={`skillIcon ${activeSkill === 'css' ? 'active' : ''}`}
               src={"/components/skills/skills-icon_css.svg"}
               alt="CSS"
               width={30}
@@ -202,7 +284,7 @@ useEffect(() => {
             <div className="hrLine" />
             <NextImage
               onClick={() => handleImageAndText("canvas")}
-              className="skillIcon"
+              className={`skillIcon ${activeSkill === 'canvas' ? 'active' : ''}`}
               src={"/components/skills/skills-icon_canvas.svg"}
               alt="Canvas"
               width={30}
@@ -211,7 +293,7 @@ useEffect(() => {
             <div className="hrLine" />
             <NextImage
               onClick={() => handleImageAndText("JS")}
-              className="skillIcon"
+              className={`skillIcon ${activeSkill === 'js' ? 'active' : ''}`}
               src={"/components/skills/skills-icon_js.svg"}
               alt="JavaScript"
               width={30}
@@ -220,7 +302,7 @@ useEffect(() => {
             <div className="hrLine" />
             <NextImage
               onClick={() => handleImageAndText("react")}
-              className="skillIcon"
+              className={`skillIcon ${activeSkill === 'react' ? 'active' : ''}`}
               src={"/components/skills/skills-icon_react.svg"}
               alt="React"
               width={30}
@@ -229,7 +311,7 @@ useEffect(() => {
             <div className="hrLine" />
             <NextImage
               onClick={() => handleImageAndText("next")}
-              className="skillIcon"
+              className={`skillIcon ${activeSkill === 'next' ? 'active' : ''}`}
               src={"/components/skills/skills-icon_next.svg"}
               alt="Next.js"
               width={30}
@@ -238,7 +320,7 @@ useEffect(() => {
             <div className="hrLine" />
             <NextImage
               onClick={() => handleImageAndText("firebase")}
-              className="skillIcon"
+              className={`skillIcon ${activeSkill === 'firebase' ? 'active' : ''}`}
               src={"/components/skills/skills-icon_firebase.svg"}
               alt="Firebase"
               width={30}
@@ -255,21 +337,20 @@ useEffect(() => {
             height={120}
           />
           <div className="headWrapper">
-             <NextImage
-            className={"headImage"}
-            src={`/components/skills/${
-              currentImage === "photoshop"
-                ? "head-sunglasess"
-                : currentImage === "illustrator"
-                ? "head-illustrator"
-                : "head"
-            }.webp`}
-            alt="Head"
-            width={180}
-            height={120}
-          />
+            <NextImage
+              className={"headImage"}
+              src={`/components/skills/${
+                currentImage === "photoshop"
+                  ? "head-sunglasess"
+                  : currentImage === "illustrator"
+                  ? "head-illustrator"
+                  : "head"
+              }.webp`}
+              alt="Head"
+              width={180}
+              height={120}
+            />
           </div>
-         
 
           <div className="leftHandWrapper">
             <NextImage
@@ -296,9 +377,9 @@ useEffect(() => {
             currentText.includes("deeply curious")
               ? "Skills"
               : currentImage
-                  .replace(/([A-Z])/g, " $1") // Add space before capital letters
-                  .replace(/^./, (str) => str.toUpperCase()) // Capitalize first letter
-                  .replace(/-/g, " ") // Replace hyphens with spaces
+                  .replace(/([A-Z])/g, " $1")
+                  .replace(/^./, (str) => str.toUpperCase())
+                  .replace(/-/g, " ")
           }
         </h2>
         <p>
