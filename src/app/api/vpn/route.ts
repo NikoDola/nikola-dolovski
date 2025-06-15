@@ -1,69 +1,76 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
+// app/api/vpn/route.ts
+import { NextResponse } from 'next/server'
+import { Ratelimit } from '@upstash/ratelimit'
+import { Redis } from '@upstash/redis'
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(5, "10 s"),
-});
+  limiter: Ratelimit.slidingWindow(5, '10 s'),
+})
 
-// Known VPN/proxy identifiers
-const VPN_HOSTNAMES = ['vpn', 'proxy', 'tor-exit', 'anonymous'];
+const VPN_KEYWORDS = ['vpn', 'proxy', 'tor', 'anonymous']
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method !== "GET") {
-    return res.status(405).json({ message: "Method not allowed" });
-  }
-
+export async function GET(request: Request) {
   try {
     // Rate limiting
-    const identifier = req.headers["x-real-ip"] || req.socket.remoteAddress;
-    const { success } = await ratelimit.limit(identifier as string);
-
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 
+               request.headers.get('x-real-ip') || 
+               'anonymous'
+    
+    const { success } = await ratelimit.limit(ip)
     if (!success) {
-      return res.status(429).json({
-        message: "Too many requests",
-      });
+      return NextResponse.json(
+        { error: 'Rate limit exceeded' },
+        { status: 429 }
+      )
     }
 
-    // Get client info from query params
-    const { time, os, tzOffset, userAgent, hostname } = req.query;
+    // Get query params
+    const { searchParams } = new URL(request.url)
+    const time = searchParams.get('time')
+    const os = searchParams.get('os')
+    const tzOffset = searchParams.get('tzOffset')
+    const userAgent = request.headers.get('user-agent')
+    const hostname = searchParams.get('hostname')
 
     // Validate time
-    if (typeof time !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(time)) {
-      return res.status(400).json({ message: "Invalid time format" });
+    if (!time || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(time)) {
+      return NextResponse.json(
+        { error: 'Invalid time format' },
+        { status: 400 }
+      )
     }
 
     // Calculate time difference
-    const clientTime = new Date(time as string);
-    const serverTime = new Date();
-    const timeDiff = Math.abs(serverTime.getTime() - clientTime.getTime());
+    const clientTime = new Date(time)
+    const serverTime = new Date()
+    const timeDiff = Math.abs(serverTime.getTime() - clientTime.getTime())
 
-    // Risk factors
+    // Risk calculation
     const risks = {
       timeRisk: timeDiff > 60000 ? 3 : 0,
-      osRisk: /(vpn|proxy|tor|anonymous)/i.test(os as string) ? 3 : 0,
-      userAgentRisk: /(vpn|proxy|tor|anonymous)/i.test(userAgent as string) ? 2 : 0,
-      tzRisk: Math.abs(Number(tzOffset)) > 360 ? 2 : 0,
-      hostnameRisk: VPN_HOSTNAMES.some(vpn => (hostname as string)?.toLowerCase().includes(vpn)) ? 2 : 0
-    };
+      osRisk: os && VPN_KEYWORDS.some(k => os.toLowerCase().includes(k)) ? 3 : 0,
+      userAgentRisk: userAgent && VPN_KEYWORDS.some(k => userAgent.toLowerCase().includes(k)) ? 2 : 0,
+      tzRisk: tzOffset && Math.abs(Number(tzOffset)) > 360 ? 2 : 0,
+      hostnameRisk: hostname && VPN_KEYWORDS.some(k => hostname.toLowerCase().includes(k)) ? 2 : 0
+    }
 
-    const riskScore = Object.values(risks).reduce((a, b) => a + b, 0);
+    const riskScore = Object.values(risks).reduce((a, b) => a + b, 0)
 
-    return res.status(200).json({
+    return NextResponse.json({
       riskScore,
-      timeDiff: timeDiff / 1000,
-      risks,
       isSuspicious: riskScore >= 4,
-      message: riskScore >= 4 
-        ? "High probability of VPN/Proxy detected" 
-        : "Low risk - no VPN detected",
-    });
+      risks,
+      clientIp: ip
+    })
+
   } catch (error) {
-    console.error("VPN check error:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    console.error('VPN detection error:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
   }
 }
+
+export const dynamic = 'force-dynamic'
