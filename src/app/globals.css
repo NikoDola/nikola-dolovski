@@ -71,16 +71,16 @@ h6{
   padding: 0.5rem;
   background-color: #1e1e1e;
   color: var(--background);
-  border-radius: 0.5rem;
+
   color: #f4f4f4;
   border-top: solid rgb(225, 225, 225, 0.1);
 }
 
 
 .input, .textarea{
-  border-radius: 0.5rem;
-  background-color: #1e1e1e;
-  border-top: solid rgb(225, 225, 225, 0.1);
+
+  background-color: transparent;
+  outline: solid 1px black;
   padding: 0.5rem;
   padding-left: 1rem;
 }

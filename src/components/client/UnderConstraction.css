@@ -3,10 +3,9 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -40%);
+
   justify-content: start;
+
 }
 
 .underWrapper h1{

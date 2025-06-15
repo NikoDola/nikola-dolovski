@@ -66,6 +66,11 @@ export default function Logo({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ history: newHistory }),
       });
+      if (res.status === 429) {
+        setAiReply("You've hit the daily limit. Try again tomorrow.");
+        setLoading(false);
+        return;
+      }
 
       if (!res.ok) {
         throw new Error(`API error: ${res.status}`);
@@ -85,7 +90,11 @@ export default function Logo({
     }
   };
 
+  
+
   return (
+    <div>
+
     <Link
       className="flex flex-col gap-4 items-center justify-end"
       onClick={handleClick}
@@ -100,12 +109,7 @@ export default function Logo({
         <div className="lips"></div>
       </div>
 
-      {counter === 5 && !answer && (
-        <div className="flex flex-col">
-          <p onClick={() => setAnswer(true)}>Yes I would like.</p>
-          <p onClick={() => setAnswer(false)}>No I just wanna annoy you.</p>
-        </div>
-      )}
+
 
       {/* Before user clicks "Yes I would like" */}
       {playText && !answer && (
@@ -120,28 +124,40 @@ export default function Logo({
           )}
         </>
       )}
+            {counter === 5 && !answer && (
+        <div className="flex gap-4">
+          <p className="button" onClick={() => setAnswer(true)}>Yes I would like.</p>
+          <p className="button" onClick={() => setAnswer(false)}>No I just wanna annoy you.</p>
+        </div>
+      )}
 
       {/* After user clicks "Yes I would like" */}
       {playText && answer && (
-        <div className="flex flex-col items-center gap-2 mt-2">
+        <div className="logoFormWrapper">
           <input
             type="text"
-            className="border px-2 py-1 text-black"
+            className="input aiInput"
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
-            placeholder="Ask me something..."
+            placeholder="Ask me anything..."
             disabled={loading}
           />
           <button
-            className="bg-black text-white px-4 py-1 text-sm"
+            className="button"
             onClick={handleUserChat}
             disabled={loading}
           >
             {loading ? "Sending..." : "Send"}
           </button>
-          {aiReply && <p className="mt-2 text-sm">{aiReply}</p>}
+        
         </div>
       )}
     </Link>
+    <div className="aiChat">
+      {aiReply && <p className="mt-2 text-sm">{aiReply}</p>}
+    </div>
+   
+    </div>
+    
   );
 }

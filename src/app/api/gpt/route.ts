@@ -10,14 +10,44 @@ const client = new OpenAI({
   apiKey: process.env.OPEN_API_KEY!,
 });
 
+const dailyLimit = 100;
+const usageMap = new Map<string, { count: number; lastReset: number }>();
+
+function getIP(req: NextRequest): string {
+  return req.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'unknown';
+}
+
+function resetIfNeeded(ip: string) {
+  const now = Date.now();
+  const oneDay = 24 * 60 * 60 * 1000;
+  const record = usageMap.get(ip);
+  if (!record || now - record.lastReset > oneDay) {
+    usageMap.set(ip, { count: 0, lastReset: now });
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
+    const ip = getIP(req);
+    resetIfNeeded(ip);
+    const usage = usageMap.get(ip)!;
+
+    if (usage.count >= dailyLimit) {
+      return NextResponse.json(
+        { error: 'You reached the daily limit. Try again tomorrow.' },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     const { history } = body;
 
     if (!Array.isArray(history)) {
       return NextResponse.json({ error: 'Invalid message history' }, { status: 400 });
     }
+
+    // Increment usage counter
+    usage.count++;
 
     // Read your bio file
     const filePath = path.join(process.cwd(), 'public', 'mybio.txt');
