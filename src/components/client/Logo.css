@@ -8,15 +8,18 @@
 .logoFormWrapper{
   display: flex;
   align-items: center;
-  width: 50%;
-  margin: 0 auto;
+  width: 80%;
+  justify-content: center;
+  margin-top: 1rem;
 }
 
+
+
 .aiInput{
-  width: 100%;
+  width: 50%;
 }
 .aiChat{
-  width: 50%;
+  width: 100%;
   padding: 1rem;
   margin:  0 auto;
   margin-top: 1rem;
@@ -126,4 +129,19 @@
   width: 9%;
   background-repeat: no-repeat;
   background-image: url('/branding/logo/logo_lips.svg');
+}
+
+@media (max-width: 1000px){
+  .logoWrapper{
+    width: 100%;
+  }
+  .aiInput{
+    width: 100%;
+  }
+  .logoFormWrapper{
+    width: 100%;
+  }
+  .aiChat{
+    width: 100%;
+    }
 }

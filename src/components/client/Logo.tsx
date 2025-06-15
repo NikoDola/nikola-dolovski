@@ -19,7 +19,6 @@ export default function Logo({
     "Website will Clean and Simple",
     "I will be showcasing my portfolio, reviews nothing to fancy",
     "Would you like to know more about me ?",
-    "Sorry I cant tell you more...",
     "Be patient...",
     "Please stop.",
     "Please stop!!",
@@ -153,9 +152,9 @@ export default function Logo({
         </div>
       )}
     </Link>
-    <div className="aiChat">
-      {aiReply && <p className="mt-2 text-sm">{aiReply}</p>}
-    </div>
+  { answer && <div className="aiChat">
+      {aiReply && <p>{aiReply}</p>}
+    </div>}
    
     </div>
     
