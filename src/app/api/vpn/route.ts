@@ -8,7 +8,7 @@ const ratelimit = new Ratelimit({
 });
 
 // Known VPN/proxy ASNs and hostnames
-const SUSPICIOUS_ASNS = ['AS60068', 'AS9009', 'AS395331', 'AS13335'];
+// const SUSPICIOUS_ASNS = ['AS60068', 'AS9009', 'AS395331', 'AS13335'];
 const VPN_HOSTNAMES = ['vpn', 'proxy', 'tor-exit', 'anonymous'];
 
 export default async function handler(
