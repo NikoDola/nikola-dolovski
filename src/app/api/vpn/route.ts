@@ -7,8 +7,7 @@ const ratelimit = new Ratelimit({
   limiter: Ratelimit.slidingWindow(5, "10 s"),
 });
 
-// Known VPN/proxy ASNs and hostnames
-// const SUSPICIOUS_ASNS = ['AS60068', 'AS9009', 'AS395331', 'AS13335'];
+// Known VPN/proxy identifiers
 const VPN_HOSTNAMES = ['vpn', 'proxy', 'tor-exit', 'anonymous'];
 
 export default async function handler(
@@ -33,39 +32,31 @@ export default async function handler(
     // Get client info from query params
     const { time, os, tzOffset, userAgent, hostname } = req.query;
 
-    // Validate time (basic ISO format check)
+    // Validate time
     if (typeof time !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(time)) {
       return res.status(400).json({ message: "Invalid time format" });
     }
 
-    // Calculate time difference between client and server
+    // Calculate time difference
     const clientTime = new Date(time as string);
     const serverTime = new Date();
     const timeDiff = Math.abs(serverTime.getTime() - clientTime.getTime());
 
-    // Risk factors calculation
+    // Risk factors
     const risks = {
-      // Time difference >1 minute = high risk
       timeRisk: timeDiff > 60000 ? 3 : 0,
-      
-      // VPN keywords in OS or user agent = high risk
       osRisk: /(vpn|proxy|tor|anonymous)/i.test(os as string) ? 3 : 0,
       userAgentRisk: /(vpn|proxy|tor|anonymous)/i.test(userAgent as string) ? 2 : 0,
-      
-      // Timezone offset >6 hours = medium risk
       tzRisk: Math.abs(Number(tzOffset)) > 360 ? 2 : 0,
-      
-      // Suspicious hostname = medium risk
       hostnameRisk: VPN_HOSTNAMES.some(vpn => (hostname as string)?.toLowerCase().includes(vpn)) ? 2 : 0
     };
 
-    // Calculate total risk score (0-12 scale)
     const riskScore = Object.values(risks).reduce((a, b) => a + b, 0);
 
     return res.status(200).json({
       riskScore,
-      timeDiff: timeDiff / 1000, // in seconds
-      risks, // Breakdown of all risk factors
+      timeDiff: timeDiff / 1000,
+      risks,
       isSuspicious: riskScore >= 4,
       message: riskScore >= 4 
         ? "High probability of VPN/Proxy detected" 
