@@ -1,86 +1,78 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextApiRequest, NextApiResponse } from "next";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
-// Simulated IP-to-country logic for demo or local testing
-function detectCountryFromIP(ip: string): string {
-  if (ip === "::1" || ip.startsWith("127.")) return "LOCAL";
-  if (ip.startsWith("78.")) return "MK"; // Example: Macedonian IP
-  if (ip.startsWith("172.") || ip.startsWith("192.") || ip.startsWith("10.")) return "PRIVATE";
-  return "US"; // Fallback for unknown/public IPs
-}
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(5, "10 s"),
+});
 
-// Full list of Chrome-accepted languages → associated country code
-const languageToCountryMap: Record<string, string> = {
-  af: "ZA", am: "ET", ar: "SA", az: "AZ", be: "BY", bg: "BG", bn: "BD", bs: "BA", ca: "ES",
-  cs: "CZ", da: "DK", de: "DE", el: "GR", en: "US", es: "ES", et: "EE", fa: "IR", fi: "FI",
-  fil: "PH", fr: "FR", he: "IL", hi: "IN", hr: "HR", hu: "HU", id: "ID", is: "IS", it: "IT",
-  ja: "JP", ka: "GE", kk: "KZ", km: "KH", ko: "KR", ky: "KG", lo: "LA", lt: "LT", lv: "LV",
-  mk: "MK", ml: "IN", mn: "MN", mr: "IN", ms: "MY", nb: "NO", ne: "NP", nl: "NL", no: "NO",
-  pa: "IN", pl: "PL", ps: "AF", pt: "BR", ro: "RO", ru: "RU", si: "LK", sk: "SK", sl: "SI",
-  sq: "AL", sr: "RS", sv: "SE", sw: "TZ", ta: "IN", te: "IN", th: "TH", tl: "PH", tr: "TR",
-  uk: "UA", ur: "PK", uz: "UZ", vi: "VN", zh: "CN", zu: "ZA"
-};
+// Known VPN/proxy ASNs and hostnames
+const SUSPICIOUS_ASNS = ['AS60068', 'AS9009', 'AS395331', 'AS13335'];
+const VPN_HOSTNAMES = ['vpn', 'proxy', 'tor-exit', 'anonymous'];
 
-// Expected timezone offsets in minutes by country (normal/local times)
-const expectedTzOffsets: Record<string, number> = {
-  US: -240, MK: -120, DE: -120, FR: -120, IT: -120, CN: -480, RU: -180,
-  IN: -330, JP: -540, SA: -180, PH: -480, ZA: -120, NL: -120, SE: -120,
-  NO: -120, ES: -120, GR: -120, UA: -120, PK: -300, BD: +360, ID: +420,
-  TH: +420, VN: +420, etc: 0 // 'etc' placeholder for unspecified
-};
-
-export async function GET(req: NextRequest) {
-  const xf = req.headers.get("x-forwarded-for");
-  const ip = xf ? xf.split(",")[0].trim() : "::1";
-
-  const language = req.headers.get("accept-language")?.split(",")[0] || "unknown";
-  const clientTime = req.nextUrl.searchParams.get("time");
-  const clientOS = req.nextUrl.searchParams.get("os") || "unknown";
-  const tzOffset = parseInt(req.nextUrl.searchParams.get("tzOffset") || "0", 10);
-
-  const now = new Date();
-  const serverHour = now.getUTCHours();
-  const clientHour = clientTime ? new Date(clientTime).getUTCHours() : null;
-
-  const langCode = language.split("-")[0];
-  const expectedCountryByLang = languageToCountryMap[langCode] ?? "unknown";
-  const ipCountry = detectCountryFromIP(ip);
-  const expectedOffset = expectedTzOffsets[ipCountry] ?? 0;
-  const offsetDiff = Math.abs(tzOffset - expectedOffset);
-
-  let riskScore = 0;
-
-  // 📍 Language vs. IP country mismatch
-  if (expectedCountryByLang !== "unknown" && ipCountry !== "LOCAL" && ipCountry !== "PRIVATE") {
-    if (expectedCountryByLang !== ipCountry) riskScore += 1;
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== "GET") {
+    return res.status(405).json({ message: "Method not allowed" });
   }
 
-  // ⏰ Time presence and difference
-  if (!clientTime) {
-    riskScore += 4;
-  } else if (clientHour !== null) {
-    const hourDiff = Math.abs(serverHour - clientHour);
-    if (hourDiff >= 6) riskScore += 3;
-    else if (hourDiff >= 2) riskScore += 2;
+  try {
+    // Rate limiting
+    const identifier = req.headers["x-real-ip"] || req.socket.remoteAddress;
+    const { success } = await ratelimit.limit(identifier as string);
+
+    if (!success) {
+      return res.status(429).json({
+        message: "Too many requests",
+      });
+    }
+
+    // Get client info from query params
+    const { time, os, tzOffset, userAgent, hostname } = req.query;
+
+    // Validate time (basic ISO format check)
+    if (typeof time !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(time)) {
+      return res.status(400).json({ message: "Invalid time format" });
+    }
+
+    // Calculate time difference between client and server
+    const clientTime = new Date(time as string);
+    const serverTime = new Date();
+    const timeDiff = Math.abs(serverTime.getTime() - clientTime.getTime());
+
+    // Risk factors calculation
+    const risks = {
+      // Time difference >1 minute = high risk
+      timeRisk: timeDiff > 60000 ? 3 : 0,
+      
+      // VPN keywords in OS or user agent = high risk
+      osRisk: /(vpn|proxy|tor|anonymous)/i.test(os as string) ? 3 : 0,
+      userAgentRisk: /(vpn|proxy|tor|anonymous)/i.test(userAgent as string) ? 2 : 0,
+      
+      // Timezone offset >6 hours = medium risk
+      tzRisk: Math.abs(Number(tzOffset)) > 360 ? 2 : 0,
+      
+      // Suspicious hostname = medium risk
+      hostnameRisk: VPN_HOSTNAMES.some(vpn => (hostname as string)?.toLowerCase().includes(vpn)) ? 2 : 0
+    };
+
+    // Calculate total risk score (0-12 scale)
+    const riskScore = Object.values(risks).reduce((a, b) => a + b, 0);
+
+    return res.status(200).json({
+      riskScore,
+      timeDiff: timeDiff / 1000, // in seconds
+      risks, // Breakdown of all risk factors
+      isSuspicious: riskScore >= 4,
+      message: riskScore >= 4 
+        ? "High probability of VPN/Proxy detected" 
+        : "Low risk - no VPN detected",
+    });
+  } catch (error) {
+    console.error("VPN check error:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
-
-  // 🌍 Timezone offset mismatch
-  if (offsetDiff >= 180) riskScore += 3;
-  else if (offsetDiff >= 60) riskScore += 2;
-
-  const isBlocked = riskScore >= 4;
-
-  return NextResponse.json({
-    ip,
-    ipCountry,
-    language,
-    expectedCountryByLang,
-    clientTime,
-    serverTime: now.toISOString(),
-    clientOS,
-    tzOffset,
-    expectedOffset,
-    offsetDiff,
-    riskScore,
-    blocked: isBlocked
-  });
 }
