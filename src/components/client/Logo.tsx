@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import "./Logo.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Logo({
   size,
@@ -51,25 +51,34 @@ export default function Logo({
       window.location.href = "https://www.youtube.com/watch?v=5Y-HoOFMlpI";
     }
   };
-
-const handleVpnCheck = async () => {
+  
+  const handleVpnCheck = async () => {
   try {
     const clientTime = new Date().toISOString();
     const os = navigator.platform || "unknown";
+    const tzOffset = new Date().getTimezoneOffset(); // in minutes
 
-    const res = await fetch(`/api/vpn?time=${encodeURIComponent(clientTime)}&os=${encodeURIComponent(os)}`);
-    const data = await res.json() ;
+    const res = await fetch(
+      `/api/vpn?time=${encodeURIComponent(clientTime)}&os=${encodeURIComponent(os)}&tzOffset=${tzOffset}`
+    );
+    const data = await res.json();
     console.log("VPN Check Result:", data);
-    if (data?.score <4){
-      setVpn(true)
+
+    if (data?.riskScore < 4) {
+      setVpn(true);
+    } else {
+      console.warn("Potential VPN/Proxy detected. Risk score:", data.riskScore);
+      // optionally: setVpn(false); or redirect/block
     }
   } catch (error) {
     console.error("Error checking VPN:", error);
   }
 };
 
+useEffect(() => {
+  handleVpnCheck(); // ✅ Safe
+}, []);
 
-handleVpnCheck()
   // When user says "Yes I would like", they get chat input box and can talk to AI
   const handleUserChat = async () => {
     if (!userInput.trim()) return;
@@ -171,7 +180,7 @@ handleVpnCheck()
         </div>
       )}
     </Link>
-  { answer && !vpn &&<div className="aiChat">
+  { answer && !vpn && <div className="aiChat">
       {aiReply && <p>{aiReply}</p>}
     </div>}
    
