@@ -12,6 +12,7 @@ export default function Logo({
   link: string;
   playText: boolean;
 }) {
+  const [vpn, setVpn] = useState(false)
   const staticMessages = [
     "...",
     "Comming Soon",
@@ -51,6 +52,24 @@ export default function Logo({
     }
   };
 
+const handleVpnCheck = async () => {
+  try {
+    const clientTime = new Date().toISOString();
+    const os = navigator.platform || "unknown";
+
+    const res = await fetch(`/api/vpn?time=${encodeURIComponent(clientTime)}&os=${encodeURIComponent(os)}`);
+    const data = await res.json() ;
+    console.log("VPN Check Result:", data);
+    if (data?.score <4){
+      setVpn(true)
+    }
+  } catch (error) {
+    console.error("Error checking VPN:", error);
+  }
+};
+
+
+handleVpnCheck()
   // When user says "Yes I would like", they get chat input box and can talk to AI
   const handleUserChat = async () => {
     if (!userInput.trim()) return;
@@ -152,7 +171,7 @@ export default function Logo({
         </div>
       )}
     </Link>
-  { answer && <div className="aiChat">
+  { answer && !vpn &&<div className="aiChat">
       {aiReply && <p>{aiReply}</p>}
     </div>}
    

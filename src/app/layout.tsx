@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import "./globals.css";
+import "./_styles/globals.css"; // if you're inside /app/layout.tsx
 import Head from 'next/head';
 
 
