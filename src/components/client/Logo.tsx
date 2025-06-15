@@ -52,29 +52,41 @@ export default function Logo({
     }
   };
   
-  const handleVpnCheck = async () => {
+const handleVpnCheck = async () => {
   try {
     const clientTime = new Date().toISOString();
     const os = navigator.platform || "unknown";
-    const tzOffset = new Date().getTimezoneOffset(); // in minutes
+    const tzOffset = new Date().getTimezoneOffset();
 
     const res = await fetch(
       `/api/vpn?time=${encodeURIComponent(clientTime)}&os=${encodeURIComponent(os)}&tzOffset=${tzOffset}`
     );
-    const data = await res.json();
+    
+    // First check if the response is OK
+    if (!res.ok) {
+      throw new Error(`API error: ${res.status} ${res.statusText}`);
+    }
+
+    // Check if response has content
+    const text = await res.text();
+    if (!text) {
+      throw new Error("Empty response from server");
+    }
+
+    const data = JSON.parse(text);
     console.log("VPN Check Result:", data);
 
     if (data?.riskScore < 4) {
       setVpn(true);
     } else {
-      console.warn("Potential VPN/Proxy detected. Risk score:", data.riskScore);
-      // optionally: setVpn(false); or redirect/block
+      console.warn("Potential VPN/Proxy detected. Risk score:", data?.riskScore);
     }
   } catch (error) {
     console.error("Error checking VPN:", error);
+    // Fallback behavior when VPN check fails
+    setVpn(true); // Assume not VPN to not block legitimate users
   }
 };
-
 useEffect(() => {
   handleVpnCheck(); // ✅ Safe
 }, []);
