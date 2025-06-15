@@ -10,11 +10,16 @@ const client = new OpenAI({
   apiKey: process.env.OPEN_API_KEY!,
 });
 
-const dailyLimit = 100;
+const dailyLimit = 3; // 5 requests per day
 const usageMap = new Map<string, { count: number; lastReset: number }>();
-
 function getIP(req: NextRequest): string {
-  return req.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'unknown';
+  const xff = req.headers.get('x-forwarded-for');
+  if (xff) {
+    return xff.split(',')[0].trim(); // first IP in the list is the real client IP
+  }
+
+  // fallback value if IP can't be determined
+  return 'unknown';
 }
 
 function resetIfNeeded(ip: string) {
@@ -46,10 +51,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid message history' }, { status: 400 });
     }
 
-    // Increment usage counter
-    usage.count++;
+    usage.count++; // track new usage
 
-    // Read your bio file
+    // Optional: Read Niko's bio from a file
     const filePath = path.join(process.cwd(), 'public', 'mybio.txt');
     let userBio = '';
     try {
@@ -62,6 +66,7 @@ export async function POST(req: NextRequest) {
 You are a sarcastic assistant with a personality who *represents Niko Dola*, a graphic designer and web developer. 
 Use the following bio to answer as Niko directly, never mention you are an AI or ChatGPT.
 Keep answers short and focus on the most important details to let the user ask more.
+And please be more modest i do not want to say about my self that i'm a legent or a mith.
 Bio:
 ${userBio}
     `.trim();
@@ -71,12 +76,12 @@ ${userBio}
       ...history,
     ];
 
-    const response = await client.chat.completions.create({
+    const res = await client.chat.completions.create({
       model: 'gpt-4o',
       messages,
     });
 
-    const reply = response.choices[0].message;
+    const reply = res.choices[0].message;
 
     return NextResponse.json({ reply });
   } catch (err) {

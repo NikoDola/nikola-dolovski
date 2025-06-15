@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import "./Logo.css";
-import { useState, useEffect } from "react";
+import { useState} from "react";
 
 export default function Logo({
   size,
@@ -12,7 +12,7 @@ export default function Logo({
   link: string;
   playText: boolean;
 }) {
-  const [vpn, setVpn] = useState(false)
+
   const staticMessages = [
     "...",
     "Comming Soon",
@@ -52,44 +52,7 @@ export default function Logo({
     }
   };
   
-const handleVpnCheck = async () => {
-  try {
-    const clientTime = new Date().toISOString();
-    const os = navigator.platform || "unknown";
-    const tzOffset = new Date().getTimezoneOffset();
-
-    const res = await fetch(
-      `/api/vpn?time=${encodeURIComponent(clientTime)}&os=${encodeURIComponent(os)}&tzOffset=${tzOffset}`
-    );
-    
-    // First check if the response is OK
-    if (!res.ok) {
-      throw new Error(`API error: ${res.status} ${res.statusText}`);
-    }
-
-    // Check if response has content
-    const text = await res.text();
-    if (!text) {
-      throw new Error("Empty response from server");
-    }
-
-    const data = JSON.parse(text);
-    console.log("VPN Check Result:", data);
-
-    if (data?.riskScore < 4) {
-      setVpn(true);
-    } else {
-      console.warn("Potential VPN/Proxy detected. Risk score:", data?.riskScore);
-    }
-  } catch (error) {
-    console.error("Error checking VPN:", error);
-    // Fallback behavior when VPN check fails
-    setVpn(true); // Assume not VPN to not block legitimate users
-  }
-};
-useEffect(() => {
-  handleVpnCheck(); // ✅ Safe
-}, []);
+ 
 
   // When user says "Yes I would like", they get chat input box and can talk to AI
   const handleUserChat = async () => {
@@ -106,7 +69,7 @@ useEffect(() => {
         body: JSON.stringify({ history: newHistory }),
       });
       if (res.status === 429) {
-        setAiReply("You've hit the daily limit. Try again tomorrow.");
+        setAiReply("You've hit the daily limit with this chat. Try again tomorrow. Or contact nikodola@gmail.com throw email");
         setLoading(false);
         return;
       }
@@ -192,7 +155,7 @@ useEffect(() => {
         </div>
       )}
     </Link>
-  { answer && !vpn && <div className="aiChat">
+  { answer &&  <div className="aiChat">
       {aiReply && <p>{aiReply}</p>}
     </div>}
    
