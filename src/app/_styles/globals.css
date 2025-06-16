@@ -5,7 +5,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
 @import url('./variables.css');
 
-
+html, body {
+  overflow-x: hidden;
+}
 body {
   color: var(--foreground);
   background: var(--tan-color);
@@ -13,6 +15,7 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+ 
 }
 
 h1{
