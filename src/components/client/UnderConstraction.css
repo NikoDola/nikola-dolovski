@@ -3,9 +3,13 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-
   justify-content: start;
 
+}
+
+.humanSendButton{
+  flex: 0 0 auto;
+  min-width: 20%;
 }
 
 .underWrapper h1{

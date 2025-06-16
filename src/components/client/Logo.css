@@ -1,6 +1,15 @@
+
+.linkInputWrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+}
+
 .logoWrapper{
   position: relative;
-  background-color: #88D2D5;
+  background-color: var(--brand-color);
   border-radius: 50%;
   cursor: pointer;
 }
@@ -13,18 +22,57 @@
   justify-content: center;
   margin-top: 1rem;
 }
-
-
-
-.aiInput{
-  width: 100%;
+.cancelAiChat {
+flex: 0 0 auto; 
+  
+  min-width: 120px; /* Optional: prevent it from shrinking too much */
 }
-.aiChat{
+
+.humanInput{
+  width: 100%;
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+.humanInput::placeholder{
+  color: black;
+}
+.aiReply{
+  position: relative;
+  background-color: var(--brand-color);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  width: max-content;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.humanSendButton{
+  min-width: 15%;
+}
+.aiReply:before{
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: var(--brand-color);
+  width: 30px;
+  height: 30px;
+  top: -0.5rem;
+  transform: rotate(45deg);
+  left: 50%;
+  transform: translate(-50%, -15%) rotate(45deg);
+  z-index: 10;
+}
+.humanAiChatWrapper{
+  position: relative;
   width: 100%;
   padding: 1rem;
   margin:  0 auto;
   margin-top: 1rem;
+
   text-align: center;
+  left: 50%;
+  transform: translate(-50%);
+  z-index: 15;
+ 
 }
 
 /* Animation keyframes for one-way movement */
@@ -39,11 +87,13 @@
   100% { left: 200%; }
 }
 
-.logoWrapper:hover .glassessMask::before {
+.logoWrapper:hover .glassessMask::before,
+.glassessMask.loading::before {
   animation: slideLight 1s linear forwards infinite;
 }
 
-.logoWrapper:hover .glassessMask::after {
+.logoWrapper:hover .glassessMask::after, 
+.glassessMask.loading::after {
   animation: slideLightDelayed 1s linear forwards infinite;
 }
 
@@ -56,7 +106,6 @@
   left: 50%;
   top: 12%;
   transform: translate(-50%);
-  background: rgb(168, 211, 225, 0.5);
   width: 45%;
   background-repeat: no-repeat;
   background-image: url('/branding/logo/logo_hair.svg');
@@ -136,13 +185,13 @@
   .logoWrapper{
     width: 100%;
   }
-  .aiInput{
+  .humanInput{
     width: 100%;
   }
   .logoFormWrapper{
     width: 100%;
   }
-  .aiChat{
+  .humanAiChatWrapper{
     width: 100%;
     }
 }

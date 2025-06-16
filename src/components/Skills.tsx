@@ -372,7 +372,7 @@ export default function HeroSection() {
         </div>
       </div>
       <div className="heroTextWrapper">
-        <h2>
+        <h3>
           {
             currentText.includes("deeply curious")
               ? "Skills"
@@ -381,7 +381,7 @@ export default function HeroSection() {
                   .replace(/^./, (str) => str.toUpperCase())
                   .replace(/-/g, " ")
           }
-        </h2>
+        </h3>
         <p>
           {currentText}{" "}
           <Link href={`/skills/#${currentImage.toLocaleLowerCase()}`}>

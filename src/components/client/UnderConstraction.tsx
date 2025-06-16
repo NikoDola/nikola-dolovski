@@ -9,7 +9,7 @@ export default function UnderConstraction(){
         <h1>UNDER <br/>CONSTRUCTION</h1>
         <p>Click me</p>
         <span className="inline-block rotate-[270deg] text-2xl mb-4">&lt;</span>
-        <Logo playText={true} size="10em" link="/"/>
+        <Logo  size="10em" link="/"/>
       </div>
    
   )

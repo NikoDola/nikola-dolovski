@@ -10,7 +10,7 @@ const client = new OpenAI({
   apiKey: process.env.OPEN_API_KEY!,
 });
 
-const dailyLimit = 3; // 5 requests per day
+const dailyLimit = 10; 
 const usageMap = new Map<string, { count: number; lastReset: number }>();
 function getIP(req: NextRequest): string {
   const xff = req.headers.get('x-forwarded-for');

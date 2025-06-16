@@ -96,8 +96,8 @@ h6{
 .section-regular{
   width: 60%;
   margin: 0 auto;
-  margin-top: var(--space-20);
-  margin-bottom: var(--space-20);
+  margin-top: var(--space-25);
+  margin-bottom: var(--space-25);
 }
 .section-full{
   width: 100%;
