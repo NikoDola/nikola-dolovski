@@ -20,10 +20,10 @@ export default function Logo({
     "Website will Clean and Simple",
     "I will be showcasing my portfolio, reviews nothing to fancy",
     "Would you like to know more about me ?",
-    "Be patient...",
+    "Ok you are being annoying.",
+       "Be patient...",
     "Please stop.",
     "Please stop!!",
-    "Ok you are being annoying.",
     "I will ignore you!",
     "Ignoring you...",
     "Again, ignoring you...",
@@ -39,22 +39,17 @@ export default function Logo({
   const [answer, setAnswer] = useState(false);
   const [userInput, setUserInput] = useState("");
 
-  // Advance static messages on logo click, until user says yes
   const handleClick = () => {
     if (answer) return; // if user already said yes, ignore clicks here
 
     const nextCount = counter + 1;
     setCounter(nextCount);
 
-    // After static messages end, redirect (or you can change this behavior)
     if (nextCount >= staticMessages.length + 5) {
       window.location.href = "https://www.youtube.com/watch?v=5Y-HoOFMlpI";
     }
   };
   
- 
-
-  // When user says "Yes I would like", they get chat input box and can talk to AI
   const handleUserChat = async () => {
     if (!userInput.trim()) return;
     setLoading(true);
@@ -114,7 +109,7 @@ export default function Logo({
 
 
       {/* Before user clicks "Yes I would like" */}
-      {playText && !answer && (
+      {playText && !answer ? (
         <>
           {counter < staticMessages.length && (
             <div>{staticMessages[counter]}</div>
@@ -125,15 +120,20 @@ export default function Logo({
             </div>
           )}
         </>
-      )}
+      ):   <div className="aiChat">
+      {aiReply && 
+        <div>
+          <p>{aiReply}</p>
+        
+      </div> }
+    </div>}
             {counter === 5 && !answer && (
-        <div className="flex gap-4">
-          <p className="button" onClick={() => setAnswer(true)}>Yes I would like.</p>
-          <p className="button" onClick={() => setAnswer(false)}>No I just wanna annoy you.</p>
+        <div className="mt-4 w-full">
+          <p className="button mt-4 text-center" onClick={() => setAnswer(true)}>Yes I would like.</p>
+          <p className="button mt-4 text-center" onClick={() => setAnswer(false)}>No I just wanna annoy you.</p>
         </div>
       )}
 
-      {/* After user clicks "Yes I would like" */}
       {playText && answer && (
         <div className="logoFormWrapper">
           <input
@@ -151,13 +151,12 @@ export default function Logo({
           >
             {loading ? "Sending..." : "Send"}
           </button>
-        
+          <button  onClick={()=> setAnswer(false)} className="button ml-4">X</button>
         </div>
+        
       )}
     </Link>
-  { answer &&  <div className="aiChat">
-      {aiReply && <p>{aiReply}</p>}
-    </div>}
+
    
     </div>
     
