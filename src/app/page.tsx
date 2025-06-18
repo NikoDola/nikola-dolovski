@@ -7,7 +7,7 @@ export default function Home(){
   return(
     <main>
       <section  className="section-regular ">
-       <Logo size="180px" link="/"/>
+       <Logo chat={true} size="180px" link="/"/>
       </section>
 
       <section className="section-regular">

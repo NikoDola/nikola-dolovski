@@ -11,9 +11,11 @@ type Message = {
 export default function Logo({
   size,
   link,
+  chat = false,
 }: {
   size: string;
   link: string;
+  chat: boolean;
 }) {
   const [history, setHistory] = useState<Message[]>([]);
   const [aiReply, setAiReply] = useState<string | null>(null);
@@ -23,7 +25,10 @@ export default function Logo({
   const handleUserChat = async () => {
     if (!userInput.trim()) return;
     setLoading(true);
-    const newHistory: Message[] = [...history, { role: "user", content: userInput }];
+    const newHistory: Message[] = [
+      ...history,
+      { role: "user", content: userInput },
+    ];
 
     try {
       const res = await fetch("/api/gpt", {
@@ -31,9 +36,11 @@ export default function Logo({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ history: newHistory }),
       });
-      
+
       if (res.status === 429) {
-        setAiReply("You've hit the daily limit with this chat. Try again tomorrow or contact nikodola@gmail.com");
+        setAiReply(
+          "You've hit the daily limit with this chat. Try again tomorrow or contact nikodola@gmail.com"
+        );
         setLoading(false);
         return;
       }
@@ -69,28 +76,39 @@ export default function Logo({
         </div>
       </Link>
 
-      <div className="humanAiChatWrapper">
-        {aiReply ? <p className="aiReply">{aiReply}</p>: <p className="aiReply">Hey there! What&apos;s up</p>}
-        
-        <div className="logoFormWrapper">
-          <input
-            type="text"
-            className="input humanInput"
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-            placeholder="Ask me anything..."
-            disabled={loading}
-            onKeyDown={(e) => e.key === "Enter" && handleUserChat()}
-          />
-          <button
-            className="button humanSendButton"
-            onClick={handleUserChat}
-            disabled={loading}
-          >
-            {loading ? "Sending..." : "⏎"}
-          </button>
-        </div>
-      </div>
+      {chat && (
+        <>
+          <div className="chatWrapper">
+
+          </div>
+          <div className="humanAiChatWrapper">
+            {aiReply ? (
+              <p className="aiReply">{aiReply}</p>
+            ) : (
+              <p className="aiReply">Hey there! What&apos;s up</p>
+            )}
+
+            <div className="logoFormWrapper">
+              <input
+                type="text"
+                className="input humanInput"
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                placeholder="Ask me anything..."
+                disabled={loading}
+                onKeyDown={(e) => e.key === "Enter" && handleUserChat()}
+              />
+              <button
+                className="button humanSendButton"
+                onClick={handleUserChat}
+                disabled={loading}
+              >
+                {loading ? "Sending..." : "⏎"}
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

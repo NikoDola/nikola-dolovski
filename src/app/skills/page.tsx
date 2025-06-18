@@ -106,7 +106,7 @@ export default function Skills() {
       </section>
 
             <section id="firebase" className="section-regular">
-        <h2 className="flex gap-8 items-center"><Logo size="35px" link="./" />Global</h2>
+        <h2 className="flex gap-8 items-center"><Logo chat={false} size="35px" link="./" />Global</h2>
         <p>
           I&apos;ve always been deeply curious about how things work — especially in the digital world. That curiosity turned into a passion, and over the years, it pushed me to explore and learn a wide range of tools, software, and technologies. Whether it&apos;&apos; design, development, or automation, I dive in with focus and genuine interest. Every skill I&apos;ve picked up wasn&apos;t just a checkbox — it was part of a journey I truly enjoyed.
         </p>
