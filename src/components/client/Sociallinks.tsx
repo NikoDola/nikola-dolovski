@@ -69,7 +69,8 @@ This is where I commit code. Many projects are private for now, but it&apos;s my
       </div>
       <div className="otherLinksWrapper">
         <h2>Other Links</h2>
-        <Link href={"https://www.youtube.com/@Niko_Dola"}>
+        <div className="socialIconsWrapper">
+          <Link href={"https://www.youtube.com/@Niko_Dola"}>
          <Image src={"/icons/social_youtube.svg"} width={40} height={40} alt="youtube"></Image>
         </Link>
           <Link href={"https://www.linkedin.com/in/nikola-dolovski-b932b0ba?originalSubdomain=mk"}>
@@ -81,6 +82,8 @@ This is where I commit code. Many projects are private for now, but it&apos;s my
                           <Link href={"https://dribbble.com/https://www.shutterstock.com/g/niko+dola"}>
          <Image src={"/icons/social_shutterstock.svg"} width={40} height={40} alt="shutterstock icon svg"></Image>
         </Link>
+        </div>
+        
       </div>
     </div>
   );

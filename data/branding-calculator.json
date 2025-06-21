@@ -1,0 +1,93 @@
+[
+  {
+    "name": "Logo",
+    "description": "Primary logo design based on brand strategy and creative direction.",
+    "hours": 8,
+    "bool": false
+  },
+  {
+    "name": "Color Palette",
+    "description": "Custom brand colors including primary, secondary, and neutrals.",
+    "hours": 4
+  },
+  {
+    "name": "3D Mockups",
+    "description": "Visuals of the logo applied to realistic environments and products.",
+    "hours": 2
+  },
+  {
+    "name": "Logo Formats",
+    "description": "Exported in multiple formats: SVG, PNG, PDF, EPS.",
+    "hours": 1
+  },
+  {
+    "name": "Color Variations (Full Color, Solid Black, Solid White)",
+    "description": "Three versions of the logo for flexibility across light and dark backgrounds.",
+    "hours": 2
+  },
+  {
+    "name": "Typography",
+    "description": "Font selection and hierarchy for brand consistency.",
+    "hours": 3
+  },
+  {
+    "name": "Brand Guidelines",
+    "description": "PDF document that explains logo use, spacing, colors, typography, and more.",
+    "hours": 5
+  },
+  {
+    "name": "Favicon Design",
+    "description": "Tiny icon version of the logo optimized for browser tabs.",
+    "hours": 1
+  },
+  {
+    "name": "Social Media Kit",
+    "description": "Profile icons, covers, and post templates for platforms like Instagram, Facebook, etc.",
+    "hours": 2
+  },
+  {
+    "name": "Business Card Design",
+    "description": "Front and back design including logo, name, and contact details.",
+    "hours": 3
+  },
+  {
+    "name": "Letterhead Design",
+    "description": "Professional letter template with branding elements.",
+    "hours": 2
+  },
+  {
+    "name": "Email Signature",
+    "description": "Branded email footer with logo, contact info, and social links.",
+    "hours": 1
+  },
+  {
+    "name": "Mockup Presentation",
+    "description": "A final PDF or slide deck showcasing logo in use across various applications.",
+    "hours": 2
+  },
+  {
+    "name": "Revisions (x2 rounds)",
+    "description": "Two rounds of revisions included for client feedback and fine-tuning.",
+    "hours": 2
+  },
+  {
+    "name": "Export for Print (CMYK)",
+    "description": "Print-ready exports with proper color profile and resolution.",
+    "hours": 1
+  },
+  {
+    "name": "Export for Web (RGB)",
+    "description": "Web-optimized logo files with correct color profile and compression.",
+    "hours": 1
+  },
+  {
+    "name": "Monochrome Versions",
+    "description": "One-color logo variations for simplified usage or printing constraints.",
+    "hours": 1
+  },
+  {
+    "name": "Responsive Logo Variants",
+    "description": "Smaller/simplified versions of the logo for mobile and small screens.",
+    "hours": 2
+  }
+]

@@ -17,7 +17,7 @@ export default function Home(){
 
       <section className="section-regular ">
         <h2>Portfolio</h2>
-        <p className="mb-8">My portfolio is not even 20% done but due to to much work or no cash I rarely have the time to fill it up </p>
+        <p className="mb-8"> Lot more items comming soon! </p>
         <SocialLinks />
       </section>
     </main>

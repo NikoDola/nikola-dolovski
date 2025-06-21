@@ -36,7 +36,6 @@ export async function POST(req: NextRequest) {
     const ip = getIP(req);
     resetIfNeeded(ip);
     const usage = usageMap.get(ip)!;
-    console.log('wtf check')
 
     if (usage.count >= dailyLimit) {
       return NextResponse.json(

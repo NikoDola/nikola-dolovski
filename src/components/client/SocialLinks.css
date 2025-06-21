@@ -22,9 +22,13 @@
 }
 
 .otherLinksWrapper{
+margin-top: 2rem;
+display: flex;
+align-items: center;
+gap: 2rem;
+}
+.socialIconsWrapper{
   display: flex;
-  margin-top: 2rem;
-  align-items: center;
   gap: 1rem;
 }
 
@@ -33,7 +37,13 @@
     flex-direction: column;
     align-items: center;
   }
+  .otherLinksWrapper{
+    flex-direction: column;
+    gap: 1rem;
+    align-items: start;
+  }
   .socialWrapperCard{
     min-width: 100%;
   }
+
 }
