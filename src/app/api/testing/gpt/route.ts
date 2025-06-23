@@ -1,43 +1,36 @@
-import { NextResponse } from "next/server";
-// import OpenAI from "openai";
+import { NextRequest, NextResponse } from "next/server";
+import axios from "axios";
 
-// const openai = new OpenAI({
-//   apiKey: process.env.OPEN_AI_KEY
-// })
+const API_KEY = process.env.STABILITY_API_KEY!;
+const engineId = "stable-diffusion-xl-1024-v1-0";
 
-export async function GET() {
-  return NextResponse.json({"name": "Nikola"})
+export async function POST(req: NextRequest) {
+  const { prompt } = await req.json();
+
+  try {
+    const response = await axios.post(
+      `https://api.stability.ai/v1/generation/${engineId}/text-to-image`,
+      {
+        text_prompts: [{ text: prompt }],
+        cfg_scale: 7,
+        height: 1024,
+        width: 1024,
+        samples: 1,
+        steps: 30
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    const imageBase64 = response.data.artifacts[0].base64;
+    return NextResponse.json({ image: `data:image/png;base64,${imageBase64}` });
+  } catch (error) {
+    console.error("Error generating image:", error);
+    return NextResponse.json({ error: "Failed to generate image" }, { status: 500 });
+  }
 }
-// import { NextRequest, NextResponse } from "next/server";
-// import OpenAI from "openai";
-// import path from "path";
-// import { promises as fs } from "fs";
-
-// const openai = new OpenAI({
-//   apiKey: process.env.OPEN_API_KEY,
-// });
-
-// export async function POST(req: NextRequest) {
-// const filePath = path.join(process.cwd(), "data", "about.json");
-//   const fileContent = await fs.readFile(filePath, "utf-8");
-//   const jsonData = JSON.parse(fileContent);
-//   const jsonDataString = JSON.stringify(jsonData);
-
-//   const body = await req.json();
-
-//   const response = await openai.chat.completions.create({
-//     model: "gpt-3.5-turbo",
-//     messages: [
-//       { role: "user", content: body.prompt },
-//       {
-//         role: "user",
-//         content: `You are Niko Dola. Speak as Niko. Never say you work alongside Niko or you are a AI unless the json tells you to do ${jsonDataString}`,
-//       },
-//     ],
-//   });
-
-//   // Extract only the content you want to send back
-//   const answer = response.choices?.[0]?.message ?? { content: "No response" };
-
-//   return NextResponse.json({ answer });
-// }

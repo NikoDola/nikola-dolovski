@@ -64,7 +64,7 @@ export default function Logo({
   };
 
   return (
-    <div className="w-full">
+    <div >
       <Link className="linkInputWrapper" href={link}>
         <div style={{ width: size, height: size }} className="logoWrapper">
           <div className="hair"></div>

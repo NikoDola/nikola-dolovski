@@ -88,7 +88,7 @@ const handleTime = (key: string) => {
   return (
     <>
         <hr className="mt-8"/>
-    <section className="section-regular flex justify-center gap-[10%]">
+    <section className="section-regular flex justify-around">
       <Logo chat={false} size="100px" link="/" />
       <Image src={"/proposals/daze/daze.svg"} width={90} height={100} alt="daze logo"/>
     </section>
