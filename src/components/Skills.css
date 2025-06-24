@@ -54,7 +54,12 @@
   animation: float 15s  infinite;
 }
 
-
+.imageChat{
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  transform: translate(-60%);
+}
 
 @keyframes float {
   0% {

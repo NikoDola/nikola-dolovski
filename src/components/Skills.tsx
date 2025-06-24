@@ -3,6 +3,7 @@ import NextImage from "next/image";
 import "./Skills.css";
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import Logo from "./client/Logo";
 
 interface Data {
   description: string;
@@ -11,6 +12,7 @@ interface Data {
 
 export default function HeroSection() {
   const [currentImage, setCurrentImage] = useState("niko-dola");
+ 
   const [currentText, setCurrentText] = useState(
     "I've always been deeply curious about how things work — especially in the digital world. That curiosity turned into a passion, and over the years, it pushed me to explore and learn a wide range of tools, software, and technologies. Whether it's design, development, or automation, I dive in with focus and genuine interest. Every skill I've picked up wasn't just a checkbox — it was part of a journey I truly enjoyed."
   );
@@ -39,7 +41,7 @@ export default function HeroSection() {
     "firebase"
   ];
 
- console.log(currentIndex)
+
 
   useEffect(() => {
     async function fetchData() {
@@ -389,6 +391,10 @@ export default function HeroSection() {
           </Link>
         </p>
       </div>
+            {activeSkill === "openai" && 
+      <div className="imageChat">
+        <Logo size="0" link="" chat={true} />
+      </div>}
     </div>
   );
 }

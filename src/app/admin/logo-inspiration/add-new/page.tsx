@@ -1,12 +1,11 @@
 "use client";
+import { useState } from "react";
+import { InspirationService } from "@/lib/actions/inspirationService";
 import "@/app/_styles/pages/addNew.css";
-import { useEffect, useState } from "react";
-import { addInspiration } from "@/lib/actions/inspiration";
 
-export default function AddNew() {
-  const [file, setFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
+export default function AddNew() {g
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [style, setStyle] = useState({
     era: "",
     years: [] as string[],
@@ -23,30 +22,14 @@ export default function AddNew() {
     timeStamp: new Date()
   });
 
-  useEffect(() => {
-    console.log(style);
-  }, [style]);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const selectedFile = e.target.files[0];
-      setFile(selectedFile);
-
-      // Create preview URL
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreviewUrl(reader.result as string);
-      };
-      reader.readAsDataURL(selectedFile);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsUploading(true);
+    setIsSubmitting(true);
+    setError(null);
     
     try {
-      await addInspiration(style, file || undefined);
+      await InspirationService.create(style);
+      
       // Reset form after successful submission
       setStyle({
         era: "",
@@ -63,14 +46,12 @@ export default function AddNew() {
         quality: "",
         timeStamp: new Date()
       });
-      setFile(null);
-      setPreviewUrl(null);
+      
       alert("Inspiration added successfully!");
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("Failed to add inspiration. Please try again.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Submission failed");
     } finally {
-      setIsUploading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -133,29 +114,11 @@ export default function AddNew() {
   return (
     <main className="section-regular">
       <form className="form-wrapper" onSubmit={handleSubmit}>
-        <div className="form-section">
-          <h3 className="section-title">Image Upload</h3>
-          <div className="file-upload-wrapper">
-            <label className="file-upload-label">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="file-upload-input"
-                required
-              />
-              <span className="file-upload-button">Choose File</span>
-              <span className="file-upload-name">
-                {file ? file.name : "No file chosen"}
-              </span>
-            </label>
-            {previewUrl && (
-              <div className="image-preview">
-                <img src={previewUrl} alt="Preview" className="preview-image" />
-              </div>
-            )}
+        {error && (
+          <div className="error-message">
+            {error}
           </div>
-        </div>
+        )}
 
         <div className="form-section">
           <h3 className="section-title">Design Information</h3>
@@ -299,9 +262,9 @@ export default function AddNew() {
         <button 
           type="submit" 
           className="submit-button"
-          disabled={isUploading}
+          disabled={isSubmitting || !!error}
         >
-          {isUploading ? "Uploading..." : "Submit"}
+          {isSubmitting ? "Saving..." : "Submit"}
         </button>
       </form>
     </main>

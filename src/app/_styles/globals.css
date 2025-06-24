@@ -96,11 +96,15 @@ h6{
   width: 100%;
   font-size: 1.3rem;
 }
-.section-regular{
+.section-regular, .heroSection{
   width: 60%;
   margin: 0 auto;
   margin-top: var(--space-25);
   margin-bottom: var(--space-25);
+}
+
+.heroSection{
+  margin-top: var(--space-14)
 }
 .section-full{
   width: 100%;
@@ -124,7 +128,7 @@ h6{
   body{
     font-size: 1rem;
   }
-  .section-regular{
+  .section-regular, .heroSection{
     width: 90%;
     
   }
