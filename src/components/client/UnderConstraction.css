@@ -10,6 +10,7 @@
 .humanSendButton{
   flex: 0 0 auto;
   min-width: 20%;
+  max-width: 100%;
 }
 
 .underWrapper h1{

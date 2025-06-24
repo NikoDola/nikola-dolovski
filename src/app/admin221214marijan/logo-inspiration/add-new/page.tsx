@@ -3,7 +3,7 @@ import { useState } from "react";
 import { InspirationService } from "@/lib/actions/inspirationService";
 import "@/app/_styles/pages/addNew.css";
 
-export default function AddNew() {g
+export default function AddNew() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [style, setStyle] = useState({

@@ -1,176 +1,237 @@
 "use client";
+
 import NextImage from "next/image";
 import "./Skills.css";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback, memo } from "react";
 import Link from "next/link";
-import Logo from "./client/Logo";
+import Logo from "./client/Logo"; // Assuming this is a client component
 
-interface Data {
-  description: string;
+// --- Interfaces ---
+interface SkillData {
   name: string;
+  description: string;
+  color: {
+    main: string;
+    alt: string;
+  };
+  imagePath: string; // Add imagePath for skill icon
 }
 
+// --- Constants ---
+const DEFAULT_TEXT =
+  "I've always been deeply curious about how things work — especially in the digital world. That curiosity turned into a passion, and over the years, it pushed me to explore and learn a wide range of tools, software, and technologies. Whether it's design, development, or automation, I dive in with focus and genuine interest. Every skill I've picked up wasn't just a checkbox — it was part of a journey I truly enjoyed.";
+const AUTO_ROTATION_INTERVAL = 5000; // 5 seconds
+const INACTIVITY_TIMEOUT = 15000; // 10 seconds
+
+const SKILL_CATEGORIES = [
+  {
+    title: "Graphic Design",
+    skills: [
+      "illustrator", "photoshop","figma", "aftereffects", "premiere", "openai", "midjourney",],
+  },
+  {
+    title: "Web Developer",
+    skills: ["HTML", "CSS", "canvas", "JS", "react", "next", "firebase"],
+  },
+];
+
+// --- Utility Functions ---
+const preloadImage = (src: string) => {
+  const img = new Image();
+  img.src = src;
+};
+
+// --- Sub-components ---
+
+interface SkillIconProps {
+  skill: SkillData;
+  isActive: boolean;
+  onClick: (key: string) => void;
+}
+
+const SkillIcon = memo(({ skill, isActive, onClick }: SkillIconProps) => (
+  <>
+    <NextImage
+      onClick={() => onClick(skill.name)}
+      className={`skillIcon ${isActive ? "active" : ""}`}
+      src={skill.imagePath}
+      alt={skill.name}
+      width={30}
+      height={30}
+      loading="eager" // Preload immediately
+    />
+    <div className="hrLine" />
+  </>
+));
+
+SkillIcon.displayName = "SkillIcon"; // For better debugging with memo
+
+// --- Main Component ---
 export default function HeroSection() {
   const [currentImage, setCurrentImage] = useState("niko-dola");
- 
-  const [currentText, setCurrentText] = useState(
-    "I've always been deeply curious about how things work — especially in the digital world. That curiosity turned into a passion, and over the years, it pushed me to explore and learn a wide range of tools, software, and technologies. Whether it's design, development, or automation, I dive in with focus and genuine interest. Every skill I've picked up wasn't just a checkbox — it was part of a journey I truly enjoyed."
-  );
-  const [data, setData] = useState<Data[]>([]);
+  const [currentText, setCurrentText] = useState(DEFAULT_TEXT);
+  const [skillsData, setSkillsData] = useState<SkillData[]>([]);
   const [color, setColor] = useState({ main: "#1e1e1e", alt: "#3ce5e5" });
-  const [currentIndex, setCurrentIndex] = useState(0);
+
   const [activeSkill, setActiveSkill] = useState<string | null>(null);
+
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Design skills to cycle through
-  const designSkills = [
-    "illustrator",
-    "photoshop",
-    "figma",
-    "aftereffects",
-    "premiere",
-    "openai",
-    "midjourney",
-    "HTML",
-    "CSS",
-    "canvas",
-    "JS",
-    "react",
-    "next",
-    "firebase"
-  ];
+  const allSkillNames = SKILL_CATEGORIES.flatMap((category) => category.skills);
+
+  // Function to update skill details
+  const updateSkill = useCallback(
+    (key: string) => {
+      const item = skillsData.find(
+        (skill) => skill.name.toLowerCase() === key.toLowerCase()
+      );
+      if (item) {
+        setCurrentText(item.description.slice(0, 150));
+        setCurrentImage(item.name);
+        setActiveSkill(key.toLowerCase());
+        setColor(item.color);
+      }
+    },
+    [skillsData]
+  );
+
+  // Start or restart the auto-rotation
+const startAutoRotation = useCallback(() => {
+  if (intervalRef.current) {
+    clearInterval(intervalRef.current);
+  }
+
+  intervalRef.current = setInterval(() => {
+    const currentIndex = allSkillNames.findIndex(
+      (skill) => skill.toLowerCase() === activeSkill?.toLowerCase()
+    );
+    const nextIndex = (currentIndex + 1) % allSkillNames.length;
+    const nextSkill = allSkillNames[nextIndex];
+    updateSkill(nextSkill);
+  }, AUTO_ROTATION_INTERVAL);
+}, [updateSkill, activeSkill]); // Removed allSkillNames
 
 
+  const handleSkillClick = useCallback(
+    (key: string) => {
+      // Find the index of the selected skill
+      updateSkill(key);
 
+      // Clear any existing timeout and interval
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+
+      // Restart auto-rotation after inactivity
+      timeoutRef.current = setTimeout(() => {
+        startAutoRotation();
+      }, INACTIVITY_TIMEOUT);
+    },
+    [allSkillNames, updateSkill, startAutoRotation]
+  );
+
+  // --- Effects ---
+
+  // Fetch data and preload images on mount
   useEffect(() => {
     async function fetchData() {
-      const response = await fetch("/components/skills/skills.json");
-      const dataJson = await response.json();
-      setData(dataJson);
+      try {
+        const response = await fetch("/components/skills/skills.json");
+        const dataJson: SkillData[] = await response.json();
 
-      // Preload skill icon images
-      const imageNames = [
-        "skills-icon_illustrator.svg",
-        "skills-icon_photoshop.svg",
-        "skills-icon_figma.svg",
-        "skills-icon_aftereffects.svg",
-        "skills-icon_premiere.svg",
-        "skills-icon_openai.svg",
-        "skills-icon_midjourney.svg",
-        "skills-icon_html.svg",
-        "skills-icon_css.svg",
-        "skills-icon_canvas.svg",
-        "skills-icon_js.svg",
-        "skills-icon_react.svg",
-        "skills-icon_next.svg",
-        "skills-icon_firebase.svg",
-      ];
+        // Map colors and image paths to the data
+        const processedData = dataJson.map((item) => {
+          let colorScheme = { main: "#1e1e1e", alt: "#3ce5e5" }; // Default
+          const lowerCaseName = item.name.toLowerCase();
 
-      imageNames.forEach((img) => {
-        const i = new Image();
-        i.src = `/components/skills/${img}`;
-      });
+          switch (lowerCaseName) {
+            case "illustrator":
+              colorScheme = { main: "#F7991C", alt: "#F7991C" };
+              break;
+            case "photoshop":
+              colorScheme = { main: "#101519", alt: "#2ECEE8" };
+              break;
+            case "figma":
+              colorScheme = { main: "#F27264", alt: "#53C0DD" };
+              break;
+            case "aftereffects":
+              colorScheme = { main: "#101519", alt: "#918FC6" };
+              break;
+            case "premiere":
+              colorScheme = { main: "#918FC6", alt: "#918FC6" };
+              break;
+            case "openai":
+              colorScheme = { main: "white", alt: "#74A89A" };
+              break;
+            case "midjourney":
+              colorScheme = { main: "black", alt: "white" };
+              break;
+            case "html":
+              colorScheme = { main: "#E24E26", alt: "#E24E26" };
+              break;
+            case "css":
+              colorScheme = { main: "#3555A5", alt: "#3555A5" };
+              break;
+            case "canvas":
+              colorScheme = { main: "#47B97E", alt: "#47B97E" };
+              break;
+            case "js":
+              colorScheme = { main: "#F5DE17", alt: "#F5DE17" };
+              break;
+            case "react":
+              colorScheme = { main: "#101519", alt: "#2ECEE8" };
+              break;
+            case "next":
+              colorScheme = { main: "#101519", alt: "#101519" };
+              break;
+            case "firebase":
+              colorScheme = { main: "#DA3226", alt: "#FFC40D" };
+              break;
+          }
+          return {
+            ...item,
+            color: colorScheme,
+            imagePath: `/components/skills/skills-icon_${lowerCaseName}.svg`,
+          };
+        });
 
-      // Preload dynamic clothing and head images
-      dataJson.forEach((item: { name: string }) => {
-        const name = item.name.toLowerCase();
-        const clothing = new Image();
-        clothing.src = `/components/skills/clothing-${name}.webp`;
+        setSkillsData(processedData);
 
-        const head = new Image();
-        head.src = `/components/skills/${
-          name === "photoshop"
-            ? "head-sunglasess"
-            : name === "illustrator"
-            ? "head-illustrator"
-            : "head"
-        }.webp`;
-      });
+        // Preload dynamic images (clothing, head, hands)
+        processedData.forEach((item) => {
+          const name = item.name.toLowerCase();
+          preloadImage(`/components/skills/clothing-${name}.webp`);
+          preloadImage(
+            `/components/skills/${
+              name === "photoshop"
+                ? "head-sunglasess"
+                : name === "illustrator"
+                ? "head-illustrator"
+                : "head"
+            }.webp`
+          );
+        });
 
-      // Preload hands
-      ["left-hand.webp", "right-hand.webp"].forEach((img) => {
-        const i = new Image();
-        i.src = `/components/skills/${img}`;
-      });
+        preloadImage("/components/skills/left-hand.webp");
+        preloadImage("/components/skills/right-hand.webp");
+      } catch (error) {
+        console.error("Failed to fetch skills data:", error);
+      }
     }
 
     fetchData();
   }, []);
 
-  // Start or restart the auto-rotation
-  const startAutoRotation = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-    
-    intervalRef.current = setInterval(() => {
-      setCurrentIndex(prevIndex => {
-        const newIndex = (prevIndex + 1) % designSkills.length;
-        updateSkill(designSkills[newIndex]);
-        return newIndex;
-      });
-    }, 5000);
-  };
-  
-  // Update skill with proper typing
-  const updateSkill = (key: string) => {
-    const item = data.find(
-      (item) => item.name.toLowerCase() === key.toLowerCase()
-    );
-    if (item) {
-      setCurrentText(item.description.slice(0, 150));
-      setCurrentImage(item.name);
-      setActiveSkill(key.toLowerCase());
-      if (key === "illustrator") setColor({ main: "#F7991C", alt: "#F7991C" });
-      if (key === "photoshop") setColor({ main: "#101519", alt: "#2ECEE8" });
-      if (key === "figma") setColor({ main: "#F27264", alt: "#53C0DD" });
-      if (key === "aftereffects") setColor({ main: "#101519", alt: "#918FC6" });
-      if (key === "premiere") setColor({ main: "#918FC6", alt: "#918FC6" });
-      if (key === "openai") setColor({ main: "white", alt: "#74A89A" });
-      if (key === "midjourney") setColor({ main: "black", alt: "white" });
-      if (key === "HTML") setColor({ main: "#E24E26", alt: "#E24E26" });
-      if (key === "CSS") setColor({ main: "#3555A5", alt: "#3555A5" });
-      if (key === "canvas") setColor({ main: "#47B97E", alt: "#47B97E" });
-      if (key === "JS") setColor({ main: "#F5DE17", alt: "#F5DE17" });
-      if (key === "react") setColor({ main: "#101519", alt: "#2ECEE8" });
-      if (key === "next") setColor({ main: "#101519", alt: "#101519" });
-      if (key === "firebase") setColor({ main: "#DA3226", alt: "#FFC40D" });
-    }
-  };
-
-  // Handle manual skill selection
-  const handleImageAndText = (key: string) => {
-    // Find the index of the selected skill
-    const newIndex = designSkills.indexOf(key.toLowerCase());
-    if (newIndex !== -1) {
-      setCurrentIndex(newIndex);
-    }
-    
-    updateSkill(key);
-    
-    // Clear any existing timeout
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    
-    // Restart auto-rotation after 10 seconds of inactivity
-    timeoutRef.current = setTimeout(() => {
-      startAutoRotation();
-    }, 10000);
-    
-    // Clear the current interval
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-  };
-
   // Initialize auto-rotation on component mount and data load
   useEffect(() => {
-    if (data.length > 0) {
+    if (skillsData.length > 0) {
       startAutoRotation();
     }
-    
+
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -179,7 +240,26 @@ export default function HeroSection() {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [data]);
+  }, [skillsData, startAutoRotation]); // Depend on skillsData to ensure it's loaded
+
+  // Determine the head image based on currentImage
+  const getHeadImageSrc = useCallback(() => {
+    switch (currentImage.toLowerCase()) {
+      case "photoshop":
+        return "head-sunglasess";
+      case "illustrator":
+        return "head-illustrator";
+      default:
+        return "head";
+    }
+  }, [currentImage]);
+
+  const displayTitle = currentText.includes("deeply curious")
+    ? "Skills"
+    : currentImage
+        .replace(/([A-Z])/g, " $1")
+        .replace(/^./, (str) => str.toUpperCase())
+        .replace(/-/g, " ");
 
   return (
     <div className="heroSectionWrapper">
@@ -193,143 +273,30 @@ export default function HeroSection() {
         }
       >
         <div className="iconWrapper">
-          <div className="designIcons">
-            <p id="graphicDesign" className="skillsText">
-              Graphic Design <b>▼</b>
-            </p>
+          {SKILL_CATEGORIES.map((category) => (
+            <div key={category.title} className="skillCategory">
+              <p className="skillsText">
+                {category.title} <b>▼</b>
+              </p>
+              {category.skills.map((skillName) => {
+                const skill = skillsData.find(
+                  (s) => s.name.toLowerCase() === skillName.toLowerCase()
+                );
+                if (!skill) return null; // Should not happen with correct data
 
-            <NextImage
-              onClick={() => handleImageAndText("illustrator")}
-              className={`skillIcon ${activeSkill === 'illustrator' ? 'active' : ''}`}
-              src={"/components/skills/skills-icon_illustrator.svg"}
-              alt="Adobe Illustrator"
-              width={30}
-              height={30}
-            />
-            <div className="hrLine" />
-            <NextImage
-              onClick={() => handleImageAndText("photoshop")}
-              className={`skillIcon ${activeSkill === 'photoshop' ? 'active' : ''}`}
-              src={"/components/skills/skills-icon_photoshop.svg"}
-              alt="Adobe Photoshop"
-              width={30}
-              height={30}
-            />
-            <div className="hrLine" />
-            <NextImage
-              onClick={() => handleImageAndText("figma")}
-              className={`skillIcon ${activeSkill === 'figma' ? 'active' : ''}`}
-              src={"/components/skills/skills-icon_figma.svg"}
-              alt="Figma"
-              width={30}
-              height={30}
-            />
-            <div className="hrLine" />
-            <NextImage
-              onClick={() => handleImageAndText("aftereffects")}
-              className={`skillIcon ${activeSkill === 'aftereffects' ? 'active' : ''}`}
-              src={"/components/skills/skills-icon_aftereffects.svg"}
-              alt="Adobe After Effects"
-              width={30}
-              height={30}
-            />
-            <div className="hrLine" />
-            <NextImage
-              onClick={() => handleImageAndText("premiere")}
-              className={`skillIcon ${activeSkill === 'premiere' ? 'active' : ''}`}
-              src={"/components/skills/skills-icon_premiere.svg"}
-              alt="Adobe Premiere"
-              width={30}
-              height={30}
-            />
-            <div className="hrLine" />
-            <NextImage
-              onClick={() => handleImageAndText("openai")}
-              className={`skillIcon ${activeSkill === 'openai' ? 'active' : ''}`}
-              src={"/components/skills/skills-icon_openai.svg"}
-              alt="OpenAI"
-              width={30}
-              height={30}
-            />
-            <div className="hrLine" />
-            <NextImage
-              onClick={() => handleImageAndText("midjourney")}
-              className={`skillIcon ${activeSkill === 'midjourney' ? 'active' : ''}`}
-              src={"/components/skills/skills-icon_midjourney.svg"}
-              alt="Midjourney"
-              width={30}
-              height={30}
-            />
-          </div>
-          <div className="codeIcons">
-            <p className="skillsText">
-              Web Developer <b>▼</b>
-            </p>
-
-            <NextImage
-              onClick={() => handleImageAndText("HTML")}
-              className={`skillIcon ${activeSkill === 'html' ? 'active' : ''}`}
-              src={"/components/skills/skills-icon_html.svg"}
-              alt="HTML"
-              width={30}
-              height={30}
-            />
-            <div className="hrLine" />
-            <NextImage
-              onClick={() => handleImageAndText("CSS")}
-              className={`skillIcon ${activeSkill === 'css' ? 'active' : ''}`}
-              src={"/components/skills/skills-icon_css.svg"}
-              alt="CSS"
-              width={30}
-              height={30}
-            />
-            <div className="hrLine" />
-            <NextImage
-              onClick={() => handleImageAndText("canvas")}
-              className={`skillIcon ${activeSkill === 'canvas' ? 'active' : ''}`}
-              src={"/components/skills/skills-icon_canvas.svg"}
-              alt="Canvas"
-              width={30}
-              height={30}
-            />
-            <div className="hrLine" />
-            <NextImage
-              onClick={() => handleImageAndText("JS")}
-              className={`skillIcon ${activeSkill === 'js' ? 'active' : ''}`}
-              src={"/components/skills/skills-icon_js.svg"}
-              alt="JavaScript"
-              width={30}
-              height={30}
-            />
-            <div className="hrLine" />
-            <NextImage
-              onClick={() => handleImageAndText("react")}
-              className={`skillIcon ${activeSkill === 'react' ? 'active' : ''}`}
-              src={"/components/skills/skills-icon_react.svg"}
-              alt="React"
-              width={30}
-              height={30}
-            />
-            <div className="hrLine" />
-            <NextImage
-              onClick={() => handleImageAndText("next")}
-              className={`skillIcon ${activeSkill === 'next' ? 'active' : ''}`}
-              src={"/components/skills/skills-icon_next.svg"}
-              alt="Next.js"
-              width={30}
-              height={30}
-            />
-            <div className="hrLine" />
-            <NextImage
-              onClick={() => handleImageAndText("firebase")}
-              className={`skillIcon ${activeSkill === 'firebase' ? 'active' : ''}`}
-              src={"/components/skills/skills-icon_firebase.svg"}
-              alt="Firebase"
-              width={30}
-              height={30}
-            />
-          </div>
+                return (
+                  <SkillIcon
+                    key={skill.name}
+                    skill={skill}
+                    isActive={activeSkill === skill.name.toLowerCase()}
+                    onClick={handleSkillClick}
+                  />
+                );
+              })}
+            </div>
+          ))}
         </div>
+
         <div className="imageWrapper">
           <NextImage
             className="clothingImage"
@@ -337,20 +304,16 @@ export default function HeroSection() {
             alt="Clothing"
             width={180}
             height={120}
+            priority // High priority for initial load
           />
           <div className="headWrapper">
             <NextImage
               className={"headImage"}
-              src={`/components/skills/${
-                currentImage === "photoshop"
-                  ? "head-sunglasess"
-                  : currentImage === "illustrator"
-                  ? "head-illustrator"
-                  : "head"
-              }.webp`}
+              src={`/components/skills/${getHeadImageSrc()}.webp`}
               alt="Head"
               width={180}
               height={120}
+              priority
             />
           </div>
 
@@ -361,6 +324,7 @@ export default function HeroSection() {
               alt="Left hand"
               width={180}
               height={120}
+              priority
             />
           </div>
 
@@ -370,20 +334,12 @@ export default function HeroSection() {
             alt="Right hand"
             width={180}
             height={120}
+            priority
           />
         </div>
       </div>
       <div className="heroTextWrapper">
-        <h3>
-          {
-            currentText.includes("deeply curious")
-              ? "Skills"
-              : currentImage
-                  .replace(/([A-Z])/g, " $1")
-                  .replace(/^./, (str) => str.toUpperCase())
-                  .replace(/-/g, " ")
-          }
-        </h3>
+        <h3>{displayTitle}</h3>
         <p>
           {currentText}{" "}
           <Link href={`/skills/#${currentImage.toLocaleLowerCase()}`}>
@@ -391,10 +347,11 @@ export default function HeroSection() {
           </Link>
         </p>
       </div>
-            {activeSkill === "openai" && 
-      <div className="imageChat">
-        <Logo size="0" link="" chat={true} />
-      </div>}
+      
+        <div className={activeSkill === "openai"?  "imageChat": "hidden"}>
+          <Logo size="0" link="" chat={true} />
+        </div>
+     
     </div>
   );
 }

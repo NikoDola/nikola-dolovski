@@ -6,7 +6,7 @@ export default function Home(){
   return(
     <main>
       <section className="heroSection">
-        <h2 className="text-center mb-[4rem]">My Skills</h2>
+        <h2 className="text-center mb-[8rem]">My Skills</h2>
         <Skills />
       </section>
 
