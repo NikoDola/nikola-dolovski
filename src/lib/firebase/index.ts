@@ -1,10 +1,12 @@
-"use client";
-import { initializeApp, getApps } from "firebase/app";
-import { getAuth } from "firebase/auth";
+"use client"
+import { initializeApp } from "firebase/app";
+
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-const firebaseConfig = {
+
+
+export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
@@ -14,27 +16,10 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase only once
-let app;
-let auth;
-let db;
-let storage;
 
-if (typeof window !== "undefined") {
-  if (!getApps().length) {
-    app = initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    db = getFirestore(app);
-    storage = getStorage(app);
-    
-    // Optional: Log initialization for debugging
-    console.log("Firebase initialized successfully");
-  } else {
-    app = getApps()[0];
-    auth = getAuth(app);
-    db = getFirestore(app);
-    storage = getStorage(app);
-  }
-}
 
-export { app, db, storage, auth };
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+const storage = getStorage(app);
+export {app, db, storage}
