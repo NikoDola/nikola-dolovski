@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { collection, addDoc, updateDoc, doc, arrayUnion, setDoc } from "firebase/firestore";
+import { collection, addDoc, updateDoc, doc, arrayUnion } from "firebase/firestore";
 
 type ChatMessage = {
   role: "user" | "assistant";
