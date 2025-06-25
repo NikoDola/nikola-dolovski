@@ -99,6 +99,8 @@
   }
 }
 
+
+
 /* ==========================================================================
    Character Images (Clothing, Head, Hands)
    ========================================================================== */
@@ -120,6 +122,24 @@
   z-index: 10; /* Above clothing */
 }
 
+@keyframes headAnimate {
+  0% {
+    transform: translate(-40%,0);
+  }
+  50% {
+     transform: translate(-40%,0);
+  }
+  75% {
+         transform: translate(-40%,0);
+  }
+
+  100% {
+     transform: translate(-40%,140%);
+   
+  }
+}
+
+
 /* General styles for both hands */
 .leftHand,
 .rightHand {
@@ -132,7 +152,46 @@
   left: 68.5%;
   transform: translate(-30%);
   z-index: 5;
+ 
 }
+
+
+
+@keyframes leftHandAnimate {
+  0% {
+    top: 78%;
+    left: 68.5%;
+    transform: translate(-30%) rotate(0deg);
+  }
+  50% {
+    top: 50%;
+    left: 80%;
+    transform: translate(-30%) rotate(-45deg);
+  }
+  75% {
+    top: 20%;
+    left: 60%;
+    z-index: 100;
+    transform: translate(-30%) rotate(25deg);
+  }
+  100% {
+    top: 50%;
+    left: 60%;
+    z-index: 100;
+    transform: translate(-30%) rotate(0deg);
+  }
+}
+
+.animate-left {
+  animation: leftHandAnimate 5s infinite;
+}
+.animate-right {
+  animation: rightHandAnimate 5s infinite;
+}
+.animate-head{
+  animation: headAnimate 5s infinite;
+}
+
 
 .rightHand {
   top: 75.5%;
@@ -140,7 +199,33 @@
   left: 24%;
   transform: translate(-30%);
   z-index: 4;
+
 }
+
+@keyframes rightHandAnimate {
+  0%{
+     top: 75.5%;
+     left: 24%;
+  }
+  50%{
+    top: 50%;
+    left: 0%;
+    transform: rotate(45deg);
+  }
+  75%{
+   top: 20.5%;
+     left: 33%;
+    z-index: 100;
+    transform: rotate(-25deg);
+    z-index: 0;
+  }
+    100%{
+    top: 50.5%;
+    left: 40%;
+    z-index: 100;
+  }
+}
+
 
 /* ==========================================================================
    Hand Wrapper Pseudo-elements (Animated shapes around hands)
@@ -229,7 +314,8 @@
   align-items: center;
   font-size: var(--text-xs); /* Assuming --text-xs is defined elsewhere */
   margin-bottom: 1rem;
-  text-align: right;
+  text-align: left;
+
   font-style: italic;
 }
 

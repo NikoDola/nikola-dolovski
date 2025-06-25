@@ -239,6 +239,7 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
     if (skillsData.length > 0 && !isLoading) {
       startAutoRotation();
     }
+    console.log(activeSkill)
   }, [skillsData, isLoading, startAutoRotation]);
 
   const getHeadImageSrc = useCallback(() => {
@@ -311,7 +312,7 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
           />
           <div className="headWrapper">
             <NextImage
-              className={"headImage"}
+              className={`headImage ${activeSkill === "aftereffects" ? "animate-head" : ""}`}
               src={`/components/skills/${getHeadImageSrc()}.webp`}
               alt="Head"
               width={180}
@@ -321,18 +322,18 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
           </div>
 
           <div className="leftHandWrapper">
-            <NextImage
-              className="leftHand"
-              src={"/components/skills/left-hand.webp"}
-              alt="Left hand"
-              width={180}
-              height={120}
-              priority
-            />
+          <NextImage
+            className={`leftHand ${activeSkill === "aftereffects" ? "animate-left" : ""}`}
+            src={"/components/skills/left-hand.webp"}
+            alt="Left hand"
+            width={180}
+            height={120}
+            priority
+          />
           </div>
 
           <NextImage
-            className="rightHand"
+            className={`rightHand ${activeSkill === "aftereffects" ? "animate-right" : ""}`}
             src={"/components/skills/right-hand.webp"}
             alt="Right hand"
             width={180}
