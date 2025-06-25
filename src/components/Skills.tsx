@@ -23,8 +23,8 @@ interface HeroSectionProps {
 const DEFAULT_TEXT =
   "I've always been deeply curious about how things work — especially in the digital world. That curiosity turned into a passion, and over the years, it pushed me to explore and learn a wide range of tools, software, and technologies. Whether it's design, development, or automation, I dive in with focus and genuine interest. Every skill I've picked up wasn't just a checkbox — it was part of a journey I truly enjoyed.";
 
-const AUTO_ROTATION_INTERVAL = 5000;
-const INACTIVITY_TIMEOUT = 15000;
+const AUTO_ROTATION_INTERVAL = 15000;
+const INACTIVITY_TIMEOUT = 30000;
 
 const SKILL_CATEGORIES = [
   {
