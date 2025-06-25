@@ -36,6 +36,11 @@ export default function Logo({
     const newHistory: Message[] = [...history, newUserMessage];
 
     try {
+      // Optional: Get user IP from your API route
+      const ipRes = await fetch("/api/get-ip");
+      const { ip } = await ipRes.json();
+
+      // Send chat history to your GPT API
       const res = await fetch("/api/gpt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -56,17 +61,17 @@ export default function Logo({
       const reply = data.reply?.content || "No reply";
       const newAssistantMessage: Message = { role: "assistant", content: reply };
 
-      // Update local state history
+      // Update local chat history state
       setHistory([...newHistory, newAssistantMessage]);
       setAiReply(reply);
       setUserInput("");
 
-      // Firestore save or update with messages array
+      // Save or update chat in Firestore including IP address
       if (!chatId) {
-        const newId = await chatSave([newUserMessage, newAssistantMessage]);
+        const newId = await chatSave([newUserMessage, newAssistantMessage], ip);
         setChatId(newId);
       } else {
-        await chatUpdate(chatId, [newUserMessage, newAssistantMessage]);
+        await chatUpdate(chatId, [newUserMessage, newAssistantMessage], ip);
       }
     } catch (error) {
       setAiReply("Oops, something went wrong.");
