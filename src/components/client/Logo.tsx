@@ -38,7 +38,11 @@ export default function Logo({
     try {
       // Optional: Get user IP from your API route
       const ipRes = await fetch("/api/get-ip");
-      const { ip } = await ipRes.json();
+  
+if (!ipRes.ok) {
+  throw new Error(`IP fetch failed with status ${ipRes.status}`);
+}
+const { ip } = await ipRes.json();
 
       // Send chat history to your GPT API
       const res = await fetch("/api/gpt", {

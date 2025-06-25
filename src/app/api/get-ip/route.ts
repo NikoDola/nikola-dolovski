@@ -1,13 +1,16 @@
-// /pages/api/get-ip.ts
+import { NextRequest, NextResponse } from "next/server";
 
-import type { NextApiRequest, NextApiResponse } from "next";
+export async function GET(req: NextRequest) {
+  try {
+    // Get the IP from headers (works on Vercel and many proxies)
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+      req.headers.get("x-real-ip") ||
+      req.ip || // fallback, might be undefined
+      "IP not found";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Try to get IP from x-forwarded-for header (if behind proxy)
-  const ip =
-    req.headers["x-forwarded-for"]?.toString().split(",")[0] ||
-    req.socket.remoteAddress ||
-    null;
-
-  res.status(200).json({ ip });
+    return NextResponse.json({ ip });
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to get IP" }, { status: 500 });
+  }
 }
