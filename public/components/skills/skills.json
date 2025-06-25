@@ -54,9 +54,5 @@
   {
     "name": "firebase",
     "description": "As a designer who codes, Firebase bridges my frontend skills with backend needs. I've built over 10 production apps with its authentication, Firestore, and hosting. While I plan to explore PostgreSQL, Firebase's real-time NoSQL database and generous free tier make it ideal for MVPs and projects where rapid iteration matters most."
-  },
-  {
-    "name": "daVinci",
-    "description": "During my time at Pinestel, I worked extensively with DaVinci Resolve for color grading and editing. While I prefer Premiere for general editing, DaVinci's color science is unmatched. This experience gave me deep appreciation for color theory in motion graphics and how color affects user perception in UI/UX contexts."
   }
 ]

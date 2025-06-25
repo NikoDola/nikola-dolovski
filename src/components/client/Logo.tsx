@@ -8,15 +8,18 @@ type Message = {
   content: string;
 };
 
+type LogoProps ={
+  size?: string;
+  link?: string;
+  chat?: boolean;
+  loadingState?: boolean;
+}
 export default function Logo({
-  size,
-  link,
+  size = "0",
+  link = "./",
   chat = false,
-}: {
-  size: string;
-  link: string;
-  chat: boolean;
-}) {
+  loadingState= false,
+}: LogoProps) {
   const [history, setHistory] = useState<Message[]>([]);
   const [aiReply, setAiReply] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -69,7 +72,7 @@ export default function Logo({
         <div style={{ width: size, height: size }} className="logoWrapper">
           <div className="hair"></div>
           <div className="glasses">
-            <div className={`glassessMask ${loading ? "loading" : ""}`}></div>
+            <div className={`glassessMask ${loading || loadingState? "loading" : ""}`}></div>
           </div>
           <div className="beard"></div>
           <div className="lips"></div>

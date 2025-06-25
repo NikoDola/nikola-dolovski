@@ -4,9 +4,8 @@ import NextImage from "next/image";
 import "./Skills.css";
 import { useEffect, useState, useRef, useCallback, memo } from "react";
 import Link from "next/link";
-import Logo from "./client/Logo"; // Assuming this is a client component
+import Logo from "./client/Logo";
 
-// --- Interfaces ---
 interface SkillData {
   name: string;
   description: string;
@@ -14,20 +13,25 @@ interface SkillData {
     main: string;
     alt: string;
   };
-  imagePath: string; // Add imagePath for skill icon
+  imagePath: string;
 }
 
-// --- Constants ---
+interface HeroSectionProps {
+  onLoadComplete?: () => void;
+}
+
 const DEFAULT_TEXT =
   "I've always been deeply curious about how things work — especially in the digital world. That curiosity turned into a passion, and over the years, it pushed me to explore and learn a wide range of tools, software, and technologies. Whether it's design, development, or automation, I dive in with focus and genuine interest. Every skill I've picked up wasn't just a checkbox — it was part of a journey I truly enjoyed.";
-const AUTO_ROTATION_INTERVAL = 5000; // 5 seconds
-const INACTIVITY_TIMEOUT = 15000; // 10 seconds
+
+const AUTO_ROTATION_INTERVAL = 5000;
+const INACTIVITY_TIMEOUT = 15000;
 
 const SKILL_CATEGORIES = [
   {
     title: "Graphic Design",
     skills: [
-      "illustrator", "photoshop","figma", "aftereffects", "premiere", "openai", "midjourney",],
+      "illustrator", "photoshop", "figma", "aftereffects", "premiere", "openai", "midjourney",
+    ],
   },
   {
     title: "Web Developer",
@@ -35,13 +39,10 @@ const SKILL_CATEGORIES = [
   },
 ];
 
-// --- Utility Functions ---
 const preloadImage = (src: string) => {
   const img = new Image();
   img.src = src;
 };
-
-// --- Sub-components ---
 
 interface SkillIconProps {
   skill: SkillData;
@@ -58,21 +59,20 @@ const SkillIcon = memo(({ skill, isActive, onClick }: SkillIconProps) => (
       alt={skill.name}
       width={30}
       height={30}
-      loading="eager" // Preload immediately
+      loading="eager"
     />
     <div className="hrLine" />
   </>
 ));
 
-SkillIcon.displayName = "SkillIcon"; // For better debugging with memo
+SkillIcon.displayName = "SkillIcon";
 
-// --- Main Component ---
-export default function HeroSection() {
+export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
+  const [isLoading, setIsLoading] = useState(true);
   const [currentImage, setCurrentImage] = useState("niko-dola");
   const [currentText, setCurrentText] = useState(DEFAULT_TEXT);
   const [skillsData, setSkillsData] = useState<SkillData[]>([]);
   const [color, setColor] = useState({ main: "#1e1e1e", alt: "#3ce5e5" });
-
   const [activeSkill, setActiveSkill] = useState<string | null>(null);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -80,7 +80,6 @@ export default function HeroSection() {
 
   const allSkillNames = SKILL_CATEGORIES.flatMap((category) => category.skills);
 
-  // Function to update skill details
   const updateSkill = useCallback(
     (key: string) => {
       const item = skillsData.find(
@@ -96,56 +95,45 @@ export default function HeroSection() {
     [skillsData]
   );
 
-  // Start or restart the auto-rotation
-const startAutoRotation = useCallback(() => {
-  if (intervalRef.current) {
-    clearInterval(intervalRef.current);
-  }
+  const startAutoRotation = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
 
-  intervalRef.current = setInterval(() => {
-    const currentIndex = allSkillNames.findIndex(
-      (skill) => skill.toLowerCase() === activeSkill?.toLowerCase()
-    );
-    const nextIndex = (currentIndex + 1) % allSkillNames.length;
-    const nextSkill = allSkillNames[nextIndex];
-    updateSkill(nextSkill);
-  }, AUTO_ROTATION_INTERVAL);
-}, [updateSkill, activeSkill]); // Removed allSkillNames
-
+    intervalRef.current = setInterval(() => {
+      const currentIndex = allSkillNames.findIndex(
+        (skill) => skill.toLowerCase() === activeSkill?.toLowerCase()
+      );
+      const nextIndex = (currentIndex + 1) % allSkillNames.length;
+      const nextSkill = allSkillNames[nextIndex];
+      updateSkill(nextSkill);
+    }, AUTO_ROTATION_INTERVAL);
+  }, [updateSkill, activeSkill, allSkillNames]);
 
   const handleSkillClick = useCallback(
     (key: string) => {
-      // Find the index of the selected skill
       updateSkill(key);
 
-      // Clear any existing timeout and interval
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (intervalRef.current) clearInterval(intervalRef.current);
 
-      // Restart auto-rotation after inactivity
       timeoutRef.current = setTimeout(() => {
         startAutoRotation();
       }, INACTIVITY_TIMEOUT);
     },
-    [allSkillNames, updateSkill, startAutoRotation]
+    [updateSkill, startAutoRotation]
   );
 
-  // --- Effects ---
-
-  // Fetch data and preload images on mount
   useEffect(() => {
+    let isMounted = true;
+    const startTime = Date.now();
+    const MIN_LOAD_TIME = 800;
+
     async function fetchData() {
       try {
         const response = await fetch("/components/skills/skills.json");
         const dataJson: SkillData[] = await response.json();
 
-        // Map colors and image paths to the data
         const processedData = dataJson.map((item) => {
-          let colorScheme = { main: "#1e1e1e", alt: "#3ce5e5" }; // Default
+          let colorScheme = { main: "#1e1e1e", alt: "#3ce5e5" };
           const lowerCaseName = item.name.toLowerCase();
 
           switch (lowerCaseName) {
@@ -199,58 +187,65 @@ const startAutoRotation = useCallback(() => {
           };
         });
 
-        setSkillsData(processedData);
+        if (isMounted) {
+          setSkillsData(processedData);
 
-        // Preload dynamic images (clothing, head, hands)
-        processedData.forEach((item) => {
-          const name = item.name.toLowerCase();
-          preloadImage(`/components/skills/clothing-${name}.webp`);
-          preloadImage(
-            `/components/skills/${
-              name === "photoshop"
-                ? "head-sunglasess"
-                : name === "illustrator"
-                ? "head-illustrator"
-                : "head"
-            }.webp`
-          );
-        });
+          processedData.forEach((item) => {
+            const name = item.name.toLowerCase();
+            preloadImage(`/components/skills/clothing-${name}.webp`);
+            preloadImage(
+              `/components/skills/${
+                name === "photoshop"
+                  ? "head-sunglasess"
+                  : name === "illustrator"
+                  ? "head-illustrator"
+                  : "head"
+              }.webp`
+            );
+          });
 
-        preloadImage("/components/skills/left-hand.webp");
-        preloadImage("/components/skills/right-hand.webp");
+          preloadImage("/components/skills/left-hand.webp");
+          preloadImage("/components/skills/right-hand.webp");
+
+          const elapsed = Date.now() - startTime;
+          const remainingTime = Math.max(0, MIN_LOAD_TIME - elapsed);
+          
+          setTimeout(() => {
+            if (isMounted) {
+              setIsLoading(false);
+              onLoadComplete?.();
+            }
+          }, remainingTime);
+        }
       } catch (error) {
         console.error("Failed to fetch skills data:", error);
+        if (isMounted) {
+          setIsLoading(false);
+          onLoadComplete?.();
+        }
       }
     }
 
     fetchData();
-  }, []);
-
-  // Initialize auto-rotation on component mount and data load
-  useEffect(() => {
-    if (skillsData.length > 0) {
-      startAutoRotation();
-    }
 
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+      isMounted = false;
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [skillsData, startAutoRotation]); // Depend on skillsData to ensure it's loaded
+  }, [onLoadComplete]);
 
-  // Determine the head image based on currentImage
+  useEffect(() => {
+    if (skillsData.length > 0 && !isLoading) {
+      startAutoRotation();
+    }
+  }, [skillsData, isLoading, startAutoRotation]);
+
   const getHeadImageSrc = useCallback(() => {
     switch (currentImage.toLowerCase()) {
-      case "photoshop":
-        return "head-sunglasess";
-      case "illustrator":
-        return "head-illustrator";
-      default:
-        return "head";
+      case "photoshop": return "head-sunglasess";
+      case "illustrator": return "head-illustrator";
+      default: return "head";
     }
   }, [currentImage]);
 
@@ -260,6 +255,14 @@ const startAutoRotation = useCallback(() => {
         .replace(/([A-Z])/g, " $1")
         .replace(/^./, (str) => str.toUpperCase())
         .replace(/-/g, " ");
+
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner" />
+      </div>
+    );
+  }
 
   return (
     <div className="heroSectionWrapper">
@@ -282,7 +285,7 @@ const startAutoRotation = useCallback(() => {
                 const skill = skillsData.find(
                   (s) => s.name.toLowerCase() === skillName.toLowerCase()
                 );
-                if (!skill) return null; // Should not happen with correct data
+                if (!skill) return null;
 
                 return (
                   <SkillIcon
@@ -304,7 +307,7 @@ const startAutoRotation = useCallback(() => {
             alt="Clothing"
             width={180}
             height={120}
-            priority // High priority for initial load
+            priority
           />
           <div className="headWrapper">
             <NextImage
@@ -348,10 +351,9 @@ const startAutoRotation = useCallback(() => {
         </p>
       </div>
       
-        <div className={activeSkill === "openai"?  "imageChat": "hidden"}>
-          <Logo size="0" link="" chat={true} />
-        </div>
-     
+      <div className={activeSkill === "openai" ? "imageChat" : "hidden"}>
+        <Logo size="0" link="" chat={true} loadingState={false} />
+      </div>
     </div>
   );
 }
