@@ -183,13 +183,13 @@
 }
 
 .animate-left {
-  animation: leftHandAnimate 5s infinite;
+  animation: leftHandAnimate 15s infinite;
 }
 .animate-right {
-  animation: rightHandAnimate 5s infinite;
+  animation: rightHandAnimate 15s infinite;
 }
 .animate-head{
-  animation: headAnimate 5s infinite;
+  animation: headAnimate 15s infinite;
 }
 
 

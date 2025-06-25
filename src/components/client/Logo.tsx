@@ -2,36 +2,38 @@
 import Link from "next/link";
 import "./Logo.css";
 import { useState } from "react";
+import { chatSave, chatUpdate } from "@/lib/actions/chatSave"; // adjust path
 
 type Message = {
   role: "user" | "assistant";
   content: string;
 };
 
-type LogoProps ={
+type LogoProps = {
   size?: string;
   link?: string;
   chat?: boolean;
   loadingState?: boolean;
-}
+};
+
 export default function Logo({
   size = "0",
   link = "./",
   chat = false,
-  loadingState= false,
+  loadingState = false,
 }: LogoProps) {
   const [history, setHistory] = useState<Message[]>([]);
   const [aiReply, setAiReply] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [userInput, setUserInput] = useState("");
+  const [chatId, setChatId] = useState<string | null>(null);
 
   const handleUserChat = async () => {
     if (!userInput.trim()) return;
     setLoading(true);
-    const newHistory: Message[] = [
-      ...history,
-      { role: "user", content: userInput },
-    ];
+
+    const newUserMessage: Message = { role: "user", content: userInput };
+    const newHistory: Message[] = [...history, newUserMessage];
 
     try {
       const res = await fetch("/api/gpt", {
@@ -41,9 +43,7 @@ export default function Logo({
       });
 
       if (res.status === 429) {
-        setAiReply(
-          "You've hit the daily limit with this chat. Try again tomorrow or contact nikodola@gmail.com"
-        );
+        setAiReply("You've hit the daily limit...");
         setLoading(false);
         return;
       }
@@ -54,10 +54,20 @@ export default function Logo({
 
       const data = await res.json();
       const reply = data.reply?.content || "No reply";
+      const newAssistantMessage: Message = { role: "assistant", content: reply };
 
-      setHistory([...newHistory, { role: "assistant", content: reply }]);
+      // Update local state history
+      setHistory([...newHistory, newAssistantMessage]);
       setAiReply(reply);
       setUserInput("");
+
+      // Firestore save or update with messages array
+      if (!chatId) {
+        const newId = await chatSave([newUserMessage, newAssistantMessage]);
+        setChatId(newId);
+      } else {
+        await chatUpdate(chatId, [newUserMessage, newAssistantMessage]);
+      }
     } catch (error) {
       setAiReply("Oops, something went wrong.");
       console.error(error);
@@ -67,12 +77,16 @@ export default function Logo({
   };
 
   return (
-    <div className="logoItemsWrapper" >
+    <div className="logoItemsWrapper">
       <Link className="linkInputWrapper" href={link}>
         <div style={{ width: size, height: size }} className="logoWrapper">
           <div className="hair"></div>
           <div className="glasses">
-            <div className={`glassessMask ${loading || loadingState? "loading" : ""}`}></div>
+            <div
+              className={`glassessMask ${
+                loading || loadingState ? "loading" : ""
+              }`}
+            ></div>
           </div>
           <div className="beard"></div>
           <div className="lips"></div>
@@ -81,9 +95,7 @@ export default function Logo({
 
       {chat && (
         <>
-          <div className="chatWrapper">
-
-          </div>
+          <div className="chatWrapper"></div>
           <div className="humanAiChatWrapper">
             {aiReply ? (
               <p className="aiReply">{aiReply}</p>
@@ -94,7 +106,7 @@ export default function Logo({
             <div className="logoFormWrapper">
               <input
                 type="text"
-                className="input humanInput"
+                className="input humanChat"
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder="Ask me anything..."

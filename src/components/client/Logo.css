@@ -22,7 +22,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
   justify-content: center;
   margin-top: 1rem;
 }
@@ -32,19 +31,19 @@ flex: 0 0 auto;
   min-width: 120px; /* Optional: prevent it from shrinking too much */
 }
 
-.humanInput{
-  width: 50%;
+.humanChat{
+  width: 100%;
   border-radius: 0.5rem 0 0 0.5rem;
    background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(px);
 
 }
-.humanInput::placeholder{
+.humanChat::placeholder{
   color: var(--foreground);
   font-style: italic;
   font-weight: 100;
 }
-.humanInput:active{
+.humanChat:active{
   color: var(--foreground);
 }
 .aiReply{
@@ -52,29 +51,19 @@ flex: 0 0 auto;
   background-color: rgb(136, 210, 213, 0.6);
   border-radius: 0.5rem;
   padding: 1rem;
-  width: max-content;
-  max-width: 100%;
   margin: 0 auto;
   backdrop-filter: blur(5px);
 }
 
+.humanSendButton{
+  width: 30%;
+ 
+}
 .humanSendButton:hover{
 background-color: rgb(60, 59, 59);
  
 }
-/* .aiReply:before{
-  content: "";
-  display: block;
-  position: absolute;
-  background-color: var(--brand-color);
-  width: 15px;
-  height: 15px;
-  top: -0.3rem;
-  transform: rotate(45deg);
-  left: 50%;
-  transform: translate(-50%, -15%) rotate(45deg);
-  z-index: 10;
-} */
+
 .humanAiChatWrapper{
   position: relative;
   min-width: 100%;
@@ -192,13 +181,14 @@ background-color: rgb(60, 59, 59);
   .logoWrapper{
     width: 100%;
   }
-  .humanInput{
-    width: 100%;
-  }
+
   .logoFormWrapper{
     width: 100%;
   }
   .humanAiChatWrapper{
     width: 100%;
+    }
+    .aiReply{
+      max-width: 100%;
     }
 }
