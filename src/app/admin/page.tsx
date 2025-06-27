@@ -1,10 +1,13 @@
-import Link from "next/link"
-export default function Admin(){
-  return(
-    <div>
-      <ul>
-        <Link href={"/admin/logo-inspiration"}>Logo Inspiration</Link>
-      </ul>
-    </div>
-  )
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
+
+export default async function AdminPage() { // ← Note the async keyword
+  const cookieStore = await cookies()
+  const session = cookieStore.get('admin_session')?.value // ← No await needed here
+  
+  if (!session) {
+    redirect('/login')
+  }
+
+  return <div>Admin Dashboard</div>
 }
