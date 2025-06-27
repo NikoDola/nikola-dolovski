@@ -5,7 +5,7 @@ export async function POST(request: Request) {
   const { token } = await request.json()
 
   try {
-    // 1. Verify JWT using Firebase's public keys
+    // Verify JWT
     const JWKS = createRemoteJWKSet(
       new URL('https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com')
     )
@@ -15,33 +15,33 @@ export async function POST(request: Request) {
       audience: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
     })
 
-    // 2. Validate admin email
+    // Verify admin email
     if (payload.email !== 'nikodola@gmail.com') {
       return NextResponse.json({ isAdmin: false }, { status: 403 })
     }
 
-    // 3. Set production-ready cookie (updated for Vercel)
+    // Set production-ready cookie
     const response = NextResponse.json({ isAdmin: true })
-    response.cookies.set('admin_session', 'valid', {
+    
+    // Vercel-specific cookie settings
+    const isProduction = process.env.NODE_ENV === 'production'
+    const domain = isProduction ? '.nikodola.com' : undefined
+    
+    response.cookies.set('admin_session', token, { // Using the token as value
       httpOnly: true,
-      secure: true, // Always true for Vercel
-      sameSite: 'lax', // Changed from strict for better compatibility
+      secure: isProduction,
+      sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 7, // 1 week
       path: '/',
-      domain: process.env.VERCEL_ENV === 'production' 
-        ? '.yourdomain.com' // Your production domain
-        : undefined // Localhost
+      domain
     })
 
     return response
 
   } catch (error) {
-    console.error('Authentication error:', error)
+    console.error('Auth error:', error)
     return NextResponse.json(
-      { 
-        isAdmin: false, 
-        error: error instanceof Error ? error.message : 'Invalid token' 
-      },
+      { isAdmin: false, error: 'Authentication failed' },
       { status: 401 }
     )
   }

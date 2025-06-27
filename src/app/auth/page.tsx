@@ -1,119 +1,72 @@
 'use client'
-import { useState, FormEvent } from 'react'
+import { useState } from 'react'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
-import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
 
-  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
     setLoading(true)
+    setError('')
 
     try {
-      // 1. Sign in with Firebase Auth
+      // 1. Firebase authentication
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
       const token = await userCredential.user.getIdToken()
 
-      // 2. Validate admin status with our API
+      // 2. Validate admin status
       const response = await fetch('/api/validate-admin', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token }),
+        credentials: 'include' // Crucial for cookies!
       })
 
-      if (!response.ok) {
-        throw new Error('Failed to validate admin status')
-      }
+      if (!response.ok) throw new Error('Admin validation failed')
 
-      const { isAdmin } = await response.json()
+      // 3. Redirect on success
+      window.location.href = '/admin' // Full page reload to ensure cookie is set
 
-      if (isAdmin) {
-        router.push('/admin')
-      } else {
-        setError('Only admin users can access this system')
-        await auth.signOut()
-      }
     } catch (err) {
-      let errorMessage = 'An unknown error occurred'
-      if (err instanceof Error) {
-        errorMessage = err.message
-          .replace('Firebase: ', '')
-          .replace(/\(auth\/.*?\)\.?/, '')
-      }
-      setError(errorMessage)
-    } finally {
+      setError(err instanceof Error ? err.message : 'Login failed')
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">Admin Login</h1>
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm rounded-md">
-            {error}
-          </div>
-        )}
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="admin@example.com"
-              required
-              disabled={loading}
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="••••••••"
-              required
-              disabled={loading}
-            />
-          </div>
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
-            >
-              {loading ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Processing...
-                </>
-              ) : 'Sign in'}
-            </button>
-          </div>
-        </form>
-      </div>
+    <div className="min-h-screen flex items-center justify-center">
+      <form onSubmit={handleLogin} className="bg-white p-8 rounded shadow-md w-96">
+        <h1 className="text-2xl font-bold mb-6">Admin Login</h1>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-2 border rounded mb-4"
+          placeholder="Email"
+          required
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-2 border rounded mb-6"
+          placeholder="Password"
+          required
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className={`w-full bg-blue-600 text-white py-2 px-4 rounded ${loading ? 'opacity-50' : ''}`}
+        >
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
+      </form>
     </div>
   )
 }
