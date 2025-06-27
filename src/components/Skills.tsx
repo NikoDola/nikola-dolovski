@@ -40,8 +40,12 @@ const SKILL_CATEGORIES = [
 ];
 
 const preloadImage = (src: string) => {
-  const img = new Image();
-  img.src = src;
+  return new Promise<void>((resolve, reject) => {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => resolve();
+    img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+  });
 };
 
 interface SkillIconProps {
@@ -68,7 +72,7 @@ const SkillIcon = memo(({ skill, isActive, onClick }: SkillIconProps) => (
 SkillIcon.displayName = "SkillIcon";
 
 export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isReady, setIsReady] = useState(false); // New state variable
   const [currentImage, setCurrentImage] = useState("niko-dola");
   const [currentText, setCurrentText] = useState(DEFAULT_TEXT);
   const [skillsData, setSkillsData] = useState<SkillData[]>([]);
@@ -125,9 +129,9 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
   useEffect(() => {
     let isMounted = true;
     const startTime = Date.now();
-    const MIN_LOAD_TIME = 800;
+    const MIN_LOAD_TIME = 800; // Minimum time to show loading spinner
 
-    async function fetchData() {
+    async function fetchDataAndPreload() {
       try {
         const response = await fetch("/components/skills/skills.json");
         const dataJson: SkillData[] = await response.json();
@@ -190,43 +194,44 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
         if (isMounted) {
           setSkillsData(processedData);
 
-          processedData.forEach((item) => {
+          const imagesToPreload = processedData.flatMap((item) => {
             const name = item.name.toLowerCase();
-            preloadImage(`/components/skills/clothing-${name}.webp`);
-            preloadImage(
+            return [
+              `/components/skills/clothing-${name}.webp`,
               `/components/skills/${
                 name === "photoshop"
                   ? "head-sunglasess"
                   : name === "illustrator"
                   ? "head-illustrator"
                   : "head"
-              }.webp`
-            );
+              }.webp`,
+            ];
           });
+          imagesToPreload.push("/components/skills/left-hand.webp");
+          imagesToPreload.push("/components/skills/right-hand.webp");
 
-          preloadImage("/components/skills/left-hand.webp");
-          preloadImage("/components/skills/right-hand.webp");
+          await Promise.allSettled(imagesToPreload.map(preloadImage)); // Wait for all images to attempt loading
 
           const elapsed = Date.now() - startTime;
           const remainingTime = Math.max(0, MIN_LOAD_TIME - elapsed);
           
           setTimeout(() => {
             if (isMounted) {
-              setIsLoading(false);
+              setIsReady(true); // Set to true when everything is ready
               onLoadComplete?.();
             }
           }, remainingTime);
         }
       } catch (error) {
-        console.error("Failed to fetch skills data:", error);
+        console.error("Failed to fetch skills data or preload images:", error);
         if (isMounted) {
-          setIsLoading(false);
+          setIsReady(true); // Still set to true to display content even if there's an error
           onLoadComplete?.();
         }
       }
     }
 
-    fetchData();
+    fetchDataAndPreload();
 
     return () => {
       isMounted = false;
@@ -236,11 +241,10 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
   }, [onLoadComplete]);
 
   useEffect(() => {
-    if (skillsData.length > 0 && !isLoading) {
+    if (skillsData.length > 0 && isReady) { // Only start rotation when skillsData is loaded and component is ready
       startAutoRotation();
     }
-    console.log(activeSkill)
-  }, [skillsData, isLoading, startAutoRotation]);
+  }, [skillsData, isReady, startAutoRotation]);
 
   const getHeadImageSrc = useCallback(() => {
     switch (currentImage.toLowerCase()) {
@@ -257,7 +261,7 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
         .replace(/^./, (str) => str.toUpperCase())
         .replace(/-/g, " ");
 
-  if (isLoading) {
+  if (!isReady) { // Render loading state if not ready
     return (
       <div className="loading-container">
         <div className="loading-spinner" />
