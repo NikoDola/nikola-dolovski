@@ -378,8 +378,8 @@
 .imageChat {
   position: absolute;
   left: 50%;
-  top: 0;
-  width: 30%;
+  top: 25%;
+  width: 50%;
   transform: translate(-50%);
   z-index: 20; /* Ensure it's on top */
 }
@@ -390,9 +390,6 @@
    (Responsive adjustments)
    ========================================================================== */
 @media (max-width: 1000px) {
-  .imageChat{
-    width: 80%;
-  }
   .skillIcon.active {
     transform: scale(1.8); /* Slightly smaller scale for active icon on smaller screens */
   }

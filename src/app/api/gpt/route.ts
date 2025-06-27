@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
     usage.count++; // track new usage
 
     // Optional: Read Niko's bio from a file
-    const filePath = path.join(process.cwd(), 'public', 'mybio.txt');
+    const filePath = path.join(process.cwd(), 'data', 'mybio.txt');
     let userBio = '';
     try {
       userBio = await fs.readFile(filePath, 'utf-8');

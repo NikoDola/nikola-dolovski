@@ -1,21 +1,20 @@
-.socialWrapperCards{
-  display: flex;
-  justify-content: space-between;
-  align-items: start;
+.socialWrapperCards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 2 columns, each equal width */
   gap: 1rem;
+  width: 100%;
 }
 
-.socialWrapperCard{
-  display: flex;
-  gap: 1rem;
-  max-width: 24.5%;
-  flex-direction: column;
-  justify-content: center;
-  outline: solid 1px black;
+.socialWrapperCard {
+  /* Remove min-width and flex properties */
   padding: 2rem 1rem 2.5rem 1rem;
   border-radius: 0.5rem;
   background-color: white;
-  
+  outline: solid 1px black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
 }
 .socialWrapperCard:hover{
   background-color: transparent;
@@ -26,7 +25,9 @@ margin-top: 2rem;
 display: flex;
 align-items: center;
 gap: 2rem;
+
 }
+
 .socialIconsWrapper{
   display: flex;
   gap: 1rem;
@@ -34,8 +35,8 @@ gap: 2rem;
 
 @media (max-width: 1000px) {
   .socialWrapperCards{
+    display: flex;
     flex-direction: column;
-    align-items: center;
   }
   .otherLinksWrapper{
     flex-direction: column;
