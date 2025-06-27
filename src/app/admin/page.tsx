@@ -6,7 +6,7 @@ export default async function AdminPage() { // ← Note the async keyword
   const session = cookieStore.get('admin_session')?.value // ← No await needed here
   
   if (!session) {
-    redirect('/login')
+    redirect('/auth')
   }
 
   return <div>Admin Dashboard</div>
