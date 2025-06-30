@@ -1,0 +1,19 @@
+.categoriesWrapper{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.hoursCostWrapper{
+  display: flex;
+  justify-content: start;
+  gap: 1rem;
+}
+.categoryWrapper{
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.categoryWrapperSelected{
+  outline: 1px solid black;
+}

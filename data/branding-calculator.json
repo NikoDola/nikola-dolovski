@@ -1,93 +1,240 @@
 [
   {
     "name": "Logo",
-    "description": "Primary logo design based on brand strategy and creative direction.",
+    "description": "Design a unique and memorable primary logo that reflects the core values and vision of your brand. This includes several initial concepts, refinements, and finalization to ensure it fits your brand strategy perfectly.",
     "hours": 8,
-    "bool": false
+    "status": false,
+    "category": "Brand Identity"
   },
   {
     "name": "Color Palette",
-    "description": "Custom brand colors including primary, secondary, and neutrals.",
-    "hours": 4
-  },
-  {
-    "name": "3D Mockups",
-    "description": "Visuals of the logo applied to realistic environments and products.",
-    "hours": 2
-  },
-  {
-    "name": "Logo Formats",
-    "description": "Exported in multiple formats: SVG, PNG, PDF, EPS.",
-    "hours": 1
-  },
-  {
-    "name": "Color Variations (Full Color, Solid Black, Solid White)",
-    "description": "Three versions of the logo for flexibility across light and dark backgrounds.",
-    "hours": 2
+    "description": "Develop a comprehensive custom color palette that covers primary, secondary, and neutral colors. This palette ensures consistent color usage across all brand touchpoints for maximum recognition and impact.",
+    "hours": 4,
+    "status": false,
+    "category": "Brand Identity"
   },
   {
     "name": "Typography",
-    "description": "Font selection and hierarchy for brand consistency.",
-    "hours": 3
+    "description": "Carefully select brand typography including fonts, weights, and hierarchy to create consistent, readable, and attractive text styles that support the brand’s personality and usability.",
+    "hours": 3,
+    "status": false,
+    "category": "Brand Identity"
   },
   {
-    "name": "Brand Guidelines",
-    "description": "PDF document that explains logo use, spacing, colors, typography, and more.",
-    "hours": 5
+    "name": "3D Mockups",
+    "description": "Create realistic 3D mockups showing the logo applied in various environments and products to help visualize the brand presence in real-world contexts, useful for presentations and marketing materials.",
+    "hours": 2,
+    "status": false,
+    "category": "Brand Identity"
   },
   {
     "name": "Favicon Design",
-    "description": "Tiny icon version of the logo optimized for browser tabs.",
-    "hours": 1
+    "description": "Design a small but effective favicon version of the logo optimized specifically for browser tabs, ensuring your brand stands out even in small-scale digital spaces.",
+    "hours": 1,
+    "status": false,
+    "category": "Brand Identity"
   },
   {
-    "name": "Social Media Kit",
-    "description": "Profile icons, covers, and post templates for platforms like Instagram, Facebook, etc.",
-    "hours": 2
+    "name": "Brand Guidelines",
+    "description": "Compile a detailed PDF document outlining the proper usage of the logo, color schemes, typography, spacing, and other brand elements to maintain consistency across all marketing and communication channels.",
+    "hours": 5,
+    "status": false,
+    "category": "Brand Identity"
   },
   {
-    "name": "Business Card Design",
-    "description": "Front and back design including logo, name, and contact details.",
-    "hours": 3
+    "name": "Color Variations (Full Color, Solid Black, Solid White)",
+    "description": "Prepare multiple color variations of your logo including full color, solid black, and solid white versions to ensure flexibility for use across different backgrounds and mediums.",
+    "hours": 2,
+    "status": false,
+    "category": "Brand Assets Export"
   },
   {
-    "name": "Letterhead Design",
-    "description": "Professional letter template with branding elements.",
-    "hours": 2
-  },
-  {
-    "name": "Email Signature",
-    "description": "Branded email footer with logo, contact info, and social links.",
-    "hours": 1
-  },
-  {
-    "name": "Mockup Presentation",
-    "description": "A final PDF or slide deck showcasing logo in use across various applications.",
-    "hours": 2
-  },
-  {
-    "name": "Revisions (x2 rounds)",
-    "description": "Two rounds of revisions included for client feedback and fine-tuning.",
-    "hours": 2
-  },
-  {
-    "name": "Export for Print (CMYK)",
-    "description": "Print-ready exports with proper color profile and resolution.",
-    "hours": 1
-  },
-  {
-    "name": "Export for Web (RGB)",
-    "description": "Web-optimized logo files with correct color profile and compression.",
-    "hours": 1
+    "name": "Logo Formats",
+    "description": "Export the logo in various formats such as SVG, PNG, PDF, and EPS to cover all digital and print needs, ensuring high-quality and scalability.",
+    "hours": 1,
+    "status": false,
+    "category": "Brand Assets Export"
   },
   {
     "name": "Monochrome Versions",
-    "description": "One-color logo variations for simplified usage or printing constraints.",
-    "hours": 1
+    "description": "Provide one-color versions of your logo suitable for printing limitations, embossing, or situations requiring simplified branding.",
+    "hours": 1,
+    "status": false,
+    "category": "Brand Assets Export"
   },
   {
     "name": "Responsive Logo Variants",
-    "description": "Smaller/simplified versions of the logo for mobile and small screens.",
-    "hours": 2
+    "description": "Design smaller and simplified logo variants optimized for mobile devices, social media avatars, and other small-scale uses, preserving brand clarity and recognition.",
+    "hours": 2,
+    "status": false,
+    "category": "Brand Assets Export"
+  },
+  {
+    "name": "Export for Print (CMYK)",
+    "description": "Create print-ready logo files with CMYK color profiles and appropriate resolution to ensure color accuracy and sharpness on physical materials.",
+    "hours": 1,
+    "status": false,
+    "category": "Brand Assets Export"
+  },
+  {
+    "name": "Export for Web (RGB)",
+    "description": "Provide web-optimized logo files in RGB color profile with compression suitable for fast loading and crisp display on digital screens.",
+    "hours": 1,
+    "status": false,
+    "category": "Brand Assets Export"
+  },
+  {
+    "name": "Social Media Kit",
+    "description": "Design a complete set of branded assets including profile icons, cover images, and post templates tailored for platforms like Instagram, Facebook, and LinkedIn to maintain brand consistency online.",
+    "hours": 2,
+    "status": false,
+    "category": "Social & Print"
+  },
+  {
+    "name": "Business Card Design",
+    "description": "Create professional front and back business card layouts featuring the logo, contact information, and brand elements designed to leave a strong impression.",
+    "hours": 3,
+    "status": false,
+    "category": "Social & Print"
+  },
+  {
+    "name": "Letterhead Design",
+    "description": "Develop a branded letterhead template suitable for official correspondence, incorporating logo, colors, and typography to maintain professionalism and brand presence.",
+    "hours": 2,
+    "status": false,
+    "category": "Social & Print"
+  },
+  {
+    "name": "Email Signature",
+    "description": "Design a clean, branded email footer with logo, contact details, and social media links to reinforce brand identity in everyday communications.",
+    "hours": 1,
+    "status": false,
+    "category": "Social & Print"
+  },
+  {
+    "name": "Instagram Story Templates",
+    "description": "Create reusable, visually engaging branded templates for Instagram stories to support consistent messaging and style in social campaigns.",
+    "hours": 2,
+    "status": false,
+    "category": "Social & Print"
+  },
+  {
+    "name": "Highlight Covers",
+    "description": "Design matching highlight cover icons for Instagram to organize stories visually while maintaining brand aesthetics.",
+    "hours": 1,
+    "status": false,
+    "category": "Social & Print"
+  },
+  {
+    "name": "Brand Discovery Workshop",
+    "description": "Conduct one-on-one sessions or detailed questionnaires to explore your brand’s vision, target audience, and goals, laying a solid foundation for the entire branding process.",
+    "hours": 3,
+    "status": false,
+    "category": "Strategy & Planning"
+  },
+  {
+    "name": "Competitor Analysis",
+    "description": "Research and analyze direct competitors in your market to identify opportunities for differentiation and strategic positioning.",
+    "hours": 2,
+    "status": false,
+    "category": "Strategy & Planning"
+  },
+  {
+    "name": "Brand Voice / Messaging Guidelines",
+    "description": "Develop clear guidelines defining the tone of voice, taglines, and communication rules to ensure consistent brand messaging across all channels and content.",
+    "hours": 4,
+    "status": false,
+    "category": "Strategy & Planning"
+  },
+  {
+    "name": "Landing Page",
+    "description": "Design a fully responsive landing page including a hero section, contact form, and two additional client-selected sections (such as testimonials, statistics, promotions) optimized for mobile and desktop devices.",
+    "hours": 14,
+    "status": false,
+    "category": "Website Design"
+  },
+  {
+    "name": "404 Page Design",
+    "description": "Create a custom branded error page to improve user experience and guide visitors back to key site areas when they encounter broken links.",
+    "hours": 1,
+    "status": false,
+    "category": "Website Design"
+  },
+  {
+    "name": "User Page",
+    "description": "Develop user account pages including login, signup, cart, and purchase history to provide a seamless and secure user experience.",
+    "hours": 20,
+    "status": false,
+    "category": "Website Development"
+  },
+  {
+    "name": "Website Payment Integration",
+    "description": "Integrate secure and reliable payment gateway solutions to facilitate online transactions directly on the website.",
+    "hours": 14,
+    "status": false,
+    "category": "Website Development"
+  },
+  {
+    "name": "Integrating AI Helper into the Website",
+    "description": "Implement a custom AI chatbot or assistant on the website to enhance user support and engagement through intelligent, real-time interactions.",
+    "hours": 20,
+    "status": false,
+    "category": "Website Development"
+  },
+  {
+    "name": "Blog Setup or CMS Integration",
+    "description": "Set up a blog or content management system allowing easy content updates, structured publishing, and SEO-friendly layouts.",
+    "hours": 6,
+    "status": false,
+    "category": "Website Development"
+  },
+  {
+    "name": "SEO Metadata + Sitemap",
+    "description": "Optimize page titles, meta descriptions, and generate sitemaps to improve search engine indexing and website visibility.",
+    "hours": 2,
+    "status": false,
+    "category": "Website Support & Legal"
+  },
+  {
+    "name": "GDPR / Cookie Consent Banner",
+    "description": "Add legally compliant consent banners to the website ensuring adherence to EU privacy regulations and building trust with visitors.",
+    "hours": 1,
+    "status": false,
+    "category": "Website Support & Legal"
+  },
+  {
+    "name": "Newsletter Signup Integration",
+    "description": "Connect email marketing tools like Mailchimp for lead generation through signup forms and subscription management.",
+    "hours": 2,
+    "status": false,
+    "category": "Website Support & Legal"
+  },
+  {
+    "name": "Website Maintenance for One Year",
+    "description": "Provide comprehensive website hosting, domain management, updates, backups, and ongoing technical support to keep the site running smoothly and securely for a full year.",
+    "hours": 30,
+    "status": false,
+    "category": "Website Support & Legal"
+  },
+  {
+    "name": "Mockup Presentation",
+    "description": "Prepare a professional presentation in PDF or slide format showcasing the logo and branding applications across multiple media to help clients visualize their brand in action.",
+    "hours": 2,
+    "status": false,
+    "category": "Client Support & Handoff"
+  },
+  {
+    "name": "Revisions (x2 rounds)",
+    "description": "Include two rounds of client revisions to gather feedback and make refinements ensuring the final deliverables meet expectations.",
+    "hours": 2,
+    "status": false,
+    "category": "Client Support & Handoff"
+  },
+  {
+    "name": "Website Training Session",
+    "description": "Conduct a detailed training session to teach clients how to use and manage their website backend effectively, empowering independence in content updates and management.",
+    "hours": 2,
+    "status": false,
+    "category": "Client Support & Handoff"
   }
 ]
