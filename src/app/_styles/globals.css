@@ -103,7 +103,7 @@ h6{
 .section-regular, .heroSection{
   width: 60%;
   margin: 0 auto;
-  margin-top: var(--space-25);
+  margin-top: var(--space-10);
   margin-bottom: var(--space-25);
 }
 

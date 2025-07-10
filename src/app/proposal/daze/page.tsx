@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { useState } from "react"
 import "./Proposal.css"
-import Logo from "@/components/client/Logo";
+
 
 type ServiceValue = {
   bool: boolean;
@@ -89,7 +89,6 @@ const handleTime = (key: string) => {
     <>
         <hr className="mt-8"/>
     <section className="section-regular flex justify-around">
-      <Logo chat={false} size="100px" link="/" loadingState={false}/>
       <Image src={"/proposals/daze/daze.svg"} width={90} height={100} alt="daze logo"/>
     </section>
     <hr className="mb-8"/>

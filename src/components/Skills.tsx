@@ -283,9 +283,9 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
         <div className="iconWrapper">
           {SKILL_CATEGORIES.map((category) => (
             <div key={category.title} className="skillCategory">
-              <p className="skillsText">
+              <span className="skillsText">
                 {category.title} <b>▼</b>
-              </p>
+              </span>
               {category.skills.map((skillName) => {
                 const skill = skillsData.find(
                   (s) => s.name.toLowerCase() === skillName.toLowerCase()

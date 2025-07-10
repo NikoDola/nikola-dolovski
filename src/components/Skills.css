@@ -288,15 +288,16 @@
 .iconWrapper {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin: 0 auto;
+
+ 
   z-index: 0; /* Ensures icons are visible */
-  width: 100%;
+  
 }
 .skillCategory{
   display: flex;
   flex-direction: column;
   align-items: center;
+
 }
 .designIcons,
 .codeIcons {
@@ -315,7 +316,8 @@
   font-size: var(--text-xs); /* Assuming --text-xs is defined elsewhere */
   margin-bottom: 1rem;
   text-align: left;
-
+  width: 50%;
+  text-align: center;
   font-style: italic;
 }
 

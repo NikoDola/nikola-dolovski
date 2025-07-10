@@ -6,8 +6,7 @@ import Loading from "@/components/ui/Loading"
 
 export default function Home() {
   const [isSkillsLoading, setSkillsLoading] = useState(true)
-
-
+  
   return (
     <main>
       {isSkillsLoading  && <Loading />}
