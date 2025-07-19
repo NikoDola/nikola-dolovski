@@ -2,35 +2,48 @@
   {
     "name": "Logo",
     "description": "Design a unique and memorable primary logo that reflects the core values and vision of your brand. This includes several initial concepts, refinements, and finalization to ensure it fits your brand strategy perfectly.",
-    "hours": 8,
-    "status": false,
-    "category": "Brand Identity"
+    "category": "Brand Identity",
+    "options": [
+      {
+        "name": "3 Logo Concepts ",
+        "hours": 6
+      },
+      {
+        "name": "5 Logo Concepts (10 hours)",
+        "hours": 10
+      },
+      {
+        "name": "10 Logo Concepts  (15 hours)",
+        "hours": 25
+      }
+    ]
   },
   {
     "name": "Color Palette",
     "description": "Develop a comprehensive custom color palette that covers primary, secondary, and neutral colors. This palette ensures consistent color usage across all brand touchpoints for maximum recognition and impact.",
-    "hours": 4,
-    "status": false,
-    "category": "Brand Identity"
-  },
-  {
-    "name": "Typography",
-    "description": "Carefully select brand typography including fonts, weights, and hierarchy to create consistent, readable, and attractive text styles that support the brand’s personality and usability.",
-    "hours": 3,
-    "status": false,
-    "category": "Brand Identity"
-  },
-  {
-    "name": "3D Mockups",
-    "description": "Create realistic 3D mockups showing the logo applied in various environments and products to help visualize the brand presence in real-world contexts, useful for presentations and marketing materials.",
     "hours": 2,
     "status": false,
     "category": "Brand Identity"
   },
   {
-    "name": "Favicon Design",
-    "description": "Design a small but effective favicon version of the logo optimized specifically for browser tabs, ensuring your brand stands out even in small-scale digital spaces.",
-    "hours": 1,
+    "name": "Typography",
+    "description": "Carefully select brand typography including fonts, weights, and hierarchy to create consistent, readable, and attractive text styles that support the brand's personality and usability.",
+    "category": "Brand Identity",
+    "options": [
+      {
+        "name": "Standard Font Selection",
+        "hours": 2
+      },
+      {
+        "name": "Custom Typography",
+        "hours": 8
+      }
+    ]
+  },
+  {
+    "name": "3D Mockups",
+    "description": "Create realistic 3D mockups showing the logo applied in various environments and products to help visualize the brand presence in real-world contexts, useful for presentations and marketing materials.",
+    "hours": 2,
     "status": false,
     "category": "Brand Identity"
   },
@@ -41,6 +54,7 @@
     "status": false,
     "category": "Brand Identity"
   },
+
   {
     "name": "Color Variations (Full Color, Solid Black, Solid White)",
     "description": "Prepare multiple color variations of your logo including full color, solid black, and solid white versions to ensure flexibility for use across different backgrounds and mediums.",
@@ -83,6 +97,7 @@
     "status": false,
     "category": "Brand Assets Export"
   },
+
   {
     "name": "Social Media Kit",
     "description": "Design a complete set of branded assets including profile icons, cover images, and post templates tailored for platforms like Instagram, Facebook, and LinkedIn to maintain brand consistency online.",
@@ -125,9 +140,10 @@
     "status": false,
     "category": "Social & Print"
   },
+
   {
     "name": "Brand Discovery Workshop",
-    "description": "Conduct one-on-one sessions or detailed questionnaires to explore your brand’s vision, target audience, and goals, laying a solid foundation for the entire branding process.",
+    "description": "Conduct one-on-one sessions or detailed questionnaires to explore your brand's vision, target audience, and goals, laying a solid foundation for the entire branding process.",
     "hours": 3,
     "status": false,
     "category": "Strategy & Planning"
@@ -146,6 +162,7 @@
     "status": false,
     "category": "Strategy & Planning"
   },
+
   {
     "name": "Landing Page",
     "description": "Design a fully responsive landing page including a hero section, contact form, and two additional client-selected sections (such as testimonials, statistics, promotions) optimized for mobile and desktop devices.",
@@ -160,6 +177,14 @@
     "status": false,
     "category": "Website Design"
   },
+  {
+    "name": "Favicon Design",
+    "description": "Design a small but effective favicon version of the logo optimized specifically for browser tabs, ensuring your brand stands out even in small-scale digital spaces.",
+    "hours": 1,
+    "status": false,
+    "category": "Website Design"
+  },
+
   {
     "name": "User Page",
     "description": "Develop user account pages including login, signup, cart, and purchase history to provide a seamless and secure user experience.",
@@ -188,6 +213,7 @@
     "status": false,
     "category": "Website Development"
   },
+
   {
     "name": "SEO Metadata + Sitemap",
     "description": "Optimize page titles, meta descriptions, and generate sitemaps to improve search engine indexing and website visibility.",
@@ -216,6 +242,7 @@
     "status": false,
     "category": "Website Support & Legal"
   },
+
   {
     "name": "Mockup Presentation",
     "description": "Prepare a professional presentation in PDF or slide format showcasing the logo and branding applications across multiple media to help clients visualize their brand in action.",

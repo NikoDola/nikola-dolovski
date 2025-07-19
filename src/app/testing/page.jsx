@@ -1,62 +1,131 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react"
+import "@/app/_styles/pages/testing/testing.css"
 
-export default function BrandingCalculator() {
-  const [LSD, setLSD] = useState([]);
+export default function Testing() {
+  const [services, setServices] = useState([])
+  const [totalHours, setTotalHours] = useState(0)
+  const [expandedDescriptions, setExpandedDescriptions] = useState({})
+  const hourlyRate = 32
 
   useEffect(() => {
-    const saved = localStorage.getItem("branding-calculator");
+    try {
+      fetch('/api/branding-calculator')
+        .then(res => res.json())
+        .then(data => {
+          const initialized = data.map(item => ({
+            ...item,
+            status: false 
+          }))
+          setServices(initialized)
 
-    if (!saved) {
-      fetch("/api/branding-calculator")
-        .then((res) => res.json())
-        .then((data) => {
-          setLSD(data);
-          localStorage.setItem("branding-calculator", JSON.stringify(data));
+          const saved = localStorage.getItem('branding-calculator')
+          if (!saved) {
+            localStorage.setItem('branding-calculator', JSON.stringify(initialized))
+          }
         })
-        .catch((err) => console.error("Fetch error:", err));
-    } else {
-      setLSD(JSON.parse(saved));
+    } catch (error) {
+      console.error(error)
     }
-  }, []);
+  }, [])
 
-  const handleToggle = (index) => {
-   
-    const newLSD = [...LSD]
-    newLSD[index].status = !newLSD[index].status
-    setLSD(newLSD)
-    localStorage.setItem("branding-calculator", JSON.stringify(newLSD));
+  const handleToggle = (itemName) => {
+    let newTotalHours = totalHours
+
+    const updated = services.map(item => {
+      if (item.name === itemName) {
+        const toggled = { ...item, status: !item.status }
+
+        if (toggled.status) {
+          newTotalHours += Number(toggled.hours)
+        } else {
+          newTotalHours -= Number(toggled.hours)
+        }
+
+        return toggled
+      }
+      return item
+    })
+
+    setServices(updated)
+    setTotalHours(newTotalHours)
+    localStorage.setItem('branding-calculator', JSON.stringify(updated))
   }
 
-const groupItems = LSD.reduce((acc, item) => {
-  if (!acc[item.category]) {
-    acc[item.category] = [];
+  const toggleDescription = (itemName) => {
+    setExpandedDescriptions(prev => ({
+      ...prev,
+      [itemName]: !prev[itemName]
+    }))
   }
-  
-  acc[item.category].push(item);
-  return acc;
-}, {});
+
+  const categorizedServices = services.reduce((bag, item) => {
+    const category = item.category
+    if (!bag[category]) {
+      bag[category] = []
+    }
+    bag[category].push(item)
+    return bag
+  }, {})
 
   return (
-<div>
-  {Object.entries(groupItems).map(([category, items]) => (
-    <div key={category}>
-      <h2>{category}</h2>
-      {items.map((item, index) => (
-        <div key={index}>
-          <h3>{item.name}</h3>
-          <p>{item.status ? "true" : "false"}</p>
-          <input
-            type="checkbox"
-            checked={item.status}
-            onChange={() => handleToggle(LSD.indexOf(item))}
-          />
+    <div className="calculator">
+      <div className="header">
+        <h1>Branding Calculator</h1>
+      </div>
+
+      {Object.entries(categorizedServices).map(([category, items]) => (
+        <div key={category} className="category">
+          <h2 className="categoryTitle">{category}</h2>
+          {items.map((item, index) => (
+            <div key={index} className="service">
+              <div className="serviceInfo">
+                <h3 className="serviceName">{item.name}</h3>
+                <p className="serviceHours">{item.hours} hours</p>
+                <div className={`serviceDescription ${expandedDescriptions[item.name] ? 'expanded' : ''}`}>
+                  {item.description}
+                  {item.link && (
+                    <a href={item.link} className="findOutMore" target="_blank" rel="noopener noreferrer">
+                      Find out more
+                    </a>
+                  )}
+                </div>
+              </div>
+              <div className="serviceActions">
+  
+                <button 
+                  onClick={() => toggleDescription(item.name)}
+                  className="readMoreButton"
+                >
+                  {expandedDescriptions[item.name] ? 'Read less' : 'Read more'}
+                </button>
+                              <button
+                  onClick={() => handleToggle(item.name)}
+                  className={`toggleButton ${item.status ? 'on' : 'off'}`}
+                >
+                  {item.status ? "Selected" : "Select"}
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       ))}
-    </div>
-  ))}
-</div>
 
-  );
+      <div className="summary">
+        <div className="summaryItem">
+          <span>Total Hours:</span>
+          <span>{totalHours} hours</span>
+        </div>
+        <div className="summaryItem">
+          <span>Hourly Rate:</span>
+          <span>${hourlyRate}/hour</span>
+        </div>
+        <div className="summaryItem total">
+          <span>Estimated Total:</span>
+          <span>${totalHours * hourlyRate}</span>
+        </div>
+      </div>
+    </div>
+  )
 }
