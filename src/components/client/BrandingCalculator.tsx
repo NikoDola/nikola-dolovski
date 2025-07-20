@@ -218,23 +218,24 @@ useEffect(() => {
 
       <div className="summary">
         <div className="summaryItem">
-          <span>Total Hours:</span>
+          <span> &#128338; Total Hours:</span>
           <span>{totalHours} hours</span>
         </div>
         <div className="summaryItem">
-          <span>Subtotal:</span>
+          <span>🧾 Subtotal:</span>
           <span>${totalHours * hourlyRate}</span>
         </div>
         {totalDiscount > 0 && (
           <div className="summaryItem discount">
-            <span>Discounts:</span>
+            <span> 🎁 Discounts:</span>
             <span>-${totalDiscount}</span>
           </div>
         )}
         <div className="summaryItem total">
-          <span>Estimated Total:</span>
+          <span>&#128181; Estimated Total:</span>
           <span>${grandTotal}</span>
         </div>
+        <button  disabled className={!totalHours ? "summaryItem toggleButton off ": " summaryItem toggleButton on"}>Order</button>
       </div>
     </div>
   )

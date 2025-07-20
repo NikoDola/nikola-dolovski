@@ -157,7 +157,10 @@
 .summaryItem {
   display: flex;
   justify-content: space-between;
+  width: 50%;
+  margin: 0 auto;
 }
+
 
 .summaryItem.discount {
   color: #4CAF50;
@@ -189,6 +192,9 @@
   }
   
   .toggleButton {
+    width: 100%;
+  }
+  .summaryItem{
     width: 100%;
   }
 }/* Add to your BrandingCalculator.css */
