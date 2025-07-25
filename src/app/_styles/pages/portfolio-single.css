@@ -1,0 +1,33 @@
+.portfolioSectionWrapper{
+  
+}
+.headLineWrapper{
+  margin-bottom: 4rem;
+}
+
+.textImageWrapperOne{
+  display: flex;
+  gap: 2rem;
+}
+
+.textImageWrapperTwo{
+  display: flex;
+  gap: 2rem;
+
+}
+.descriptionWrapperOne{
+  flex: 1;
+}
+.headline2{
+  line-height: 2rem;
+  margin-bottom: 2rem;
+}
+
+.imageWrapper{
+ flex: 1.5;
+
+}
+.imageWrapper img{
+  width: 100%;
+  background-color: white;
+}

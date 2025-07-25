@@ -1,6 +1,7 @@
 "use client"
 import { listlogos } from "@/lib/actions/inspirationList"
 import { useEffect, useState } from "react"
+import Image from "next/image"
 
 interface LogoItem {
   id: string  
@@ -41,8 +42,10 @@ export default function ListAllInspiration() {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
       {logos.map((item) => (
         <div key={item.id} className="border rounded overflow-hidden">
-          <img 
-            src={item.imageUrl} 
+          <Image
+            src={item.imageUrl}
+            width={300}
+            height={300}
             alt="Logo inspiration"
             className="w-full h-48 object-contain bg-gray-100"
             onError={(e) => {

@@ -100,6 +100,14 @@ h6{
   width: 100%;
   font-size: 1.3rem;
 }
+
+
+.section-full{
+  width: 100%;
+  margin: 0 auto;
+  margin-top: var(--space-22);
+  margin-bottom: var(--space-22);
+}
 .section-regular, .heroSection{
   width: 60%;
   margin: 0 auto;
@@ -109,12 +117,6 @@ h6{
 
 .heroSection{
   margin-top: var(--space-14)
-}
-.section-full{
-  width: 100%;
-  margin: 0 auto;
-  margin-top: var(--space-22);
-  margin-bottom: var(--space-22);
 }
 
 .colorBox {

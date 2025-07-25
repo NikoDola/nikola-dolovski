@@ -21,82 +21,42 @@ interface Service {
 
 export default function BrandingCalculator() {
   const [services, setServices] = useState<Service[]>([])
-  const [totalHours, setTotalHours] = useState(0)
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({})
-  const [categoryDiscounts, setCategoryDiscounts] = useState<Record<string, number>>({})
   const hourlyRate = 32
 
-useEffect(() => {
-  const loadServices = async () => {
-    try {
-      // First try to load from localStorage
-      const savedData = localStorage.getItem('branding-calculator')
-      
-      if (savedData) {
-        const parsedData = JSON.parse(savedData) as Service[]
-        setServices(parsedData)
-        calculateTotalHours(parsedData)
-        calculateCategoryDiscounts(parsedData)
-        return
-      }
+  useEffect(() => {
+    const loadServices = async () => {
+      try {
+        // First try to load from localStorage
+        const savedData = localStorage.getItem('branding-calculator')
+        
+        if (savedData) {
+          const parsedData = JSON.parse(savedData) as Service[]
+          setServices(parsedData)
+          return
+        }
 
-      // If no localStorage data, fetch from API
-      const response = await fetch('/api/branding-calculator')
-      const data: Service[] = await response.json()
-      const initialized = data.map((item: Service) => ({
-        ...item,
-        status: false,
-        selectedOption: item.options ? 0 : undefined
-      }))
-      
-      setServices(initialized)
-      localStorage.setItem('branding-calculator', JSON.stringify(initialized))
-    } catch (error) {
-      console.error("Error loading services:", error)
+        // If no localStorage data, fetch from API
+        const response = await fetch('/api/branding-calculator')
+        const data: Service[] = await response.json()
+        const initialized = data.map((item: Service) => ({
+          ...item,
+          status: false,
+          selectedOption: item.options ? 0 : undefined
+        }))
+        
+        setServices(initialized)
+        localStorage.setItem('branding-calculator', JSON.stringify(initialized))
+      } catch (error) {
+        console.error("Error loading services:", error)
+      }
     }
-  }
 
-  loadServices()
-}, [])
-
-  const calculateTotalHours = (services: Service[]) => {
-    const total = services.reduce((sum, item) => {
-      if (item.status) {
-        const hours = item.options ? item.options[item.selectedOption || 0].hours : item.hours || 0
-        return sum + hours
-      }
-      return sum
-    }, 0)
-    setTotalHours(total)
-  }
-
-  const calculateCategoryDiscounts = (services: Service[]) => {
-    const categories = [...new Set(services.map(item => item.category))]
-    const newDiscounts: Record<string, number> = {}
-    
-    categories.forEach(category => {
-      const categoryItems = services.filter(item => item.category === category)
-      const allSelected = categoryItems.every(item => item.status)
-      
-      if (allSelected) {
-        const categoryTotal = categoryItems.reduce((sum, item) => {
-          const hours = item.options ? item.options[item.selectedOption || 0].hours : item.hours || 0
-          return sum + (item.status ? hours : 0)
-        }, 0)
-        newDiscounts[category] = Math.round(categoryTotal * hourlyRate * 0.2)
-      } else {
-        newDiscounts[category] = 0
-      }
-    })
-    
-    setCategoryDiscounts(newDiscounts)
-    return newDiscounts
-  }
+    loadServices()
+  }, [])
 
   const updateServices = (updatedServices: Service[]) => {
     setServices(updatedServices)
-    calculateTotalHours(updatedServices)
-    calculateCategoryDiscounts(updatedServices)
     localStorage.setItem('branding-calculator', JSON.stringify(updatedServices))
   }
 
@@ -127,6 +87,7 @@ useEffect(() => {
     }))
   }
 
+  // Calculate derived values
   const categorizedServices = services.reduce((bag: Record<string, Service[]>, item) => {
     const category = item.category
     if (!bag[category]) {
@@ -135,6 +96,28 @@ useEffect(() => {
     bag[category].push(item)
     return bag
   }, {})
+
+  const totalHours = services.reduce((sum, item) => {
+    if (item.status) {
+      const hours = item.options ? item.options[item.selectedOption || 0].hours : item.hours || 0
+      return sum + hours
+    }
+    return sum
+  }, 0)
+
+  const categoryDiscounts = Object.entries(categorizedServices).reduce((discounts, [category, items]) => {
+    const allSelected = items.every(item => item.status)
+    if (allSelected) {
+      const categoryTotal = items.reduce((sum, item) => {
+        const hours = item.options ? item.options[item.selectedOption || 0].hours : item.hours || 0
+        return sum + (item.status ? hours : 0)
+      }, 0)
+      discounts[category] = Math.round(categoryTotal * hourlyRate * 0.2)
+    } else {
+      discounts[category] = 0
+    }
+    return discounts
+  }, {} as Record<string, number>)
 
   const totalDiscount = Object.values(categoryDiscounts).reduce((sum, discount) => sum + discount, 0)
   const grandTotal = (totalHours * hourlyRate) - totalDiscount
@@ -159,12 +142,12 @@ useEffect(() => {
               <div key={index} className="service">
                 <div className="serviceInfo">
                   <h5 className="serviceName">{item.name}</h5>
-     <p className="serviceHours"> &#128338;
-  {item.options 
-    ? `${item.options[item.selectedOption || 0].hours} hours` 
-    : `${item.hours} hours`
-  }
-</p>
+                  <p className="serviceHours"> &#128338;
+                    {item.options 
+                      ? `${item.options[item.selectedOption || 0].hours} hours` 
+                      : `${item.hours} hours`
+                    }
+                  </p>
                   <div className={`serviceDescription ${expandedDescriptions[item.name] ? 'expanded' : ''}`}>
                     {item.description}
                     {item.link && (
@@ -235,7 +218,9 @@ useEffect(() => {
           <span>&#128181; Estimated Total:</span>
           <span>${grandTotal}</span>
         </div>
-        <button  disabled className={!totalHours ? "summaryItem toggleButton off ": " summaryItem toggleButton on"}>Order</button>
+        <button disabled className={!totalHours ? "summaryItem toggleButton off" : "summaryItem toggleButton on"}>
+          Order
+        </button>
       </div>
     </div>
   )
