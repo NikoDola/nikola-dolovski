@@ -73,52 +73,6 @@ export default function HendoCalculator() {
     loadServices();
   }, []);
 
-  const loadServices = async () => {
-  setIsLoading(true);
-  setError(null);
-
-  try {
-    // Try localStorage first
-    const savedData = localStorage.getItem('hendo-calculator');
-    if (savedData) {
-      setServices(JSON.parse(savedData));
-      return;
-    }
-
-    // Fetch from API
-    const response = await fetch('/api/hendo-calculator');
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.error || 
-        errorData.message || 
-        `HTTP error! status: ${response.status}`
-      );
-    }
-
-    const data = await response.json();
-    
-    if (!Array.isArray(data)) {
-      throw new Error("Invalid data format received from API");
-    }
-
-    const initialized = data.map(item => ({
-      ...item,
-      status: false,
-      selectedOption: item.options ? 0 : undefined
-    }));
-
-    setServices(initialized);
-    localStorage.setItem('hendo-calculator', JSON.stringify(initialized));
-  } catch (err) {
-    console.error("Failed to load services:", err);
-    setError(err instanceof Error ? err.message : "Unknown error occurred");
-    setServices([]);
-  } finally {
-    setIsLoading(false);
-  }
-};
 
   // Helper functions for localStorage
   const getFromLocalStorage = (): Service[] | null => {
@@ -145,14 +99,14 @@ export default function HendoCalculator() {
   };
 
   const handleToggle = (itemName: string) => {
-    const updated = services.map(item => 
+    const updated = services.map(item =>
       item.name === itemName ? { ...item, status: !item.status } : item
     );
     updateServices(updated);
   };
 
   const handleOptionChange = (itemName: string, optionIndex: number) => {
-    const updated = services.map(item => 
+    const updated = services.map(item =>
       item.name === itemName ? { ...item, selectedOption: optionIndex } : item
     );
     updateServices(updated);
@@ -174,8 +128,8 @@ export default function HendoCalculator() {
 
   const totalHours = services.reduce((sum, item) => {
     if (!item.status) return sum;
-    const hours = item.options 
-      ? item.options[item.selectedOption || 0].hours 
+    const hours = item.options
+      ? item.options[item.selectedOption || 0].hours
       : item.hours || 0;
     return sum + hours;
   }, 0);
@@ -185,12 +139,12 @@ export default function HendoCalculator() {
     if (!allSelected) return acc;
 
     const categoryTotal = items.reduce((sum, item) => {
-      const hours = item.options 
-        ? item.options[item.selectedOption || 0].hours 
+      const hours = item.options
+        ? item.options[item.selectedOption || 0].hours
         : item.hours || 0;
       return sum + (item.status ? hours : 0);
     }, 0);
-    
+
     acc[category] = Math.round(categoryTotal * hourlyRate * 0.2);
     return acc;
   }, {} as Record<string, number>);
@@ -217,7 +171,7 @@ export default function HendoCalculator() {
               <h2 className="categoryTitle">{category}</h2>
               {allSelected && <span className="discountBadge">20% OFF</span>}
             </div>
-            
+
             {items.map((item) => (
               <ServiceItem
                 key={item.name}
@@ -257,7 +211,7 @@ function ServiceItem({ item, expanded, onToggle, onOptionChange, onToggleDescrip
       <div className="serviceInfo">
         <h5 className="serviceName">{item.name}</h5>
         <p className="serviceHours">⏱ {selectedOption?.hours || item.hours} hours</p>
-        
+
         <div className={`serviceDescription ${expanded ? 'expanded' : ''}`}>
           <p>{item.description}</p>
           {selectedOption?.features && (
@@ -291,7 +245,7 @@ function ServiceItem({ item, expanded, onToggle, onOptionChange, onToggleDescrip
       </div>
 
       <div className="serviceActions">
-        <button 
+        <button
           onClick={() => onToggleDescription(item.name)}
           className="readMoreButton"
         >
@@ -334,7 +288,7 @@ function CalculatorSummary({ totalHours, hourlyRate, totalDiscount, grandTotal }
         <span>💰 Estimated Total:</span>
         <span>${grandTotal}</span>
       </div>
-      <button 
+      <button
         className={`orderButton ${!totalHours ? "disabled" : ""}`}
         disabled={!totalHours}
       >

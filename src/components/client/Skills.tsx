@@ -194,10 +194,9 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
             const name = item.name.toLowerCase();
             preloadImage(`/components/skills/clothing-${name}.webp`);
             preloadImage(
-              `/components/skills/${
-                name === "photoshop"
-                  ? "head-sunglasess"
-                  : name === "illustrator"
+              `/components/skills/${name === "photoshop"
+                ? "head-sunglasess"
+                : name === "illustrator"
                   ? "head-illustrator"
                   : "head"
               }.webp`
@@ -209,7 +208,7 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
 
           const elapsed = Date.now() - startTime;
           const remainingTime = Math.max(0, MIN_LOAD_TIME - elapsed);
-          
+
           setTimeout(() => {
             if (isMounted) {
               setIsLoading(false);
@@ -240,7 +239,7 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
       startAutoRotation();
     }
     console.log(activeSkill)
-  }, [skillsData, isLoading, startAutoRotation]);
+  }, [skillsData, isLoading, startAutoRotation, activeSkill]);
 
   const getHeadImageSrc = useCallback(() => {
     switch (currentImage.toLowerCase()) {
@@ -253,9 +252,9 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
   const displayTitle = currentText.includes("deeply curious")
     ? "Skills"
     : currentImage
-        .replace(/([A-Z])/g, " $1")
-        .replace(/^./, (str) => str.toUpperCase())
-        .replace(/-/g, " ");
+      .replace(/([A-Z])/g, " $1")
+      .replace(/^./, (str) => str.toUpperCase())
+      .replace(/-/g, " ");
 
   if (isLoading) {
     return (
@@ -322,14 +321,14 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
           </div>
 
           <div className="leftHandWrapper">
-          <NextImage
-            className={`leftHand ${activeSkill === "aftereffects" ? "animate-left" : ""}`}
-            src={"/components/skills/left-hand.webp"}
-            alt="Left hand"
-            width={180}
-            height={120}
-            priority
-          />
+            <NextImage
+              className={`leftHand ${activeSkill === "aftereffects" ? "animate-left" : ""}`}
+              src={"/components/skills/left-hand.webp"}
+              alt="Left hand"
+              width={180}
+              height={120}
+              priority
+            />
           </div>
 
           <NextImage
@@ -351,7 +350,7 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
           </Link>
         </p>
       </div>
-      
+
       <div className={activeSkill === "openai" ? "imageChat" : "hidden"}>
         <Logo size="0" link="" chat={true} loadingState={false} />
       </div>

@@ -29,7 +29,7 @@ export default function BrandingCalculator() {
       try {
         // First try to load from localStorage
         const savedData = localStorage.getItem('branding-calculator')
-        
+
         if (savedData) {
           const parsedData = JSON.parse(savedData) as Service[]
           setServices(parsedData)
@@ -44,7 +44,7 @@ export default function BrandingCalculator() {
           status: false,
           selectedOption: item.options ? 0 : undefined
         }))
-        
+
         setServices(initialized)
         localStorage.setItem('branding-calculator', JSON.stringify(initialized))
       } catch (error) {
@@ -52,7 +52,7 @@ export default function BrandingCalculator() {
       }
     }
 
-    loadServices()
+    loadServices();
   }, [])
 
   const updateServices = (updatedServices: Service[]) => {
@@ -143,8 +143,8 @@ export default function BrandingCalculator() {
                 <div className="serviceInfo">
                   <h5 className="serviceName">{item.name}</h5>
                   <p className="serviceHours"> &#128338;
-                    {item.options 
-                      ? `${item.options[item.selectedOption || 0].hours} hours` 
+                    {item.options
+                      ? `${item.options[item.selectedOption || 0].hours} hours`
                       : `${item.hours} hours`
                     }
                   </p>
@@ -156,7 +156,7 @@ export default function BrandingCalculator() {
                       </a>
                     )}
                   </div>
-                  
+
                   {item.options && (
                     <div className="serviceOptions">
                       {item.options.map((option, optionIndex) => (
@@ -179,7 +179,7 @@ export default function BrandingCalculator() {
                 </div>
                 <div className="serviceActions">
                   <div className="actionButtons">
-                    <button 
+                    <button
                       onClick={() => toggleDescription(item.name)}
                       className="readMoreButton"
                     >
