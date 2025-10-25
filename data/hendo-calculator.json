@@ -1,0 +1,162 @@
+[
+  {
+    "name": "Music License Store",
+    "description": "Complete e-commerce system for selling music licenses",
+    "category": "Core Features",
+    "options": [
+      {
+        "name": "Basic License System",
+        "hours": 15,
+        "status": false,
+        "features": [
+          "License tier display",
+          "Simple checkout",
+          "PDF license generator"
+        ]
+      },
+      {
+        "name": "Advanced License Management",
+        "hours": 25,
+        "status": false,
+        "features": [
+          "Usage tracking",
+          "Renewal system",
+          "API integrations"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Music Editing Services",
+    "description": "Booking and payment system for editing services",
+    "category": "Core Features",
+    "options": [
+      {
+        "name": "Service Listings",
+        "hours": 10,
+        "status": false,
+        "features": [
+          "Service packages",
+          "Calendar integration",
+          "File upload system"
+        ]
+      },
+      {
+        "name": "Advanced Audio Tools",
+        "hours": 20,
+        "status": false,
+        "features": [
+          "Online audio preview",
+          "Revision system",
+          "Collaboration tools"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Merchandise Store",
+    "description": "Clothing and physical goods e-commerce",
+    "category": "Core Features",
+    "options": [
+      {
+        "name": "Basic Store",
+        "hours": 20,
+        "status": false,
+        "features": [
+          "Product variants",
+          "Inventory management",
+          "Basic checkout"
+        ]
+      },
+      {
+        "name": "Premium Store",
+        "hours": 35,
+        "status": false,
+        "features": [
+          "Subscription merch",
+          "Pre-order system",
+          "Advanced analytics"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "User Accounts",
+    "description": "Customer account system",
+    "category": "Essential Features",
+    "hours": 15,
+    "status": false,
+    "features": [
+      "Purchase history",
+      "License management",
+      "Downloads section"
+    ]
+  },
+  {
+    "name": "Payment Processing",
+    "description": "Payment gateway integration",
+    "category": "Essential Features",
+    "hours": 10,
+    "status": false,
+    "features": [
+      "Stripe/PayPal integration",
+      "Tax calculation",
+      "Payout system"
+    ]
+  },
+  {
+    "name": "Content Management",
+    "description": "For managing music and products",
+    "category": "Essential Features",
+    "hours": 12,
+    "status": false,
+    "features": [
+      "Digital asset management",
+      "Bulk upload",
+      "Metadata editing"
+    ]
+  },
+  {
+    "name": "Mobile Responsiveness",
+    "description": "Optimized for all devices",
+    "category": "Technical Requirements",
+    "hours": 8,
+    "status": false
+  },
+  {
+    "name": "SEO Setup",
+    "description": "Basic search engine optimization",
+    "category": "Technical Requirements",
+    "hours": 5,
+    "status": false,
+    "features": [
+      "Metadata templates",
+      "Sitemap generation",
+      "Schema markup"
+    ]
+  },
+  {
+    "name": "Security",
+    "description": "Essential security measures",
+    "category": "Technical Requirements",
+    "hours": 8,
+    "status": false,
+    "features": [
+      "SSL certificate",
+      "Regular backups",
+      "GDPR compliance"
+    ]
+  },
+  {
+    "name": "Maintenance (3 months)",
+    "description": "Post-launch support",
+    "category": "Additional Services",
+    "hours": 10,
+    "status": false,
+    "features": [
+      "Bug fixes",
+      "Minor updates",
+      "Performance monitoring"
+    ]
+  }
+]
