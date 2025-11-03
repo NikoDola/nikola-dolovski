@@ -4,12 +4,16 @@ import Skills from "@/components/Skills"
 import SocialLinks from "@/components/client/Sociallinks"
 import Loading from "@/components/ui/Loading"
 import ContactForm from "@/components/ContactForm"
+import Footer from "@/components/client/Footer"
+
 
 export default function Home() {
   const [isSkillsLoading, setSkillsLoading] = useState(true)
   
   return (
     <main>
+ 
+   
       {isSkillsLoading  && <Loading />}
 
       {/* Skills Section */}
@@ -35,6 +39,9 @@ export default function Home() {
         <SocialLinks />
         <ContactForm />
       </section>
+      <footer>
+        <Footer />
+      </footer>
     </main>
   )
 }

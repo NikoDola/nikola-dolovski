@@ -1,0 +1,28 @@
+.footerWrapper{
+
+}
+
+.otherLinksWrapper{
+ 
+  display: flex;
+  padding: 2rem;
+  flex-direction: column;
+  gap: 0;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.socialIconsWrapper{
+  display: flex;
+  gap: 1rem;
+}
+
+.copyrights{
+  background-color: var(--foreground);
+  color: gray;
+  font-size: 11px;
+  text-align: center;
+  padding: 1rem;
+}
+
+.socialIcon{}
