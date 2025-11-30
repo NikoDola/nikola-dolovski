@@ -7,7 +7,6 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
- 
 }
 
 /* ==========================================================================
@@ -31,6 +30,8 @@
   height: 644px; /* Base height for the character area */
   margin: 0 auto;
   z-index: -1; /* Keep behind other content */
+  /* Prevent layout shifts */
+  contain: layout style paint;
 }
 
 /* Pseudo-element for the bottom gradient background */
@@ -49,6 +50,8 @@
   border-top-left-radius: 50%;
   border-top-right-radius: 50%;
   z-index: -2; /* Furthest back */
+  /* Optimize animations */
+  will-change: transform;
 }
 
 /* Pseudo-element for the floating animated blob */
@@ -65,11 +68,14 @@
   transform: translate(-50%, -60%);
   border-radius: 80% 200% 100% 150%;
   animation: float 15s infinite; /* Animation for the blob */
+  /* Optimize animations */
+  will-change: transform, border-radius;
+  transform: translateZ(0);
 }
 
-/* Animation for the floating blob */
+/* Optimized animation for the floating blob */
 @keyframes float {
-  0% {
+  0%, 100% {
     transform: translate(-50%, -80%) rotate(0deg) scale(1);
     border-radius: 80% 200% 100% 150%;
   }
@@ -93,17 +99,20 @@
     transform: translate(-35%, -80%) rotate(10deg) scale(1.2);
     border-radius: 100% 100% 100% 100%;
   }
-  100% {
-    transform: translate(-50%, -80%) rotate(0deg) scale(1);
-    border-radius: 80% 200% 100% 150%;
-  }
 }
-
-
 
 /* ==========================================================================
    Character Images (Clothing, Head, Hands)
    ========================================================================== */
+.clothingImage,
+.headImage,
+.leftHand,
+.rightHand {
+  /* Prevent layout shifts */
+  aspect-ratio: auto;
+  backface-visibility: hidden;
+}
+
 .clothingImage {
   position: absolute;
   left: 50%;
@@ -123,28 +132,22 @@
 }
 
 @keyframes headAnimate {
-  0% {
-    transform: translate(-40%,0);
+  0%, 50%, 75%, 100% {
+    transform: translate(-40%, 0);
   }
-  50% {
-     transform: translate(-40%,0);
-  }
-  75% {
-         transform: translate(-40%,0);
-  }
-
   100% {
-     transform: translate(-40%,140%);
-   
+    transform: translate(-40%, 140%);
   }
 }
-
 
 /* General styles for both hands */
 .leftHand,
 .rightHand {
   position: absolute;
   width: 68px; /* Base width */
+  /* Optimize animations */
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .leftHand {
@@ -152,46 +155,45 @@
   left: 68.5%;
   transform: translate(-30%);
   z-index: 5;
- 
 }
-
-
 
 @keyframes leftHandAnimate {
   0% {
+    transform: translate(-30%) rotate(0deg);
     top: 78%;
     left: 68.5%;
-    transform: translate(-30%) rotate(0deg);
   }
   50% {
+    transform: translate(-30%) rotate(-45deg);
     top: 50%;
     left: 80%;
-    transform: translate(-30%) rotate(-45deg);
   }
   75% {
+    transform: translate(-30%) rotate(25deg);
     top: 20%;
     left: 60%;
     z-index: 100;
-    transform: translate(-30%) rotate(25deg);
   }
   100% {
+    transform: translate(-30%) rotate(0deg);
     top: 50%;
     left: 60%;
     z-index: 100;
-    transform: translate(-30%) rotate(0deg);
   }
 }
 
 .animate-left {
   animation: leftHandAnimate 15s infinite;
 }
+
 .animate-right {
   animation: rightHandAnimate 15s infinite;
 }
-.animate-head{
-  animation: headAnimate 15s infinite;
-}
 
+.animate-head {
+  animation: headAnimate 15s infinite;
+  will-change: transform;
+}
 
 .rightHand {
   top: 75.5%;
@@ -199,38 +201,35 @@
   left: 24%;
   transform: translate(-30%);
   z-index: 4;
-
 }
 
 @keyframes rightHandAnimate {
-  0%{
-     top: 75.5%;
-     left: 24%;
+  0% {
+    top: 75.5%;
+    left: 24%;
   }
-  50%{
+  50% {
     top: 50%;
     left: 0%;
     transform: rotate(45deg);
   }
-  75%{
-   top: 20.5%;
-     left: 33%;
-    z-index: 100;
+  75% {
+    top: 20.5%;
+    left: 33%;
     transform: rotate(-25deg);
     z-index: 0;
   }
-    100%{
+  100% {
     top: 50.5%;
     left: 40%;
     z-index: 100;
   }
 }
 
-
 /* ==========================================================================
    Hand Wrapper Pseudo-elements (Animated shapes around hands)
    ========================================================================== */
-/* Animation for shapes around hands */
+/* Optimized animation for shapes around hands */
 @keyframes shapeHandLeftBefore {
   0% {
     transform: translate(0%, 0%) rotate(-25deg) scale(1);
@@ -264,6 +263,9 @@
   background-color: var(--after-background); /* Dynamic color */
   animation: shapeHandLeftBefore 20s alternate-reverse ease-in-out 1s infinite;
   transform: rotate(-20deg);
+  /* Optimize animations */
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 /* Pseudo-element for the left hand wrapper (before) */
@@ -279,6 +281,9 @@
   clip-path: circle(50% at 50% 50%); /* Circular shape */
   z-index: 3;
   animation: shapeHandLeftBefore 20s alternate ease-in-out 1s infinite;
+  /* Optimize animations */
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 /* ==========================================================================
@@ -292,12 +297,16 @@
   margin: 0 auto;
   z-index: 0; /* Ensures icons are visible */
   width: 100%;
+  /* Prevent layout shifts */
+  contain: layout;
 }
-.skillCategory{
+
+.skillCategory {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .designIcons,
 .codeIcons {
   position: relative;
@@ -315,7 +324,6 @@
   font-size: var(--text-xs); /* Assuming --text-xs is defined elsewhere */
   margin-bottom: 1rem;
   text-align: left;
-
   font-style: italic;
 }
 
@@ -325,7 +333,11 @@
   border-radius: 0.35rem;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   width: 2rem;
+  height: auto;
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+  /* Optimize transitions */
+  will-change: transform, box-shadow;
+  transform: translateZ(0);
 }
 
 .skillIcon.active {
@@ -352,20 +364,18 @@
    Hero Text Section
    ========================================================================== */
 .heroTextWrapper {
-  /* Add styles for your text wrapper here */
-  text-align: center; 
+  text-align: center;
   padding: 1em;
- 
 }
 
 .heroTextWrapper h3 {
   font-size: var(--text-4xl);
-  margin-bottom: 0.5em; 
+  margin-bottom: 0.5em;
 }
 
 .heroTextWrapper p {
-  font-size: 1em; 
-  line-height: 1.5; 
+  font-size: 1em;
+  line-height: 1.5;
 }
 
 .heroTextWrapper p b {
@@ -384,6 +394,28 @@
   z-index: 20; /* Ensure it's on top */
 }
 
+.hidden {
+  display: none;
+}
+
+/* ==========================================================================
+   Reduced Motion Support
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .imageWrapper::after,
+  .animate-left,
+  .animate-right,
+  .animate-head,
+  .leftHandWrapper::after,
+  .leftHandWrapper::before {
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+  }
+  
+  .skillIcon {
+    transition: none;
+  }
+}
 
 /* ==========================================================================
    Media Queries
@@ -392,5 +424,33 @@
 @media (max-width: 1000px) {
   .skillIcon.active {
     transform: scale(1.8); /* Slightly smaller scale for active icon on smaller screens */
+  }
+  
+  /* Optimize animations on mobile */
+  .imageWrapper::after,
+  .animate-left,
+  .animate-right,
+  .animate-head {
+    animation-duration: 20s;
+  }
+}
+
+/* Mobile-first optimizations */
+@media (max-width: 768px) {
+  .imageWrapper {
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+    min-height: 500px;
+  }
+  
+  .imageWrapper::after {
+    width: 150px;
+    height: 150px;
+  }
+  
+  /* Reduce animation intensity on mobile for better performance */
+  .skillIcon.active {
+    transform: scale(1.4);
   }
 }

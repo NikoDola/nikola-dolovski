@@ -52,7 +52,7 @@ export default function ContactForm() {
   return (
     <section className="ctfWrapper">
       <div className="ctfTextWrapper">
-        <h1 className="ctfHeadline">HAVE A <br/> PROJECT  IN MIND<span className="questionmark">?</span></h1>
+        <h1 className="ctfHeadline">HAVE A <br /> PROJECT  IN MIND<span className="questionmark">?</span></h1>
         <h5 className="ctfBody">
           I&apos;d love to hear from you! <br />
           Drop a message, and let&apos;s make something amazing together!

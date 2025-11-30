@@ -84,18 +84,20 @@ h6{
 }
 
 
-.input, .textarea{
-
-  background-color: transparent;
+input, textarea{
+  background-color: white;
   outline: solid 1px black;
   padding: 0.5rem;
   padding-left: 1rem;
 }
 
-.input:focus, .textarea:focus{
-  outline: solid  0.1rem var(--brand-color);
+input:focus, textarea:focus{
+  background-color: transparent;
+  outline: solid  0.1rem black;
 }
-
+input:focus::placeholder{
+  color: darkgray;
+}
 .main{
   width: 100%;
   font-size: 1.3rem;

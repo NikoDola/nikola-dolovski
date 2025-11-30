@@ -39,7 +39,26 @@ const SKILL_CATEGORIES = [
   },
 ];
 
+// Predefined color schemes to avoid runtime calculations
+const COLOR_SCHEMES: Record<string, { main: string; alt: string }> = {
+  illustrator: { main: "#F7991C", alt: "#F7991C" },
+  photoshop: { main: "#101519", alt: "#2ECEE8" },
+  figma: { main: "#F27264", alt: "#53C0DD" },
+  aftereffects: { main: "#101519", alt: "#918FC6" },
+  premiere: { main: "#918FC6", alt: "#918FC6" },
+  openai: { main: "white", alt: "#74A89A" },
+  midjourney: { main: "black", alt: "white" },
+  html: { main: "#E24E26", alt: "#E24E26" },
+  css: { main: "#3555A5", alt: "#3555A5" },
+  canvas: { main: "#47B97E", alt: "#47B97E" },
+  js: { main: "#F5DE17", alt: "#F5DE17" },
+  react: { main: "#101519", alt: "#2ECEE8" },
+  next: { main: "#101519", alt: "#101519" },
+  firebase: { main: "#DA3226", alt: "#FFC40D" },
+};
+
 const preloadImage = (src: string) => {
+  // Only preload critical above-the-fold images
   const img = new Image();
   img.src = src;
 };
@@ -56,10 +75,11 @@ const SkillIcon = memo(({ skill, isActive, onClick }: SkillIconProps) => (
       onClick={() => onClick(skill.name)}
       className={`skillIcon ${isActive ? "active" : ""}`}
       src={skill.imagePath}
-      alt={skill.name}
+      alt={`${skill.name} icon`}
       width={30}
       height={30}
       loading="eager"
+      priority
     />
     <div className="hrLine" />
   </>
@@ -68,7 +88,6 @@ const SkillIcon = memo(({ skill, isActive, onClick }: SkillIconProps) => (
 SkillIcon.displayName = "SkillIcon";
 
 export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
-  const [isLoading, setIsLoading] = useState(true);
   const [currentImage, setCurrentImage] = useState("niko-dola");
   const [currentText, setCurrentText] = useState(DEFAULT_TEXT);
   const [skillsData, setSkillsData] = useState<SkillData[]>([]);
@@ -124,8 +143,6 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
 
   useEffect(() => {
     let isMounted = true;
-    const startTime = Date.now();
-    const MIN_LOAD_TIME = 800;
 
     async function fetchData() {
       try {
@@ -133,53 +150,9 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
         const dataJson: SkillData[] = await response.json();
 
         const processedData = dataJson.map((item) => {
-          let colorScheme = { main: "#1e1e1e", alt: "#3ce5e5" };
           const lowerCaseName = item.name.toLowerCase();
-
-          switch (lowerCaseName) {
-            case "illustrator":
-              colorScheme = { main: "#F7991C", alt: "#F7991C" };
-              break;
-            case "photoshop":
-              colorScheme = { main: "#101519", alt: "#2ECEE8" };
-              break;
-            case "figma":
-              colorScheme = { main: "#F27264", alt: "#53C0DD" };
-              break;
-            case "aftereffects":
-              colorScheme = { main: "#101519", alt: "#918FC6" };
-              break;
-            case "premiere":
-              colorScheme = { main: "#918FC6", alt: "#918FC6" };
-              break;
-            case "openai":
-              colorScheme = { main: "white", alt: "#74A89A" };
-              break;
-            case "midjourney":
-              colorScheme = { main: "black", alt: "white" };
-              break;
-            case "html":
-              colorScheme = { main: "#E24E26", alt: "#E24E26" };
-              break;
-            case "css":
-              colorScheme = { main: "#3555A5", alt: "#3555A5" };
-              break;
-            case "canvas":
-              colorScheme = { main: "#47B97E", alt: "#47B97E" };
-              break;
-            case "js":
-              colorScheme = { main: "#F5DE17", alt: "#F5DE17" };
-              break;
-            case "react":
-              colorScheme = { main: "#101519", alt: "#2ECEE8" };
-              break;
-            case "next":
-              colorScheme = { main: "#101519", alt: "#101519" };
-              break;
-            case "firebase":
-              colorScheme = { main: "#DA3226", alt: "#FFC40D" };
-              break;
-          }
+          const colorScheme = COLOR_SCHEMES[lowerCaseName] || { main: "#1e1e1e", alt: "#3ce5e5" };
+          
           return {
             ...item,
             color: colorScheme,
@@ -190,36 +163,20 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
         if (isMounted) {
           setSkillsData(processedData);
 
-          processedData.forEach((item) => {
-            const name = item.name.toLowerCase();
-            preloadImage(`/components/skills/clothing-${name}.webp`);
-            preloadImage(
-              `/components/skills/${name === "photoshop"
-                ? "head-sunglasess"
-                : name === "illustrator"
-                  ? "head-illustrator"
-                  : "head"
-              }.webp`
-            );
-          });
+          // Only preload critical images that are likely to be viewed first
+          const criticalImages = [
+            "/components/skills/clothing-niko-dola.webp",
+            "/components/skills/head.webp",
+            "/components/skills/left-hand.webp",
+            "/components/skills/right-hand.webp"
+          ];
 
-          preloadImage("/components/skills/left-hand.webp");
-          preloadImage("/components/skills/right-hand.webp");
-
-          const elapsed = Date.now() - startTime;
-          const remainingTime = Math.max(0, MIN_LOAD_TIME - elapsed);
-
-          setTimeout(() => {
-            if (isMounted) {
-              setIsLoading(false);
-              onLoadComplete?.();
-            }
-          }, remainingTime);
+          criticalImages.forEach(preloadImage);
+          onLoadComplete?.();
         }
       } catch (error) {
         console.error("Failed to fetch skills data:", error);
         if (isMounted) {
-          setIsLoading(false);
           onLoadComplete?.();
         }
       }
@@ -235,11 +192,10 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
   }, [onLoadComplete]);
 
   useEffect(() => {
-    if (skillsData.length > 0 && !isLoading) {
+    if (skillsData.length > 0) {
       startAutoRotation();
     }
-    console.log(activeSkill)
-  }, [skillsData, isLoading, startAutoRotation, activeSkill]);
+  }, [skillsData, startAutoRotation]);
 
   const getHeadImageSrc = useCallback(() => {
     switch (currentImage.toLowerCase()) {
@@ -255,14 +211,6 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
       .replace(/([A-Z])/g, " $1")
       .replace(/^./, (str) => str.toUpperCase())
       .replace(/-/g, " ");
-
-  if (isLoading) {
-    return (
-      <div className="loading-container">
-        <div className="loading-spinner" />
-      </div>
-    );
-  }
 
   return (
     <div className="heroSectionWrapper">
@@ -304,7 +252,7 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
           <NextImage
             className="clothingImage"
             src={`/components/skills/clothing-${currentImage.toLocaleLowerCase()}.webp`}
-            alt="Clothing"
+            alt={`${currentImage} clothing`}
             width={180}
             height={120}
             priority

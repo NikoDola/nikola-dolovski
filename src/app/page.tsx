@@ -1,10 +1,11 @@
 "use client"
 import { useState } from "react"
 import Skills from "@/components/Skills"
-import SocialLinks from "@/components/client/Sociallinks"
+
 import Loading from "@/components/ui/Loading"
-import ContactForm from "@/components/ContactForm"
+import ContactForm from "@/components/client/ContactForm"
 import Footer from "@/components/client/Footer"
+import Portfolio from "@/components/client/Portfolio"
 
 
 export default function Home() {
@@ -29,19 +30,17 @@ export default function Home() {
         <Skills onLoadComplete={() => setSkillsLoading(false)} />
       </section>
 
-      {/* Portfolio Section */}
-      <section 
-        className="section-regular"
-       
-      >
-        <h2>Portfolio</h2>
-        <p className="mb-8">More items coming soon!</p>
-        <SocialLinks />
+        <section className="section-regular">
+          <h2>My Work</h2>
+          <Portfolio/>
+        </section>
+             <section className="section-regular">
         <ContactForm />
       </section>
       <footer>
         <Footer />
       </footer>
+
     </main>
   )
 }

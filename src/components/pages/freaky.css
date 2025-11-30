@@ -1,0 +1,108 @@
+.frkSection {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  font-family: "Inter", sans-serif;
+  line-height: 1.7;
+  color: #2c2c2c;
+  
+}
+
+.frkHeadline {
+  font-size: 3rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-align: center;
+  color: var(--brand-color);
+  margin-bottom: 1.5rem;
+}
+
+.frkHeadline2{
+
+  line-height: 2rem;
+}
+
+.frkBody {
+  font-size: 1.1rem;
+  margin-bottom: 3rem;
+}
+
+.frkSectionWrapper {
+  display: flex;
+  align-items: start;
+  gap: 3rem;
+  margin-bottom: 4rem;
+}
+
+.frkSectionWrapper.frkReverse {
+  flex-direction: row-reverse;
+}
+
+.frkTextWrapper {
+  flex: 1;
+  width: 50%;
+}
+
+.frkImageWrapper {
+  flex: 1;
+  width: 50%;
+}
+
+.frkTextWrapper h2,
+.frkTextWrapper h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: var(--brand-color);
+  font-weight: 600;
+}
+
+.frkTextWrapper p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.frkImageWrapper figure {
+  margin: 0;
+  text-align: center;
+}
+
+.blogImage {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.5rem;
+  max-width: 100%;
+  height: auto;
+}
+
+figcaption {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+@media (max-width: 768px) {
+  .frkHeadline {
+    font-size: 2.2rem;
+  }
+
+  .frkSection {
+    padding: 40px 16px;
+  }
+
+  .frkBody {
+    font-size: 1rem;
+  }
+
+  .frkSectionWrapper {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .frkSectionWrapper.frkReverse {
+    flex-direction: column;
+  }
+
+  .frkTextWrapper,
+  .frkImageWrapper {
+    width: 100%;
+  }
+}
