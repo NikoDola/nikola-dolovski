@@ -64,6 +64,7 @@ const SkillIcon = memo(({ skill, isActive, onClick }: SkillIconProps) => (
       width={30}
       height={30}
       loading="eager"
+      priority
     />
     <div className="hrLine" />
   </>
