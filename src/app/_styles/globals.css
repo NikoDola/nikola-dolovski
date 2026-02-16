@@ -23,12 +23,10 @@ img::selection{
   
 }
 h1{
-  font-size: var(--text-7xl);
+
   font-family: 'Oswald', sans-serif;
-  font-weight: 600;
-  letter-spacing: var(--space-2);
-  line-height: var(--text-7xl);
-  margin-bottom: 2rem;
+
+
 }
 
 h1::selection{
@@ -102,13 +100,14 @@ input:focus::placeholder{
   width: 100%;
   font-size: 1.3rem;
 }
-
+.hrTextWrapper{
+  width: 50%;
+}
 
 .section-full{
   width: 100%;
   margin: 0 auto;
-  margin-top: var(--space-22);
-  margin-bottom: var(--space-22);
+
 }
 .section-regular, .heroSection{
   width: 60%;
@@ -140,9 +139,7 @@ input:focus::placeholder{
     width: 90%;
     
   }
-  h1{
-    font-size: var(--text-5xl);
-  }
+
   h2{
     font-size: var(--text-3xl);
   }

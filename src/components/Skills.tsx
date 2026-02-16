@@ -29,9 +29,7 @@ const INACTIVITY_TIMEOUT = 30000;
 const SKILL_CATEGORIES = [
   {
     title: "Graphic Design",
-    skills: [
-      "illustrator", "photoshop", "figma", "aftereffects", "premiere", "openai", "midjourney",
-    ],
+    skills: ["illustrator", "photoshop", "figma", "aftereffects", "premiere", "openai", "midjourney"],
   },
   {
     title: "Web Developer",
@@ -87,9 +85,7 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
 
   const updateSkill = useCallback(
     (key: string) => {
-      const item = skillsData.find(
-        (skill) => skill.name.toLowerCase() === key.toLowerCase()
-      );
+      const item = skillsData.find((skill) => skill.name.toLowerCase() === key.toLowerCase());
       if (item) {
         setCurrentText(item.description.slice(0, 150));
         setCurrentImage(item.name);
@@ -97,16 +93,14 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
         setColor(item.color);
       }
     },
-    [skillsData]
+    [skillsData],
   );
 
   const startAutoRotation = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
 
     intervalRef.current = setInterval(() => {
-      const currentIndex = allSkillNames.findIndex(
-        (skill) => skill.toLowerCase() === activeSkill?.toLowerCase()
-      );
+      const currentIndex = allSkillNames.findIndex((skill) => skill.toLowerCase() === activeSkill?.toLowerCase());
       const nextIndex = (currentIndex + 1) % allSkillNames.length;
       const nextSkill = allSkillNames[nextIndex];
       updateSkill(nextSkill);
@@ -124,7 +118,7 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
         startAutoRotation();
       }, INACTIVITY_TIMEOUT);
     },
-    [updateSkill, startAutoRotation]
+    [updateSkill, startAutoRotation],
   );
 
   useEffect(() => {
@@ -199,13 +193,7 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
             const name = item.name.toLowerCase();
             return [
               `/components/skills/clothing-${name}.webp`,
-              `/components/skills/${
-                name === "photoshop"
-                  ? "head-sunglasess"
-                  : name === "illustrator"
-                  ? "head-illustrator"
-                  : "head"
-              }.webp`,
+              `/components/skills/${name === "photoshop" ? "head-sunglasess" : name === "illustrator" ? "head-illustrator" : "head"}.webp`,
             ];
           });
           imagesToPreload.push("/components/skills/left-hand.webp");
@@ -215,7 +203,7 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
 
           const elapsed = Date.now() - startTime;
           const remainingTime = Math.max(0, MIN_LOAD_TIME - elapsed);
-          
+
           setTimeout(() => {
             if (isMounted) {
               setIsReady(true); // Set to true when everything is ready
@@ -242,16 +230,20 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
   }, [onLoadComplete]);
 
   useEffect(() => {
-    if (skillsData.length > 0 && isReady) { // Only start rotation when skillsData is loaded and component is ready
+    if (skillsData.length > 0 && isReady) {
+      // Only start rotation when skillsData is loaded and component is ready
       startAutoRotation();
     }
   }, [skillsData, isReady, startAutoRotation]);
 
   const getHeadImageSrc = useCallback(() => {
     switch (currentImage.toLowerCase()) {
-      case "photoshop": return "head-sunglasess";
-      case "illustrator": return "head-illustrator";
-      default: return "head";
+      case "photoshop":
+        return "head-sunglasess";
+      case "illustrator":
+        return "head-illustrator";
+      default:
+        return "head";
     }
   }, [currentImage]);
 
@@ -262,7 +254,8 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
         .replace(/^./, (str) => str.toUpperCase())
         .replace(/-/g, " ");
 
-  if (!isReady) { // Render loading state if not ready
+  if (!isReady) {
+    // Render loading state if not ready
     return (
       <div className="loading-container">
         <div className="loading-spinner" />
@@ -271,7 +264,7 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
   }
 
   return (
-    <div className="heroSectionWrapper">
+    <div className="skillsWrapper">
       <div
         className="imagesWrapper"
         style={
@@ -288,9 +281,7 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
                 {category.title} <b>▼</b>
               </span>
               {category.skills.map((skillName) => {
-                const skill = skillsData.find(
-                  (s) => s.name.toLowerCase() === skillName.toLowerCase()
-                );
+                const skill = skillsData.find((s) => s.name.toLowerCase() === skillName.toLowerCase());
                 if (!skill) return null;
 
                 return (
@@ -327,14 +318,14 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
           </div>
 
           <div className="leftHandWrapper">
-          <NextImage
-            className={`leftHand ${activeSkill === "aftereffects" ? "animate-left" : ""}`}
-            src={"/components/skills/left-hand.webp"}
-            alt="Left hand"
-            width={180}
-            height={120}
-            priority
-          />
+            <NextImage
+              className={`leftHand ${activeSkill === "aftereffects" ? "animate-left" : ""}`}
+              src={"/components/skills/left-hand.webp"}
+              alt="Left hand"
+              width={180}
+              height={120}
+              priority
+            />
           </div>
 
           <NextImage
@@ -356,7 +347,7 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
           </Link>
         </p>
       </div>
-      
+
       <div className={activeSkill === "openai" ? "imageChat" : "hidden"}>
         <Logo size="0" link="" chat={true} loadingState={false} />
       </div>

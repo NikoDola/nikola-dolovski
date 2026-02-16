@@ -2,6 +2,11 @@
    Base & Layout Styles
    (General wrapper, main layout, and responsive defaults)
    ========================================================================== */
+.skillsWrapper{
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 10rem;
+}
 .heroSectionWrapper {
   width: 100%;
   margin: 0 auto;
@@ -399,4 +404,8 @@
   .skillIcon.active {
     transform: scale(1.8); /* Slightly smaller scale for active icon on smaller screens */
   }
+  .skillsWrapper{
+  width: 100%;
+
+}
 }
