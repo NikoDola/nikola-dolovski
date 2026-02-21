@@ -1,4 +1,4 @@
-import BrandingCalculator from "@/components/client/BrandingCalculator"
+import BrandingCalculator from "@/components/sections/BrandingCalculator"
 
 export default function brandingCalculator(){
   return(

@@ -1,0 +1,158 @@
+.bcWrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  font-family: "Inter", sans-serif;
+  color: #2c2c2c;
+}
+
+.bcTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--theme-color, #000);
+  margin-bottom: 0.5rem;
+}
+
+.bcSubtitle {
+  text-align: center;
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2.5rem;
+}
+
+/* Grid */
+.bcGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Card */
+.bcCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #fff;
+}
+
+.bcCard:hover {
+  border-color: #aaa;
+}
+
+.bcCard--active {
+  border-color: var(--theme-color, #000);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+.bcCheckbox {
+  margin-top: 3px;
+  accent-color: var(--theme-color, #000);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.bcCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.bcCardLabel {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.bcCardDesc {
+  font-size: 0.85rem;
+  color: #777;
+  line-height: 1.4;
+}
+
+.bcCardPrice {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--theme-color, #000);
+  margin-top: 0.25rem;
+}
+
+/* Summary bar */
+.bcSummary {
+  position: sticky;
+  bottom: 20px;
+  background: #fff;
+  border: 2px solid #e0e0e0;
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.bcSummaryInfo {
+  display: flex;
+  gap: 2rem;
+}
+
+.bcSummaryItem {
+  font-size: 1rem;
+  color: #444;
+}
+
+.bcSummaryItem strong {
+  color: #000;
+}
+
+/* Submit button */
+.bcSubmitBtn {
+  padding: 0.75rem 2rem;
+  background: var(--theme-color, #000);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.bcSubmitBtn:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.bcSubmitBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .bcTitle {
+    font-size: 1.8rem;
+  }
+
+  .bcSummary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .bcSummaryInfo {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .bcSubmitBtn {
+    width: 100%;
+  }
+}

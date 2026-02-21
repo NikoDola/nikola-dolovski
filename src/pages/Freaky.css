@@ -13,7 +13,7 @@
   text-transform: uppercase;
   font-weight: 700;
   text-align: center;
-  color: var(--brand-color);
+  color: var(--theme-color);
   margin-bottom: 1.5rem;
 }
 
@@ -52,7 +52,7 @@
 .frkTextWrapper h3 {
   margin-top: 0;
   margin-bottom: 1.5rem;
-  color: var(--brand-color);
+  color: var(--theme-color);
   font-weight: 600;
 }
 

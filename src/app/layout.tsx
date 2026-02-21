@@ -1,19 +1,7 @@
 import type { Metadata } from "next";
-
-import "./_styles/globals.css"; // if you're inside /app/layout.tsx
-import Head from 'next/head';
-
-
-// const geistSans = localFont({
-//   src: "./fonts/GeistVF.woff",
-//   variable: "--font-geist-sans",
-//   weight: "100 900",
-// });
-// const geistMono = localFont({
-//   src: "./fonts/GeistMonoVF.woff",
-//   variable: "--font-geist-mono",
-//   weight: "100 900",
-// });
+import React from "react";
+import { ColorProvider } from "@/context/ColorContext";
+import "./_styles/globals.css";
 
 export const metadata: Metadata = {
   title: "Niko Dola Page",
@@ -22,18 +10,22 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const defaultColor = "#88D1D4";
+
   return (
-    <html lang="en">
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </Head>
-      <body
-        // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html
+      lang="en"
+      style={
+        { "--theme-color": defaultColor } as React.CSSProperties
+      }
+    >
+      <body>
+        <ColorProvider initialColor={defaultColor}>
+          {children}
+        </ColorProvider>
       </body>
     </html>
   );

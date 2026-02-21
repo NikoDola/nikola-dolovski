@@ -1,0 +1,89 @@
+.hrWrapper {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  background-color: gray;
+  position: relative;
+  overflow: hidden; /* Prevents the large logo from creating a scrollbar */
+}
+
+.hrChild {
+  position: relative;
+  width: 50%;
+  height: 100%;
+}
+
+.left {
+  background-color: lightblue;
+}
+
+.right {
+  background-color: lightcoral;
+
+}
+.logo {
+  position: absolute;
+  /* 1. Anchor to the right edge of whichever container it is in */
+  right: 0; 
+  top: 50%;
+  
+  /* 2. Use a relative width so it can't be 'too big' for the screen */
+  width: 80%;       /* It will now take up 80% of the half-screen */
+  max-width: 600px; /* But it won't ever get bigger than 600px */
+  height: auto;
+  
+  /* 3. Center vertically and pull it slightly left if needed */
+  transform: translateY(-50%); 
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+
+/* RIGHT SIDE */
+.hrsImageWrapper {
+  width: 100%;
+
+  background-color: white;
+  position: relative;
+}
+
+
+
+.colorLayer {
+  position: absolute;
+  inset: 0;
+  background: var(--theme-color);
+
+  -webkit-mask-image: url("/images/personal/shadow.webp");
+  -webkit-mask-size: contain;
+  -webkit-mask-position: bottom left;
+  -webkit-mask-repeat: no-repeat;
+
+  mask-image: url("/images/personal/shadow.webp");
+  mask-size: contain;
+  mask-position: bottom left;
+  mask-repeat: no-repeat;
+pointer-events: none;
+  mix-blend-mode: multiply;
+  
+}
+
+.shadow {
+  mix-blend-mode: overlay;
+}
+
+.highlight {
+  mix-blend-mode: screen;
+}
+.globe{
+  position: absolute;
+  width: 20%;
+  aspect-ratio: 1;
+  background: var(--theme-color);
+  border-radius: 100%;
+  top: 25%;
+  left: 90%;
+  animation: anmGlobe 5s infinite alternate;
+}

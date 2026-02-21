@@ -1,0 +1,9 @@
+.cardWrapper{
+  background-color: rgb(62, 62, 63);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}

@@ -1,6 +1,6 @@
 "use client"
 import "./UnderConstraction.css"
-import Logo from "@/components/client/Logo"
+import Logo from "@/components/ui/Logo"
 
 export default function UnderConstraction(){
   return(

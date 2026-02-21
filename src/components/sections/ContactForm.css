@@ -69,7 +69,7 @@
 }
 
 .ctfButton:hover {
-  background-color: var(--brand-color);
+  background-color: var(--theme-color);
   color: var(--foreground);
 }
 

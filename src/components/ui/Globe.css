@@ -1,0 +1,29 @@
+.globePicker {
+  position: absolute;
+  top: 30%;
+  left: 25%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  outline: none;
+  cursor: pointer;
+  z-index: 0;
+}
+
+/* remove default chrome styling */
+.globePicker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.globePicker::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.globePicker::-moz-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
