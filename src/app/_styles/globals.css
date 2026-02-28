@@ -101,7 +101,8 @@ input:focus::placeholder{
   font-size: 1.3rem;
 }
 .hrTextWrapper{
-  width: 50%;
+  width: 60%;
+
 }
 
 .section-full{

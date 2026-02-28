@@ -100,6 +100,11 @@
   text-align: right;
 
 }
+.beforeHr{
+  margin-bottom: -1rem;
+  font-size: 2rem;
+  line-height: 1.9rem;
+}
 .hrHeadline{
   font-weight: 800;
   font-size: 130px;
@@ -136,9 +141,9 @@
     transform: scaleY(1);
   }
 }
-@media (max-width: 750px) {
+@media (max-width: 1000px) {
   .imgWrapper {
-    height: 60vh;
+    height: 70vh;
     align-items: end;
   }
 
@@ -155,6 +160,10 @@
     font-size: 65px;
     line-height: 60px;
    
+  }
+  .beforeHr{
+    font-size: 1.5rem;
+    line-height: 1.3rem;
   }
 }
 

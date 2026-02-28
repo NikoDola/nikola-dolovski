@@ -1,6 +1,6 @@
 import Image from "next/image";
 import "./Hero.css";
-import Globe from "@/components/ui/Globe"
+
 
 export default function Hero() {
   return (
@@ -18,7 +18,7 @@ export default function Hero() {
            
           </div>
           <div className="textWrapper">
-            <p>Branding & Web design</p>
+            <p className="beforeHr">Quiet brands speak the loudest.</p>
             <h1 className="hrHeadline">NIKO DOLA</h1>
             <button>Get in touch</button>
           </div>
