@@ -31,7 +31,7 @@
 
 .servicesWrapper li:hover{
   color: white;
-  background-color: var(--theme-color)
+  background-color: var(--primary-color)
 }
 
 .servicesWrapper{
@@ -85,7 +85,7 @@
 
 
 .servicesWrapper li input[type="checkbox"]:checked {
-  background-color: var(--theme-color);
+  background-color: var(--primary-color);
   border-color: white;
 }
 

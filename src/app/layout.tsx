@@ -13,17 +13,19 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const defaultColor = "#88D1D4";
+  const primaryColor = "#88D1D4";
+  const secondaryColor = "#121B41"
 
   return (
     <html
       lang="en"
       style={
-        { "--theme-color": defaultColor } as React.CSSProperties
+        { "--primary-color": primaryColor, "--secondary-color": secondaryColor} as React.CSSProperties
+      
       }
     >
       <body>
-        <ColorProvider initialColor={defaultColor}>
+        <ColorProvider primaryColor={primaryColor}>
           {children}
         </ColorProvider>
       </body>

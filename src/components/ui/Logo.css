@@ -13,7 +13,7 @@
 
 .logoWrapper{
   position: relative;
-  background-color: var(--theme-color);
+  background-color: var(--primary-color);
   border-radius: 50%;
   cursor: pointer;
 }

@@ -1,64 +1,33 @@
-import "./Hero.css"
-import HalfLogo from "@/components/ui/HalfLogo"
-import Image from "next/image"
+import Image from "next/image";
+import "./Hero.css";
 import Globe from "@/components/ui/Globe"
-export default function Hero(){
-  return(
-    <section className="hrWrapper">
-      <div className="hrChild left">
-        <HalfLogo className="logo" />
-        {/* Text/Content goes here */}
+
+export default function Hero() {
+  return (
+    <div>
+      <div className="imgWrapper">
+        <Image src="/images/personal/half-logo.svg" width={300} height={300} alt="niko-dola logo" className="logo__half" />
+
+        <div className="imageContainer">
+          <div className="niko__image">
+            <Image src="/images/personal/finger.webp" width={300} height={300} alt="niko dola" className="images finger" priority />
+            <Image src="/images/personal/base.webp" width={300} height={300} alt="niko dola" className="images base" priority/>
+            <Image src="/images/personal/shadow.webp" width={300} height={300} alt="niko dola" className="images highlight" priority />
+            <div className="color__mask"></div>
+            <Image src="/images/personal/highlight.webp" width={300} height={300} alt="niko dola" className="images shadow" priority/>
+           
+          </div>
+          <div className="textWrapper">
+            <p>Branding & Web design</p>
+            <h1 className="hrHeadline">NIKO DOLA</h1>
+            <button>Get in touch</button>
+          </div>
+         
+          <div onClick={()=> alert('hello')} className="globe"></div>
+          <div className="globe2"></div>
+        </div>
       </div>
-      
-      <div className="hrChild right">
-          <Image 
-          src="/images/personal/finger.webp" 
-          width={500} 
-          height={1250} 
-          alt="finger" 
-          className="heroImage" 
-          priority 
-          style={{ objectFit: 'contain', objectPosition: 'bottom left' }}
-        />
-        
-      
-        
-        <Globe />
-        
-        <Image 
-          src="/images/personal/base.webp" 
-          width={500} 
-          height={1250} 
-          alt="base" 
-          className="heroImage" 
-          priority 
-          style={{ objectFit: 'contain', objectPosition: 'bottom left' }}
-        />
-
-        <div className="colorLayer"></div>
-
-        <Image 
-          src="/images/personal/shadow.webp" 
-          width={500} 
-          height={1250} 
-          alt="shadow" 
-          className="heroImage shadow" 
-          priority 
-          style={{ objectFit: 'contain', objectPosition: 'bottom left' }}
-        />
-
-        <Image 
-          src="/images/personal/highlight.webp" 
-          width={500} 
-          height={1250} 
-          alt="highlight" 
-          className="heroImage highlight" 
-          priority 
-          style={{ objectFit: 'contain', objectPosition: 'bottom left' }}
-        />
-        
-        <span className="dummy-text">ee</span>
-      </div>
-    </section>
-  )
+      <div className="other__section"></div>
+    </div>
+  );
 }

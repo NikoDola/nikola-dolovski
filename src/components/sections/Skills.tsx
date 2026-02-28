@@ -4,7 +4,7 @@ import NextImage from "next/image";
 import "./Skills.css";
 import { useEffect, useState, useRef, useCallback, memo } from "react";
 import Link from "next/link";
-import Logo from "./client/Logo";
+import Logo from "@/components/ui/Logo";
 
 interface SkillData {
   name: string;

@@ -2,17 +2,25 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-const ColorContext = createContext();
+const ColorContext = createContext(undefined);
 
-export function ColorProvider({ children, initialColor = "#ff0000" }) {
-  const [color, setColor] = useState(initialColor);
+export function ColorProvider({
+  children,
+  primaryColor = "#4B69C6",
+  secondaryColor = "#121B41",
+}) {
+  const [primary, setPrimary] = useState(primaryColor);
+  const [secondary, setSecondary] = useState(secondaryColor);
 
   useEffect(() => {
-    document.documentElement.style.setProperty("--theme-color", color);
-  }, [color]);
+    document.documentElement.style.setProperty("--primary-color", primary);
+    document.documentElement.style.setProperty("--secondary-color", secondary);
+  }, [primary, secondary]);
 
   return (
-    <ColorContext.Provider value={{ color, setColor }}>
+    <ColorContext.Provider
+      value={{ primary, setPrimary, secondary, setSecondary }}
+    >
       {children}
     </ColorContext.Provider>
   );

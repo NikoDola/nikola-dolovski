@@ -1,89 +1,166 @@
-.hrWrapper {
+.imgWrapper {
   height: 100vh;
-  width: 100%;
   display: flex;
-  background-color: gray;
+  justify-content: center;
+  align-items: end;
+
+}
+.finger{
+  z-index: -1;
+}
+/* Both images scale together */
+.logo__half,
+.niko__image {
   position: relative;
-  overflow: hidden; /* Prevents the large logo from creating a scrollbar */
-}
-
-.hrChild {
-  position: relative;
-  width: 50%;
-  height: 100%;
-}
-
-.left {
-  background-color: lightblue;
-}
-
-.right {
-  background-color: lightcoral;
-
-}
-.logo {
-  position: absolute;
-  /* 1. Anchor to the right edge of whichever container it is in */
-  right: 0; 
-  top: 50%;
-  
-  /* 2. Use a relative width so it can't be 'too big' for the screen */
-  width: 80%;       /* It will now take up 80% of the half-screen */
-  max-width: 600px; /* But it won't ever get bigger than 600px */
-  height: auto;
-  
-  /* 3. Center vertically and pull it slightly left if needed */
-  transform: translateY(-50%); 
-  width: 100%;
-  height: 100%;
-  overflow: visible;
+  width: clamp(180px, 30vw, 300px);
+  aspect-ratio: 2 / 5;
   pointer-events: none;
+
 }
-
-
-/* RIGHT SIDE */
-.hrsImageWrapper {
-  width: 100%;
-
-  background-color: white;
-  position: relative;
-}
-
-
-
-.colorLayer {
+.images {
   position: absolute;
   inset: 0;
-  background: var(--theme-color);
-
-  -webkit-mask-image: url("/images/personal/shadow.webp");
-  -webkit-mask-size: contain;
-  -webkit-mask-position: bottom left;
-  -webkit-mask-repeat: no-repeat;
-
-  mask-image: url("/images/personal/shadow.webp");
-  mask-size: contain;
-  mask-position: bottom left;
-  mask-repeat: no-repeat;
-pointer-events: none;
-  mix-blend-mode: multiply;
-  
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
 }
-
 .shadow {
-  mix-blend-mode: overlay;
+  mix-blend-mode: screen;
+  z-index: 2;
 }
 
 .highlight {
-  mix-blend-mode: screen;
+  mix-blend-mode: overlay;
+  z-index: 2;
 }
-.globe{
+
+.color__mask {
   position: absolute;
-  width: 20%;
-  aspect-ratio: 1;
-  background: var(--theme-color);
-  border-radius: 100%;
-  top: 25%;
-  left: 90%;
-  animation: anmGlobe 5s infinite alternate;
+  inset: 0;
+  background-color: var(--primary-color);
+  z-index: 1;
+
+  /* use base.webp as mask */
+  -webkit-mask-image: url("/images/personal/base.webp");
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+
+  mask-image: url("/images/personal/shadow.webp");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mix-blend-mode: multiply;
 }
+
+.imageContainer {
+  position: relative;
+  width: fit-content;
+}
+
+.globe {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background-color: var(--primary-color);
+  left: 100%;
+  top: 50%;
+  border-radius: 100%;
+  transform: translate(-120%, -112%);
+  animation: anm__globe ease infinite 3s;
+  
+}
+.base{
+  z-index: 1;
+}
+
+.globe::after{
+  content: "";
+  width: 50px;
+  height: 50px;
+  background-color: rgb(7, 7, 30);
+  border-radius: 50%;
+  animation: blinking 3s ease infinite;
+  transform-origin: center;
+}
+
+.textWrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 1rem;
+  width: 100%;
+  position: absolute;
+  right: 110%;
+  top: 50%;
+  text-align: right;
+
+}
+.hrHeadline{
+  font-weight: 800;
+  font-size: 130px;
+  line-height: 120px;
+  color: var(--secondary-color);
+}
+@keyframes anm__globe{
+  0%{
+    transform: translate(-120%, -112%)
+  }
+  50%{transform: translate(-80%, -130%);}
+  75%{
+    transform: translate(-90%, -160%);
+  }
+  100%{
+    transform: translate(-120%, -112%)
+  }
+  
+}
+@keyframes blinking{
+  0%{
+    transform: scaleY(1);
+  }
+
+  85%{
+    transform: scaleY(1);
+  }
+
+  90%{
+    transform: scaleY(0.05);
+  }
+
+  100%{
+    transform: scaleY(1);
+  }
+}
+@media (max-width: 750px) {
+  .imgWrapper {
+    height: 60vh;
+    align-items: end;
+  }
+
+  .globe {
+    width: 100px;
+    height: 100px;
+  }
+
+  .globe::after {
+    width: 30px;
+    height: 30px;
+  }
+  .hrHeadline{
+    font-size: 65px;
+    line-height: 60px;
+   
+  }
+}
+
+.other__section{
+  height: 100vh;
+  width: 100%;
+  background-color: blue;
+}
+

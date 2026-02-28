@@ -30,7 +30,7 @@ h1{
 }
 
 h1::selection{
-  background-color: var(--theme-color);
+  background-color: var(--primary-color);
   color: var(--foreground);
 }
 

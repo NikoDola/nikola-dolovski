@@ -10,7 +10,7 @@ export default function HalfLogo({ className }) {
       <g>
         {/* Background shape */}
         <path
-          fill="var(--theme-color)"
+          fill="var(--primary-color)"
           d="M219,312.4c0,155.1,125.9,281,281,281V31.6C344.9,31.6,219,157.2,219,312.4z"
         />
 

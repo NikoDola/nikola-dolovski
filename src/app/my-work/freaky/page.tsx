@@ -1,5 +1,5 @@
 import Image from "next/image"
-import "@/components/pages/freaky.css"
+
 
 export default function Freaky() {
   return (

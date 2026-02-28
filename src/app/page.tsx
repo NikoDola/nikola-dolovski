@@ -1,7 +1,6 @@
 "use client"
 import Hero from "@/components/sections/Hero"
 
-import BrandingCalculator from "@/pages/BrandingCalculator"
 
 export default function Home() {
 
@@ -9,7 +8,7 @@ export default function Home() {
     <main>
     <Hero />
 
-     <BrandingCalculator />
+
     </main>
   )
 }
