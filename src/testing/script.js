@@ -1,93 +1,134 @@
-const eyes = document.querySelectorAll(".eye");
-let lastMouse = { x: 0, y: 0 };
-let idleTimer = null;
+// Select the single eye element
+const eye = document.querySelector(".eye")
 
+// Select the pupil inside the eye
+const ball = eye.querySelector(".ball")
+
+// Store the last known mouse position
+let lastMouse = { x: 0, y: 0 }
+
+// Timer used to detect when the mouse stops moving (idle state)
+let idleTimer = null
+
+// Main mouse move listener
 document.addEventListener("mousemove", (e) => {
-  lastMouse = { x: e.clientX, y: e.clientY };
+  // Update last mouse position
+  lastMouse = { x: e.clientX, y: e.clientY }
 
-  eyes.forEach((eye) => {
-    const ball = eye.querySelector(".ball");
-    const rect = eye.getBoundingClientRect();
+  // Get eye position & size relative to viewport
+  const rect = eye.getBoundingClientRect()
 
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+  // Calculate center of the eye
+  const centerX = rect.left + rect.width / 2
+  const centerY = rect.top + rect.height / 2
 
-    const dx = e.clientX - centerX;
-    const dy = e.clientY - centerY;
+  // Calculate distance from mouse to eye center
+  const dx = e.clientX - centerX
+  const dy = e.clientY - centerY
 
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    const maxRadius = rect.width / 2 - ball.offsetWidth / 2;
+  // Distance between mouse and eye center
+  const distance = Math.sqrt(dx * dx + dy * dy)
 
-    let x = dx;
-    let y = dy;
+  // Maximum movement radius of pupil inside the eye
+  const maxRadius = rect.width / 2 - ball.offsetWidth / 2
 
-    if (distance > maxRadius) {
-      const angle = Math.atan2(dy, dx);
-      x = Math.cos(angle) * maxRadius;
-      y = Math.sin(angle) * maxRadius;
-    }
+  let x = dx
+  let y = dy
 
-    ball.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
-  });
+  // Clamp pupil movement so it stays inside the eye
+  if (distance > maxRadius) {
+    const angle = Math.atan2(dy, dx)
+    x = Math.cos(angle) * maxRadius
+    y = Math.sin(angle) * maxRadius
+  }
 
-  document.body.style.cursor = "default";
-  document.querySelectorAll("*").forEach(el => el.style.cursor = "default");
-  removeBeams();
+  // Move pupil toward mouse
+  ball.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`
 
-  if (idleTimer) clearTimeout(idleTimer);
-  idleTimer = setTimeout(triggerIdleEffect, 1000);
-});
+  // Restore cursor visibility
+  document.body.style.cursor = "default"
+  document.querySelectorAll("*").forEach(el => el.style.cursor = "default")
 
+  // Remove any existing laser beams
+  removeBeams()
+
+  // Reset idle timer
+  if (idleTimer) clearTimeout(idleTimer)
+  idleTimer = setTimeout(triggerIdleEffect, 1000)
+})
+
+
+// Triggered when mouse is idle for 1 second
 function triggerIdleEffect() {
-  document.body.style.cursor = "none";
-  document.querySelectorAll("*").forEach(el => el.style.cursor = "none");
+  // Hide cursor
+  document.body.style.cursor = "none"
+  document.querySelectorAll("*").forEach(el => el.style.cursor = "none")
 
-  eyes.forEach((eye) => {
-    const ball = eye.querySelector(".ball");
-    const rect = ball.getBoundingClientRect();
-    shootBeam(rect.left + rect.width / 2, rect.top + rect.height / 2, lastMouse.x, lastMouse.y);
-  });
+  // Fire beam from pupil toward last mouse position
+  const rect = ball.getBoundingClientRect()
 
-  createFallingCursor(lastMouse.x, lastMouse.y);
+  shootBeam(
+    rect.left + rect.width / 2,
+    rect.top + rect.height / 2,
+    lastMouse.x,
+    lastMouse.y
+  )
+
+  // Spawn falling cursor animation
+  createFallingCursor(lastMouse.x, lastMouse.y)
 }
 
+
+// Creates and animates a laser beam
 function shootBeam(x1, y1, x2, y2) {
-  const beam = document.createElement("div");
-  beam.className = "beam";
-  const length = Math.hypot(x2 - x1, y2 - y1);
-  const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+  const beam = document.createElement("div")
+  beam.className = "beam"
 
-  beam.style.width = "0px"; // start from 0
-  beam.style.left = x1 + "px";
-  beam.style.top = y1 + "px";
-  beam.style.transform = `rotate(${angle}deg)`;
-  document.body.appendChild(beam);
+  // Distance between start and end point
+  const length = Math.hypot(x2 - x1, y2 - y1)
 
-  // Animate beam growing to full length
+  // Rotation angle toward cursor
+  const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI)
+
+  beam.style.width = "0px"
+  beam.style.left = x1 + "px"
+  beam.style.top = y1 + "px"
+  beam.style.transform = `rotate(${angle}deg)`
+
+  document.body.appendChild(beam)
+
+  // Animate beam extending forward
   requestAnimationFrame(() => {
-    beam.style.width = length + "px";
-  });
+    beam.style.width = length + "px"
+  })
 
-  // Remove after animation
+  // Cleanup beam after animation
   setTimeout(() => {
-    beam.remove();
-  }, 300);
+    beam.remove()
+  }, 300)
 }
 
+
+// Removes all beams instantly
 function removeBeams() {
-  document.querySelectorAll(".beam").forEach(b => b.remove());
+  document.querySelectorAll(".beam").forEach(b => b.remove())
 }
 
-function createFallingCursor(x, y) {
-  const cursorAnim = document.createElement("div");
-  cursorAnim.className = "cursor-animation";
-  cursorAnim.style.left = x + "px";
-  cursorAnim.style.top = y + "px";
-  document.body.appendChild(cursorAnim);
 
+// Creates falling cursor visual when idle
+function createFallingCursor(x, y) {
+  const cursorAnim = document.createElement("div")
+  cursorAnim.className = "cursor-animation"
+
+  cursorAnim.style.left = x + "px"
+  cursorAnim.style.top = y + "px"
+
+  document.body.appendChild(cursorAnim)
+
+  // Cleanup and restore cursor
   setTimeout(() => {
-    cursorAnim.remove();
-    document.body.style.cursor = "default";
-    document.querySelectorAll("*").forEach(el => el.style.cursor = "default");
-  }, 800);
+    cursorAnim.remove()
+    document.body.style.cursor = "default"
+    document.querySelectorAll("*").forEach(el => el.style.cursor = "default")
+  }, 800)
 }
