@@ -1,0 +1,29 @@
+.rsWrapper{
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  height: 25vh;
+}
+.box, .box2{
+  width: 100%;
+ 
+  background-color: var(--primary-color);
+}
+.box2{
+  background-color: var(--secondary-color);
+}
+
+@media (max-width: 1025px){
+  .rsWrapper {
+    height: 50vh;
+    grid-template-columns: repeat(2, 1fr); /* I also changed 2fr → 1fr, usually better for equal widths */
+  }
+
+  /* Swap colors for 3rd and 4th boxes */
+  .rsWrapper > :nth-child(3) {
+    background-color: var(--secondary-color); /* was secondary, now primary */
+  }
+
+  .rsWrapper > :nth-child(4) {
+    background-color: var(--primary-color); /* was primary, now secondary */
+  }
+}

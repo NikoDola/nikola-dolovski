@@ -19,9 +19,19 @@ export default function Hero() {
         </div>
       </div>
           <div className="textWrapper">
-            <p className="beforeHr">Quiet brands speak the loudest.</p>
+            <div className="statusWrapper">
+          <p className="beforeHr">Currently Avaible</p>
+              <div className="hrStatusLight"></div>
+            </div>
+  
             <h1 className="hrHeadline">NIKO <br/> DOLA</h1>
-            <button className="ctaButton">Get in touch</button>
+              
+               <p className="afterHr">Branding, UI/UX & Web</p>
+            <div className="buttonWrapper">
+              <button className="ctaButton get__in__touch">Get in Touch</button>
+              <button className="ctaButton download__CV">Download CV</button>
+            </div>
+  
           </div>
     </section>
   );
