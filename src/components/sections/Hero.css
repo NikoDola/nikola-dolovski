@@ -88,7 +88,7 @@
   z-index: 1;
 }
 
-.globe::after{
+.globe::after {
   content: "";
   width: clamp(20px, 3vw, 50px);
   height: clamp(20px, 3vw, 50px);
@@ -96,20 +96,21 @@
   border-radius: 50%;
   animation: blinking 3s ease infinite;
 }
-.statusWrapper{
+.statusWrapper {
   display: flex;
   flex-direction: row-reverse;
-  background-color: var(--secondary-color);
+  background-color: rgba(192, 194, 204, 0.5);
   padding: 0.5rem 1rem 0.5rem 1rem;
   border-radius: 2rem;
-  color: white;
+  color: rgb(21, 13, 75);
   align-items: center;
   gap: 0.5rem;
   z-index: 12;
-  
+  backdrop-filter: blur(3px);
+  font-weight: 600;
 }
 
-.hrStatusLight{
+.hrStatusLight {
   background-color: var(--green-color);
   width: 13px;
   height: 13px;
@@ -125,19 +126,19 @@
     box-shadow: 0 0 30px var(--green-color);
   }
 }
-.beforeHr{
-  font-size: 1rem;
+.beforeHr {
+  font-size: 0.9rem;
+  color: gray;
 }
 .afterHr {
-  font-size: 2rem;
-  line-height: 1.9rem;
-  
+  font-size: 1.3rem;
+  line-height: 1.2rem;
 }
 .textWrapper {
   display: flex;
   flex-direction: column;
   align-items: end;
-  gap: 0.5rem;
+  gap: 1rem;
   position: absolute;
   left: 50%;
   padding-right: 1rem;
@@ -148,43 +149,69 @@
   margin-bottom: 1rem;
 }
 
-
-
 .hrHeadline {
   font-weight: 800;
-  font-size: 120px;
-  line-height: 110px;
+  font-size: 110px;
+  line-height: 100px;
   color: var(--secondary-color);
 }
-.buttonWrapper{
+.buttonWrapper {
   display: flex;
   gap: 1rem;
 }
+
 .ctaButton {
-  position: relative;
-  background-color: var(--primary-color);
-  color: var(--secondary-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+ 
+  padding: 1rem 1rem 1rem 1rem;
   font-weight: 600;
   font-size: 1rem;
-  width: 160px;
-  height: 60px;
-  margin-left: auto;
-  margin-top: 1rem;
-  overflow: hidden;
-  transition: 0.3s;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  border: 2px solid transparent;
+  border: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.2s ease;
 }
 
-.download__CV{
-  border: 2px var(--secondary-color) solid;
-  background: transparent;
+.ctaButton svg {
+  transition: transform 0.3s ease;
 }
-.get__in__touch{
+
+/* hover example */
+.ctaButton:hover {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+.get__in__touch:hover svg {
+  transform: translateX(4px);
+}
+.download__CV:hover svg {
+  transform: translateY(4px);
+}
+
+.download__CV {
   background: var(--primary-color);
 }
-.download__CV:hover, .get__in__touch:hover{
-  background: var(--secondary-color);
-   border: 2px var(--secondary-color) solid;
-   color: white;
+
+.get__in__touch {
+  border: 2px solid var(--secondary-color);
+  background: transparent;
+}
+.download__CV:hover,
+.get__in__touch:hover {
+background-color: var(--secondary-color);
+  border-color: var(--secondary-color); /* Just change the color, not the size */
+  color: white;
 }
 
 @keyframes anm__globe {
@@ -215,26 +242,32 @@
 }
 
 @media (max-width: 1025px) {
+  .ctaButton{
+    padding: 0.5rem;
+    font-size: 10px;
+  }
+
   .imgWrapper {
     min-height: 50vh;
   }
-
 
   .hrHeadline {
     font-size: 110px;
     line-height: 100px;
   }
-  .textWrapper{
+  .textWrapper {
     gap: 0.5rem;
   }
 
   .afterHr {
     font-size: 2rem;
-    line-height: 1.8rem;
-    width: 80%
+    line-height: 2rem;
+    width: 80%;
   }
-  
-  
+  .buttonWrapper{
+    gap: 0.5rem;
+    text-align: center;
+  }
 }
 
 @media (max-width: 600px) {
@@ -244,17 +277,18 @@
   }
 
   .afterHr {
-    font-size: 1.2rem;
-    line-height: 1.05rem;
+    font-size: 1.1rem;
+    line-height: 1.1rem;
   }
 
   .hrHeadline {
-    font-size: 3rem;
-    line-height: 2.8rem;
+    font-size: 2.8rem;
+    line-height: 2.6rem;
     width: 100%;
   }
-
-  .ctaButton {
-    font-size: 0.8rem;
+  .svgIcon{
+    display: none;
   }
+
+
 }

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import "./Hero.css";
 
+
 export default function Hero() {
   return (
     <section className="hero">
@@ -18,21 +19,28 @@ export default function Hero() {
           <div onClick={() => alert("hello")} className="globe"></div>
         </div>
       </div>
-          <div className="textWrapper">
-            <div className="statusWrapper">
+      <div className="textWrapper">
+        {/* <div className="statusWrapper">
           <p className="beforeHr">Currently Avaible</p>
-              <div className="hrStatusLight"></div>
-            </div>
-  
-            <h1 className="hrHeadline">NIKO <br/> DOLA</h1>
-              
-               <p className="afterHr">Branding, UI/UX & Web</p>
-            <div className="buttonWrapper">
-              <button className="ctaButton get__in__touch">Get in Touch</button>
-              <button className="ctaButton download__CV">Download CV</button>
-            </div>
-  
-          </div>
+          <div className="hrStatusLight"></div>
+        </div> */}
+
+        <h1 className="hrHeadline">
+          NIKO <br /> DOLA
+        </h1>
+
+        <p className="afterHr">Branding, UI/UX & Web Devoloper</p>
+        <div className="buttonWrapper">
+          <a className="ctaButton download__CV" href="/documents/Nikola-Dolovski_CV.pdf" download="My_Custom_Name.pdf">
+            <span>Download CV</span>
+
+          </a>
+          <button className="ctaButton get__in__touch">
+            <span>Get in Touch</span>
+          
+          </button>
+        </div>
+      </div>
     </section>
   );
 }

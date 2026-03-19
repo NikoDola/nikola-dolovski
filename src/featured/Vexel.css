@@ -1,0 +1,16 @@
+.mw{
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  background-color: red;
+}
+
+.my-work_img{
+  width: 100%;
+  background-color: transparent;
+}
+
+.logo-img_wrapper{
+  display: flex;
+  height: min-content;
+}
