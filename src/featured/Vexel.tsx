@@ -119,6 +119,20 @@ export default function Vexel() {
           className="my-work_img"
         />
       </section>
+          <section className="section-regular">
+          <h3>Symbol Minimal Scale</h3>
+          <p>The icon is optimized for clarity at small sizes.
+          On light backgrounds, the minimum size is 22px to maintain shape definition.
+          On dark backgrounds, higher contrast allows the icon to scale down to 16px while 
+          remaining clear and recognizable.</p>
+        <Image
+          src={"/portfolio/vexel/section-5_logo-symbo_scale.svg"}
+          width={300}
+          height={300}
+          alt="vexel logo symbol process"
+          className="my-work_img"
+        />
+      </section>
     </main>
   );
 }
