@@ -23,10 +23,8 @@ img::selection{
   
 }
 h1{
-
+  font-size: 65px;
   font-family: 'Oswald', sans-serif;
-
-
 }
 
 h1::selection{
