@@ -167,7 +167,7 @@ export default function Vexel() {
 
       {/* ── Symbol — Full-Bleed Hero ─────────────────── */}
       <div className="section-full vx-symbol-hero" id="section--symbol">
-        <div className="vx-container vx-symbol-hero__header">
+        <div className="vx-container vx-symbol-hero__header text-center">
           <span className="vx-section__label">Logo</span>
           <h2 className="vx-symbol-hero__title">Symbol</h2>
         </div>
@@ -188,22 +188,17 @@ export default function Vexel() {
         <h3 className="vx-section__title">Symbol Usage</h3>
         <div className="vx-prose">
           <p>
-            The Vexel symbol is built from three simple geometric shapes forming an abstract fox, using orange and white for strong contrast
-            and clarity.
-          </p>
-          <p>The shape also creates a clear &quot;V&quot; form, directly connecting the symbol to the name Vexel.</p>
-          <p>
-            The fox represents speed, intelligence, and precision — matching how Vexel works. It processes images fast, keeps quality, and
-            avoids unnecessary complexity. Just like a fox, the app is efficient and focused, doing more with less.
-          </p>
-          <p>The sharp shapes reflect pixel structure, while the symmetry keeps the symbol clean and balanced.</p>
-          <p>
-            The symbol is designed to be used inside a defined background — either a square app icon or a circular container. It should not
-            be placed directly on random backgrounds. If needed, it must sit on its original background color to keep visibility and
-            consistency.
+The Vexel symbol is built from three geometric shapes forming an 
+abstract fox. The structure creates a clear “V” linked to the name.
+<br/>
+The form communicates speed and precision.
+
+Sharp edges follow pixel geometry. Symmetry keeps the mark balanced
+ and recognizable.
+The symbol must be used within a defined container (square or circle). Do not place it on uncontrolled backgrounds. Use the original background color when needed to maintain clarity.
           </p>
         </div>
-        <div className="vx-asset vx-asset--symbol">
+        <div className="vx-asset">
           <Image
             src="/portfolio/vexel/section-2_logo-symbol.svg"
             width={300}
@@ -239,16 +234,9 @@ export default function Vexel() {
         <h3 className="vx-section__title">Symbol Safe Zone</h3>
         <div className="vx-prose">
           <p>
-            <strong>Step 1</strong> — Select the top center anchor point of the logo.
-          </p>
-          <p>
-            <strong>Step 2</strong> — Cut the shape vertically from that point to isolate one side of the fox.
-          </p>
-          <p>
-            <strong>Step 3</strong> — Use the extracted shape as a reference unit.
-          </p>
-          <p>
-            <strong>Step 4</strong> — Apply this shape around the logo to define the safe zone spacing.
+          The safe zone is defined using a single unit taken from the symbol itself. This unit is applied consistently around all sides to maintain clear spacing.
+
+No other elements should enter this area.
           </p>
         </div>
         <div className="vx-asset">
@@ -267,8 +255,7 @@ export default function Vexel() {
         <span className="vx-section__label">Symbol</span>
         <h3 className="vx-section__title">Symbol Minimal Scale</h3>
         <p>
-          The icon is optimized for clarity at small sizes. On light backgrounds, the minimum size is 22px to maintain shape definition. On
-          dark backgrounds, higher contrast allows the icon to scale down to 16px while remaining clear and recognizable.
+        The minimum size is 22px for the app icon and 16px for the standalone symbol.
         </p>
         <div className="vx-asset">
           <Image
@@ -282,9 +269,20 @@ export default function Vexel() {
       </section>
 
       {/* ── Text Logo ───────────────────────────────── */}
-      <section className="section-regular vx-section " id="section--text-logo">
-        <span className="vx-section__label">Logo</span>
-        <h3 className="vx-section__title">Text Logo</h3>
+      <section className="section-full vx-section " id="section--text-logo">
+        <div className="vx-container vx-symbol-hero__header text-center">
+    <span className="vx-section__label">Logo</span>
+        <h2 className="vx-section__title">Text Logo</h2>
+        </div>
+    
+                <Image
+          src="/portfolio/vexel/text-logo_mockup.webp"
+          width={1900}
+          height={1400}
+          alt="Vexel symbol minimal scale"
+          className="vx-asset__img"
+        />
+
       </section>
 
       <section className="section-regular vx-section " id="section--text-logo-aspect-ratio">
@@ -334,9 +332,16 @@ export default function Vexel() {
       </section>
 
       {/* ── Colors ──────────────────────────────────── */}
-      <section className="section-regular vx-section vx-section--wip" id="section--colors">
+      <section className="section-regular vx-section " id="section--colors">
         <span className="vx-section__label">Brand Guidelines</span>
         <h2 className="vx-section__title">Colors</h2>
+        <Image
+          src="/portfolio/vexel/section-10_colors.svg"
+          width={300}
+          height={300}
+          alt="Vexel symbol minimal scale"
+          className="vx-asset__img"
+        />
       </section>
 
       {/* ── Brand Typography ────────────────────────── */}
