@@ -1,0 +1,93 @@
+.portfolioPage {
+  padding-bottom: 6rem;
+}
+
+.portfolioPage__header {
+  padding-top: 4rem;
+  margin-bottom: 3rem;
+}
+
+.portfolioPage__tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  padding: 0.25rem 0.75rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.portfolioPage__title {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  margin: 0 0 1rem;
+  color: var(--secondary-color);
+}
+
+.portfolioPage__sub {
+  max-width: 520px;
+  color: #555;
+  line-height: 1.7;
+}
+
+.portfolioGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.portfolioCard {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  background-color: var(--tan-color);
+}
+
+.portfolioCard__img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background-color: var(--secondary-color);
+}
+
+.portfolioCard__img {
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.portfolioCard:hover .portfolioCard__img {
+  transform: scale(1.04);
+}
+
+.portfolioCard__info {
+  padding: 1.25rem 1.5rem;
+  background-color: var(--white-color);
+  border-bottom: 3px solid var(--primary-color);
+}
+
+.portfolioCard__category {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #888;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.portfolioCard__title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0;
+  color: var(--secondary-color);
+}
+
+@media (max-width: 700px) {
+  .portfolioGrid {
+    grid-template-columns: 1fr;
+  }
+}

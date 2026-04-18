@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(cat tailwind.config.ts)",
-      "Bash(cat tailwind.config.js)"
+      "Bash(cat tailwind.config.js)",
+      "Read(//c/Users/Dolov/Junk code/nikola-dolovski/public/**)"
     ]
   }
 }

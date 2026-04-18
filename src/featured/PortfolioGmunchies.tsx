@@ -132,7 +132,7 @@ export default function PortfolioGmunchies() {
         <span className="gm-section__label">Branding</span>
         <h2 className="gm-section__title">Logo</h2>
         <p className="gm-section__desc">
-          The Gmunchies logo is a direct expression of the brand's character. Bold,
+          The Gmunchies logo is a direct expression of the brand&apos;s character. Bold,
           rounded, and unapologetically fun, it commands attention without aggression.
           Designed to work at any scale, from a vending machine fascia to a mobile
           screen, the mark always lands with clarity, warmth, and a personality that
@@ -156,11 +156,11 @@ export default function PortfolioGmunchies() {
         <span className="gm-section__label">Branding</span>
         <h2 className="gm-section__title">Colors</h2>
         <p className="gm-section__desc">
-          Signal red and sunshine yellow are the brand's energy drivers: vivid, warm,
+          Signal red and sunshine yellow are the brand&apos;s energy drivers: vivid, warm,
           and impossible to ignore. Together they communicate passion, appetite, and joy.
           Midnight black provides the structural contrast that anchors the palette and
           makes everything pop. A warm tan rounds out the system, adding approachability
-          and comfort that softens the overall tone without losing the brand's fire.
+          and comfort that softens the overall tone without losing the brand&apos;s fire.
         </p>
         <div className="gm-colors">
           {brandColors.map((color) => (
@@ -207,7 +207,7 @@ export default function PortfolioGmunchies() {
         <span className="gm-section__label">Branding</span>
         <h2 className="gm-section__title">Text Logo</h2>
         <p className="gm-section__desc">
-          The typographic identity mirrors the mascot's attitude. Playful, rounded
+          The typographic identity mirrors the mascot&apos;s attitude. Playful, rounded
           letterforms carry the same cartoonish energy as the visual system, binding
           the wordmark and the character into a cohesive whole. The tagline delivers
           the brand promise without overthinking it. Vending that is easy, enjoyable,
@@ -274,7 +274,7 @@ export default function PortfolioGmunchies() {
           The stock location set covers every environment where a Gmunchies machine
           might be placed: gyms, hospitals, schools, offices, warehouses, and beyond.
           Clean and consistent, they communicate placement context without competing
-          with the brand's visual identity.
+          with the brand&apos;s visual identity.
         </p>
         <div className="gm-icons-grid gm-icons-grid--stock">
           {stockIcons.map((icon) => (

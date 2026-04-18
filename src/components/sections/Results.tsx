@@ -2,6 +2,8 @@
 import { useEffect, useRef, useState } from "react"
 import { FaMedal, FaHandshake, FaChartLine } from "react-icons/fa"
 import type { IconType } from "react-icons"
+import Link from "next/link"
+import Image from "next/image"
 import "./Results.css"
 
 type Stat = {
@@ -9,18 +11,19 @@ type Stat = {
   value: number
   suffix: string
   variant: "primary" | "secondary"
+  href: string
   Icon?: IconType
   imgSrc?: string
 }
 
 const stats: Stat[] = [
-  { label: "Contest Winner", value: 350, suffix: "", Icon: FaMedal, variant: "primary" },
-  { label: "Partners", value: 130, suffix: "", Icon: FaHandshake, variant: "secondary" },
-  { label: "Projects Completed", value: 500, suffix: "+", imgSrc: "/icons/race-flag.svg", variant: "primary" },
-  { label: "Years of Experience", value: 14, suffix: "", Icon: FaChartLine, variant: "secondary" },
+  { label: "Contest Winner", value: 350, suffix: "", Icon: FaMedal, variant: "primary", href: "/about#contest-winner" },
+  { label: "Partners", value: 130, suffix: "", Icon: FaHandshake, variant: "secondary", href: "/our-clients" },
+  { label: "Projects Completed", value: 500, suffix: "+", imgSrc: "/icons/race-flag.svg", variant: "primary", href: "/portfolio" },
+  { label: "Years of Experience", value: 14, suffix: "", Icon: FaChartLine, variant: "secondary", href: "/about#experience" },
 ]
 
-function StatBox({ label, value, suffix, Icon, imgSrc, variant, active }: Stat & { active: boolean }) {
+function StatBox({ label, value, suffix, Icon, imgSrc, variant, href, active }: Stat & { active: boolean }) {
   const [count, setCount] = useState(0)
 
   useEffect(() => {
@@ -45,9 +48,10 @@ function StatBox({ label, value, suffix, Icon, imgSrc, variant, active }: Stat &
   return (
     <div className={`rsBox rsBox--${variant}`}>
       {Icon && <Icon className="rsBox__icon" />}
-      {imgSrc && <img src={imgSrc} alt={label} className="rsBox__icon rsBox__img-icon" />}
+      {imgSrc && <Image src={imgSrc} alt={label} width={40} height={40} className="rsBox__icon rsBox__img-icon" />}
       <span className="rsBox__number">{count}{suffix}</span>
       <span className="rsBox__label">{label}</span>
+      <Link href={href} className="rsBox__readmore">Read More</Link>
     </div>
   )
 }

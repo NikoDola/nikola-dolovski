@@ -530,4 +530,4 @@ class PatternGrid {
 
 
 // ── Init ──────────────────────────────────────────────────────────────────────
-const grid = new PatternGrid('grid');
+new PatternGrid('grid');

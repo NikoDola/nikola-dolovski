@@ -1,13 +1,14 @@
 .hero {
   overflow: hidden;
   position: relative;
+  height: calc(100vh - 72px);
 }
 
 .imgWrapper {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  min-height: 100vh;
+  height: 100%;
   margin: 0 auto;
 
   position: relative;
@@ -247,8 +248,13 @@ background-color: var(--secondary-color);
     font-size: 10px;
   }
 
+  .hero {
+    height: auto;
+  }
+
   .imgWrapper {
-    min-height: 50vh;
+    min-height: calc(50vh - 72px);
+    height: auto;
   }
 
   .hrHeadline {

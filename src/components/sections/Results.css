@@ -51,6 +51,23 @@
   font-weight: 600;
 }
 
+.rsBox__readmore {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: 'Oswald', sans-serif;
+  opacity: 0.6;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: inherit;
+  transition: opacity 0.2s;
+  margin-top: 0.25rem;
+}
+
+.rsBox__readmore:hover {
+  opacity: 1;
+}
+
 @media (max-width: 1025px) {
   .rsWrapper {
     grid-template-columns: repeat(2, 1fr);
