@@ -1,0 +1,139 @@
+{
+  "slug": "gmunchies",
+  "name": "Gmunchies",
+  "category": "branding",
+  "description": "GMunchies is a modern vending solutions brand focused on delivering convenient, high-quality snacks, drinks, and coffee through smart, reliable machines. Built for schools, offices, and public spaces, GMunchies combines clean design, cashless technology, and fast service to create a smooth everyday experience. The brand focuses on accessibility, efficiency, and making quick breaks better for everyone.",
+  "mission": "To provide easy access to fresh snacks, drinks, and coffee through well-designed vending machines that fit naturally into everyday environments. GMunchies aims to improve convenience while keeping service fast, simple, and dependable.",
+  "vision": "To become a trusted vending brand known for smart technology, clean design, and consistent service across multiple locations. GMunchies aims to grow into a recognizable name that people rely on for quick, quality refreshment wherever they are.",
+  "href": "/my-work/gmunchies",
+  "clientThumbnail": "",
+  "client": {
+    "firstName": "Guillermo ",
+    "lastName": "Guerrero"
+  },
+  "services": [
+    "icon",
+    "icon-custom",
+    "icon-stock",
+    "icon-stock-fill",
+    "icon-stock-outline",
+    "logo",
+    "logo-mascot",
+    "logo-primary",
+    "logo-wordmark",
+    "print",
+    "print-stationery",
+    "print-stationery-business-card",
+    "print-stationery-business-card-back",
+    "print-stationery-business-card-front"
+  ],
+  "review": "We added a GMunchies machine to our space and it’s been great. Easy to use, clean, and always stocked. The cashless option makes everything faster, and support has been reliable whenever we needed it",
+  "technologyUsed": [
+    "Adobe Illustrator"
+  ],
+  "thumbnails": [
+    "/my-work/gmunchies/images/@gmunchies_branding_logo_mascot.svg"
+  ],
+  "heroSection": [
+    "/my-work/gmunchies/images/@gmunchies_branding_print_stationery_business-card_front.svg"
+  ],
+  "images": [
+    "/my-work/gmunchies/images/@gmunchies_branding_print_stationery_business-card_front.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_custom_@drinks.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_custom_@micro-market.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_custom_@snacks.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_custom_@snacks-and-drinks.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_custom_@vending.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_fill_@appartments-14.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_fill_@appartments-15.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_fill_@gym.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_fill_@hospital.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_fill_@location.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_fill_@school.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_fill_@ware-house.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_outline_@appartments-21.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_outline_@appartments-22.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_outline_@gym.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_outline_@hospital.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_outline_@location.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_outline_@school.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_outline_@ware-house.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_logo_mascot.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_logo_primary.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_logo_wordmark.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_print_stationery_business-card_back.svg",
+    "/my-work/gmunchies/images/@gmunchies_branding_print_stationery_business-card_front.svg"
+  ],
+  "brandColors": [
+    {
+      "hex": "#0d0d0d",
+      "rgb": "rgb(13, 13, 13)",
+      "order": 0,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#cd2328",
+      "rgb": "rgb(205, 35, 40)",
+      "order": 1,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#8e192f",
+      "rgb": "rgb(142, 25, 47)",
+      "order": 2,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#ec626c",
+      "rgb": "rgb(236, 98, 108)",
+      "order": 3,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#ffcd05",
+      "rgb": "rgb(255, 205, 5)",
+      "order": 4,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#fece43",
+      "rgb": "rgb(254, 206, 67)",
+      "order": 5,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#cb832a",
+      "rgb": "rgb(203, 131, 42)",
+      "order": 6,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#b62225",
+      "rgb": "rgb(182, 34, 37)",
+      "order": 7,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#f8f6f1",
+      "rgb": "rgb(248, 246, 241)",
+      "order": 8,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#f4ece5",
+      "rgb": "rgb(244, 236, 229)",
+      "order": 9,
+      "name": "",
+      "usage": ""
+    }
+  ]
+}
