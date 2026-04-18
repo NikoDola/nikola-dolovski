@@ -25,20 +25,22 @@
     "print-stationery",
     "print-stationery-business-card",
     "print-stationery-business-card-back",
-    "print-stationery-business-card-front"
+    "print-stationery-business-card-front",
+    "stationery",
+    "business-card",
+    "business-card-front"
   ],
   "review": "We added a GMunchies machine to our space and it’s been great. Easy to use, clean, and always stocked. The cashless option makes everything faster, and support has been reliable whenever we needed it",
   "technologyUsed": [
     "Adobe Illustrator"
   ],
   "thumbnails": [
-    "/my-work/gmunchies/images/@gmunchies_branding_logo_mascot.svg"
+    "/my-work/gmunchies/images/gmunchies_branding_icon_custom_coffee.svg"
   ],
   "heroSection": [
-    "/my-work/gmunchies/images/@gmunchies_branding_print_stationery_business-card_front.svg"
+    "/my-work/gmunchies/images/gmunchies_branding_icon_custom_coffee.svg"
   ],
   "images": [
-    "/my-work/gmunchies/images/@gmunchies_branding_print_stationery_business-card_front.svg",
     "/my-work/gmunchies/images/@gmunchies_branding_icon_custom_@drinks.svg",
     "/my-work/gmunchies/images/@gmunchies_branding_icon_custom_@micro-market.svg",
     "/my-work/gmunchies/images/@gmunchies_branding_icon_custom_@snacks.svg",
@@ -62,76 +64,306 @@
     "/my-work/gmunchies/images/@gmunchies_branding_logo_primary.svg",
     "/my-work/gmunchies/images/@gmunchies_branding_logo_wordmark.svg",
     "/my-work/gmunchies/images/@gmunchies_branding_print_stationery_business-card_back.svg",
-    "/my-work/gmunchies/images/@gmunchies_branding_print_stationery_business-card_front.svg"
+    "/my-work/gmunchies/images/gmunchies_branding_icon_custom_coffee.svg",
+    "/my-work/gmunchies/images/gmunchies_branding_print_stationery_business-card_front.svg"
   ],
+  "sectionDescriptions": {
+    "Logo": "The Gmunchies logo is a direct expression of the brand's character. Bold, rounded, and unapologetically fun, it commands attention without aggression. Designed to work at any scale, from a vending machine fascia to a mobile screen, the mark always lands with clarity, warmth, and a personality that is impossible to ignore.",
+    "Icons": "The Gmunchies icon system is built in two tiers. Custom icons define the core product world, crafted exclusively for this brand. Stock location icons extend that identity into every environment where a Gmunchies machine might live: consistent, clear, and always on-brand.",
+    "Print": "The business card takes the brand into the physical world. Front and back are tightly coordinated: bold enough to make an immediate impression, structured enough to communicate the essentials. The card is the brand in your hand."
+  },
   "brandColors": [
     {
-      "hex": "#0d0d0d",
-      "rgb": "rgb(13, 13, 13)",
+      "hex": "#170f09",
+      "rgb": "rgb(23, 15, 9)",
       "order": 0,
       "name": "",
       "usage": ""
     },
     {
-      "hex": "#cd2328",
-      "rgb": "rgb(205, 35, 40)",
+      "hex": "#222221",
+      "rgb": "rgb(34, 34, 33)",
       "order": 1,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#d89a53",
+      "rgb": "rgb(216, 154, 83)",
+      "order": 2,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#fdfdfd",
+      "rgb": "rgb(253, 253, 253)",
+      "order": 3,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#592a07",
+      "rgb": "rgb(89, 42, 7)",
+      "order": 4,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#b88346",
+      "rgb": "rgb(184, 131, 70)",
+      "order": 5,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#dbdada",
+      "rgb": "rgb(219, 218, 218)",
+      "order": 6,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#383837",
+      "rgb": "rgb(56, 56, 55)",
+      "order": 7,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#804118",
+      "rgb": "rgb(128, 65, 24)",
+      "order": 8,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#646463",
+      "rgb": "rgb(100, 100, 99)",
+      "order": 9,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#e5af73",
+      "rgb": "rgb(229, 175, 115)",
+      "order": 10,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#2d2d2c",
+      "rgb": "rgb(45, 45, 44)",
+      "order": 11,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#693309",
+      "rgb": "rgb(105, 51, 9)",
+      "order": 12,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#db9d56",
+      "rgb": "rgb(219, 157, 86)",
+      "order": 13,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#613214",
+      "rgb": "rgb(97, 50, 20)",
+      "order": 14,
       "name": "",
       "usage": ""
     },
     {
       "hex": "#8e192f",
       "rgb": "rgb(142, 25, 47)",
-      "order": 2,
+      "order": 15,
       "name": "",
       "usage": ""
     },
     {
-      "hex": "#ec626c",
-      "rgb": "rgb(236, 98, 108)",
-      "order": 3,
+      "hex": "#0d0d0d",
+      "rgb": "rgb(13, 13, 13)",
+      "order": 16,
       "name": "",
       "usage": ""
     },
     {
-      "hex": "#ffcd05",
-      "rgb": "rgb(255, 205, 5)",
-      "order": 4,
-      "name": "",
-      "usage": ""
-    },
-    {
-      "hex": "#fece43",
-      "rgb": "rgb(254, 206, 67)",
-      "order": 5,
-      "name": "",
-      "usage": ""
-    },
-    {
-      "hex": "#cb832a",
-      "rgb": "rgb(203, 131, 42)",
-      "order": 6,
+      "hex": "#cd2328",
+      "rgb": "rgb(205, 35, 40)",
+      "order": 17,
       "name": "",
       "usage": ""
     },
     {
       "hex": "#b62225",
       "rgb": "rgb(182, 34, 37)",
-      "order": 7,
+      "order": 18,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#e93b48",
+      "rgb": "rgb(233, 59, 72)",
+      "order": 19,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#ec626c",
+      "rgb": "rgb(236, 98, 108)",
+      "order": 20,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#ea5661",
+      "rgb": "rgb(234, 86, 97)",
+      "order": 21,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#b31f36",
+      "rgb": "rgb(179, 31, 54)",
+      "order": 22,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#8b6271",
+      "rgb": "rgb(139, 98, 113)",
+      "order": 23,
       "name": "",
       "usage": ""
     },
     {
       "hex": "#f8f6f1",
       "rgb": "rgb(248, 246, 241)",
-      "order": 8,
+      "order": 24,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#606161",
+      "rgb": "rgb(96, 97, 97)",
+      "order": 25,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#6d1628",
+      "rgb": "rgb(109, 22, 40)",
+      "order": 26,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#f26866",
+      "rgb": "rgb(242, 104, 102)",
+      "order": 27,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#232121",
+      "rgb": "rgb(35, 33, 33)",
+      "order": 28,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#cfdcdc",
+      "rgb": "rgb(207, 220, 220)",
+      "order": 29,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#0e0e0e",
+      "rgb": "rgb(14, 14, 14)",
+      "order": 30,
       "name": "",
       "usage": ""
     },
     {
       "hex": "#f4ece5",
       "rgb": "rgb(244, 236, 229)",
-      "order": 9,
+      "order": 31,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#cb832a",
+      "rgb": "rgb(203, 131, 42)",
+      "order": 32,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#ffcd05",
+      "rgb": "rgb(255, 205, 5)",
+      "order": 33,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#911f36",
+      "rgb": "rgb(145, 31, 54)",
+      "order": 34,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#f9f8f2",
+      "rgb": "rgb(249, 248, 242)",
+      "order": 35,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#54121d",
+      "rgb": "rgb(84, 18, 29)",
+      "order": 36,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#4a77a8",
+      "rgb": "rgb(74, 119, 168)",
+      "order": 37,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#84827e",
+      "rgb": "rgb(132, 130, 126)",
+      "order": 38,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#6b6b6b",
+      "rgb": "rgb(107, 107, 107)",
+      "order": 39,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#65a042",
+      "rgb": "rgb(101, 160, 66)",
+      "order": 40,
+      "name": "",
+      "usage": ""
+    },
+    {
+      "hex": "#b8cacd",
+      "rgb": "rgb(184, 202, 205)",
+      "order": 41,
       "name": "",
       "usage": ""
     }
