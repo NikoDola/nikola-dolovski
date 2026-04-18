@@ -57,12 +57,16 @@ export async function POST(req: NextRequest) {
     const project = JSON.parse(projectStr) as Project
     const { slug } = project
 
-    // Process image files
-    const imageFiles = formData.getAll("images") as File[]
+    // Process image files — strip @ from filenames so URLs don't break
+    const rawImages = formData.getAll("images") as File[]
+    const imageFiles = rawImages.map((f) =>
+      new File([f], f.name.replace(/@/g, ""), { type: f.type })
+    )
     if (imageFiles.length > 0) {
-      const imagePaths = imageFiles.map((f) => `/my-work/${slug}/images/${f.name}`)
+      const newPaths = imageFiles.map((f) => `/my-work/${slug}/images/${f.name}`)
+      const existing = project.images ?? []
+      project.images = [...new Set([...existing, ...newPaths])]
       const { thumbnails, heroSection } = deriveThumbnailsAndHero(slug, imageFiles)
-      project.images = imagePaths
       project.thumbnails = thumbnails
       project.heroSection = heroSection
     }

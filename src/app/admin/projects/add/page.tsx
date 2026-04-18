@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { getProjects } from "@/lib/actions/projects"
 import { TagsInput } from "@/components/ui/TagsInput"
-import { validateImageFile, autoCorrectFilename } from "@/lib/imageNames"
+import { validateImageFile, autoCorrectFilename, parseImageFilename, SECTION_ORDER } from "@/lib/imageNames"
 import type { Project, BrandColor } from "@/types/project"
 import "./add.css"
 
@@ -13,6 +13,7 @@ const empty: Project = {
   client: { firstName: "", lastName: "" },
   services: [], review: "", technologyUsed: [],
   thumbnails: [], heroSection: [], images: [], brandColors: [],
+  sectionDescriptions: {},
 }
 
 function slugify(s: string) {
@@ -30,13 +31,73 @@ function capitalize(s: string) {
 }
 
 // ── Brand prefix extraction ──────────────────────────────────────────────────
-// "gmunchies_horizontal-logo_branding.svg" → "gmunchies"
+// "@gmunchies_branding_logo_primary.svg" → "gmunchies"
 function extractBrandPrefix(filename: string): string {
-  const lastDot = filename.lastIndexOf(".")
-  const base = lastDot >= 0 ? filename.slice(0, lastDot) : filename
-  const parts = base.split("_")
-  if (parts.length >= 3) return parts.slice(0, parts.length - 2).join(" ")
-  return ""
+  const parsed = parseImageFilename(filename)
+  return parsed?.brand ?? ""
+}
+
+function detectTechnologies(entries: AssetEntry[]): string[] {
+  const found = new Set<string>()
+  let hasUi = false
+  for (const e of entries) {
+    if (e.ext === "svg") found.add("Adobe Illustrator")
+    if (["webp", "avif", "png", "jpg", "jpeg"].includes(e.ext)) found.add("Adobe Photoshop")
+    if (e.baseName.includes("mockup")) found.add("Adobe Photoshop")
+    const parsed = parseImageFilename(`${e.baseName}.${e.ext}`)
+    if (parsed?.category === "ui") hasUi = true
+  }
+  if (hasUi) {
+    for (const t of ["Figma", "HTML", "CSS", "React", "Next.js"]) found.add(t)
+  }
+  return [...found]
+}
+
+function detectSectionsFromPaths(paths: string[]): string[] {
+  const found = new Set<string>()
+  for (const path of paths) {
+    const filename = path.split("/").pop() ?? ""
+    const parsed = parseImageFilename(filename)
+    if (!parsed || parsed.pathSegments.length === 0) continue
+    const seg = parsed.pathSegments[0]
+    const display = SECTION_ORDER.find(
+      (s) => s.toLowerCase().replace(/[^a-z]/g, "") === seg.replace(/-/g, "")
+    ) ?? seg
+    found.add(display)
+  }
+  return SECTION_ORDER.filter((s) => found.has(s))
+}
+
+function detectSections(entries: AssetEntry[]): string[] {
+  const found = new Set<string>()
+  for (const e of entries) {
+    if (!e.valid) continue
+    const parsed = parseImageFilename(`${e.baseName}.${e.ext}`)
+    if (!parsed || parsed.pathSegments.length === 0) continue
+    const seg = parsed.pathSegments[0]
+    // Map segment to display name using SECTION_ORDER
+    const display = SECTION_ORDER.find((s) =>
+      s.toLowerCase().replace(/[^a-z]/g, "") === seg.replace(/-/g, "")
+    ) ?? seg
+    found.add(display)
+  }
+  return SECTION_ORDER.filter((s) => found.has(s))
+}
+
+function detectServices(entries: AssetEntry[]): string[] {
+  const found = new Set<string>()
+  for (const e of entries) {
+    if (!e.valid) continue
+    const parsed = parseImageFilename(`${e.baseName}.${e.ext}`)
+    if (!parsed || parsed.pathSegments.length === 0) continue
+    const segs = parsed.pathSegments
+    // Each parent segment individually: print, stationery, business-card
+    const parents = segs.length > 1 ? segs.slice(0, -1) : segs
+    for (const seg of parents) found.add(seg)
+    // Last two joined as a pair: business-card-front, icon-outline, icon-white
+    if (segs.length > 1) found.add(`${segs[segs.length - 2]}-${segs[segs.length - 1]}`)
+  }
+  return [...found]
 }
 
 // ── Asset entry ──────────────────────────────────────────────────────────────
@@ -103,7 +164,6 @@ async function extractColorsFromAssets(entries: AssetEntry[]): Promise<BrandColo
 
   return Array.from(fileCount.entries())
     .sort((a, b) => b[1] - a[1])       // colors in more files = more brand-like
-    .slice(0, 10)
     .map(([hex], order) => ({ hex, rgb: hexToRgb(hex), order, name: "", usage: "" }))
 }
 
@@ -239,6 +299,7 @@ export default function AddProjectPage() {
 
   const [form, setForm] = useState<Project>(empty)
   const [assets, setAssets] = useState<AssetEntry[]>([])
+  const [existingImages, setExistingImages] = useState<string[]>([])
   const [colors, setColors] = useState<BrandColor[]>([])
   const [pickerHex, setPickerHex] = useState("#88D1D4")
   const [extracting, setExtracting] = useState(false)
@@ -247,6 +308,7 @@ export default function AddProjectPage() {
   const [saving, setSaving] = useState(false)
   const [status, setStatus] = useState<{ msg: string; ok: boolean } | null>(null)
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null)
+  const [visibleColors, setVisibleColors] = useState(10)
   const dragSrcRef = useRef<number | null>(null)
   const clientThumbRef = useRef<HTMLInputElement>(null)
   const assetInputRef = useRef<HTMLInputElement>(null)
@@ -258,6 +320,7 @@ export default function AddProjectPage() {
       if (p) {
         setForm(p)
         if (p.brandColors) setColors(p.brandColors)
+        if (p.images) setExistingImages(p.images)
       }
     })
   }, [editSlug])
@@ -267,6 +330,19 @@ export default function AddProjectPage() {
 
   const setClient = (field: keyof Project["client"], value: string) =>
     setForm((f) => ({ ...f, client: { ...f.client, [field]: value } }))
+
+  const setSectionDesc = (section: string, value: string) =>
+    setForm((f) => ({
+      ...f,
+      sectionDescriptions: { ...f.sectionDescriptions, [section]: value },
+    }))
+
+  const detectedSections = [
+    ...new Set([...detectSections(assets), ...detectSectionsFromPaths(existingImages)])
+  ].sort((a, b) => SECTION_ORDER.indexOf(a) - SECTION_ORDER.indexOf(b))
+
+  const handleDeleteExisting = (path: string) =>
+    setExistingImages((prev) => prev.filter((p) => p !== path))
 
   const handleAssetFiles = async (files: File[]) => {
     const entries = files.map(makeEntry)
@@ -286,6 +362,15 @@ export default function AddProjectPage() {
         }))
       }
     }
+
+    // Auto-fill services and technologies from uploaded files (merge, no duplicates)
+    const detected = detectServices(combined)
+    const detectedTech = detectTechnologies(combined)
+    setForm((f) => ({
+      ...f,
+      ...(detected.length > 0 && { services: [...new Set([...f.services, ...detected])] }),
+      ...(detectedTech.length > 0 && { technologyUsed: [...new Set([...f.technologyUsed, ...detectedTech])] }),
+    }))
 
     // Auto-extract colors whenever SVG files are present
     const hasSvgs = combined.some((e) => e.ext === "svg")
@@ -389,6 +474,7 @@ export default function AddProjectPage() {
         href: form.href || `/my-work/${form.slug}`,
         clientThumbnail: clientThumbPath,
         brandColors: colors.length > 0 ? colors : form.brandColors,
+        images: existingImages,
       }
 
       const fd = new FormData()
@@ -428,11 +514,36 @@ export default function AddProjectPage() {
             </span>
           </legend>
 
-          {assets.length === 0 ? (
+          {/* Existing uploaded images */}
+          {existingImages.length > 0 && (
+            <div className="apfa__existingSection">
+              <p className="apfa__existingLabel">Uploaded images — click × to remove</p>
+              <div className="apfa__assetGrid">
+                {existingImages.map((path) => {
+                  const filename = path.split("/").pop() ?? path
+                  return (
+                    <div key={path} className="apfa__assetCard apfa__assetCard--valid apfa__assetCard--existing">
+                      <button type="button" className="apfa__assetRemove" onClick={() => handleDeleteExisting(path)} title="Remove">✕</button>
+                      <div className="apfa__assetPreview">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={path} alt={filename} />
+                      </div>
+                      <div className="apfa__assetInfo">
+                        <span className="apfa__assetNameInput apfa__assetNameInput--readonly" title={filename}>{filename}</span>
+                        <span className="apfa__assetOk">✓ Saved</span>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {assets.length === 0 && existingImages.length === 0 ? (
             <p className="apfa__assetEmpty">
               Upload your design files. Brand name and colors will be auto-detected from SVGs.
             </p>
-          ) : (
+          ) : assets.length > 0 ? (
             <>
               {hasErrors && (
                 <div className="apfa__autoCorrectBar">
@@ -450,7 +561,7 @@ export default function AddProjectPage() {
               ))}
             </div>
             </>
-          )}
+          ) : null}
 
           <input
             ref={assetInputRef}
@@ -476,6 +587,27 @@ export default function AddProjectPage() {
           )}
           {extracting && <p className="apfa__assetNote apfa__assetNote--info">Detecting colors from SVGs…</p>}
         </fieldset>
+
+        {/* ── 1b. Section Descriptions ── */}
+        {detectedSections.length > 0 && (
+          <fieldset className="apfa__group">
+            <legend>
+              Section Descriptions
+              <span className="apfa__hint"> — optional description for each portfolio section</span>
+            </legend>
+            {detectedSections.map((section) => (
+              <label key={section}>
+                {section} <span className="apfa__hint">(optional)</span>
+                <textarea
+                  rows={3}
+                  value={form.sectionDescriptions?.[section] ?? ""}
+                  placeholder={`Describe the ${section.toLowerCase()} section...`}
+                  onChange={(e) => setSectionDesc(section, e.target.value)}
+                />
+              </label>
+            ))}
+          </fieldset>
+        )}
 
         {/* ── 2. Project Info ── */}
         <fieldset className="apfa__group">
@@ -561,7 +693,7 @@ export default function AddProjectPage() {
 
           {colors.length > 0 && (
             <div className="apfa__colorList">
-              {colors.map((color, i) => (
+              {colors.slice(0, visibleColors).map((color, i) => (
                 <ColorSwatch
                   key={color.hex + i}
                   color={color}
@@ -577,6 +709,15 @@ export default function AddProjectPage() {
                   onDrop={() => handleColorDrop(i)}
                 />
               ))}
+              {colors.length > visibleColors && (
+                <button
+                  type="button"
+                  className="apfa__addImg"
+                  onClick={() => setVisibleColors((v) => v + 10)}
+                >
+                  Load more ({colors.length - visibleColors} remaining)
+                </button>
+              )}
             </div>
           )}
 

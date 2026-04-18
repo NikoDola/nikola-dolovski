@@ -237,6 +237,32 @@
   margin: 0;
 }
 
+.apfa__existingSection {
+  margin-bottom: 1.5rem;
+}
+
+.apfa__existingLabel {
+  font-size: 0.75rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.75rem;
+}
+
+.apfa__assetCard--existing {
+  opacity: 0.85;
+}
+
+.apfa__assetNameInput--readonly {
+  display: block;
+  font-size: 0.75rem;
+  color: #555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+
 /* ── Auto-correct bar ────────────────────────────────────────────────────── */
 .apfa__autoCorrectBar {
   display: flex;

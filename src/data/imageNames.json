@@ -70,17 +70,15 @@
     },
 
     "print": {
-          "stationery": {
-      "business-card": {
-        "mods": ["back", "front"],
-        "back": {},
-        "front":{}
+      "stationery": {
+        "business-card": {
+          "mods": ["back", "front"]
+        },
+        "letterhead": {},
+        "envelope": {},
+        "invoice": {},
+        "email-signature": {}
       },
-      "letterhead": {},
-      "envelope": {},
-      "invoice": {},
-      "email-signature": {}
-    },
       "brochure": {
         "mods": ["tri-fold", "bi-fold", "z-fold", "gate-fold"]
       },

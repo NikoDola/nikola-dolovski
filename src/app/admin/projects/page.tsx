@@ -12,7 +12,7 @@ export default function AdminProjectsPage() {
   const load = async () => {
     try {
       const data = await getProjects()
-      setProjects(data)
+      setProjects(data.filter((p) => p.images && p.images.length > 0))
     } catch {
       setProjects([])
     } finally {

@@ -7,7 +7,8 @@
       "Bash(git merge *)",
       "Bash(git push *)",
       "Read(//c/Users/Dolov/**)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(node -e \"const fs=require\\('fs'\\); const p=JSON.parse\\(fs.readFileSync\\('c:/Users/Dolov/Junk code/nikola-dolovski/src/data/projects.json','utf-8'\\)\\); p.forEach\\(x=>console.log\\(x.slug, 'thumbnails:', x.thumbnails?.length, 'category:', x.category\\)\\)\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\Dolov\\Junk code\\nikola-dolovski\\src\\app\\my-work"

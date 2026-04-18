@@ -21,7 +21,9 @@ export default function HomePortfolio({ defaultProjects }: Props) {
       .catch(() => {})
   }, [])
 
-  const filtered = projects.filter((p) => p.category === tab)
+  const filtered = projects.filter(
+    (p) => p.category === tab && p.images && p.images.length > 0
+  )
 
   return (
     <section className="hpf section-full">

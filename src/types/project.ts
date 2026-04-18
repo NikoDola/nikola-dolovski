@@ -29,4 +29,5 @@ export interface Project {
   heroSection: string[]
   images?: string[]
   brandColors?: BrandColor[]
+  sectionDescriptions?: Record<string, string>
 }
