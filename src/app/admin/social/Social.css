@@ -1,0 +1,604 @@
+/* =====================================================
+   Social Media Admin Panel
+   ===================================================== */
+
+.social-admin {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── Header ────────────────────────────────────────── */
+.social-admin__header {
+  margin-bottom: 2rem;
+}
+
+.social-admin__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 0.25rem 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.social-admin__subtitle {
+  font-size: 0.875rem;
+  color: #888;
+  margin: 0;
+}
+
+/* ── Grid ──────────────────────────────────────────── */
+.social-admin__grid {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* ── Card ──────────────────────────────────────────── */
+.social-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+  overflow: hidden;
+}
+
+.social-card__head {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.social-card__title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.social-card__body {
+  padding: 1.5rem;
+}
+
+/* ── Form ──────────────────────────────────────────── */
+.sf-field {
+  margin-bottom: 1.25rem;
+}
+
+.sf-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+}
+
+.sf-input,
+.sf-textarea {
+  width: 100%;
+  padding: 0.65rem 0.875rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.925rem;
+  font-family: 'Inter', sans-serif;
+  color: #111;
+  background: #fff;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.sf-input:focus,
+.sf-textarea:focus {
+  outline: none;
+  border-color: #111;
+}
+
+.sf-textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.6;
+}
+
+/* ── Platform Toggles ──────────────────────────────── */
+.sf-platforms {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.sf-platform {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #e5e5e5;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+}
+
+.sf-platform input[type="checkbox"] {
+  display: none;
+}
+
+.sf-platform--checked {
+  border-color: #111;
+  background: #fafafa;
+}
+
+.sf-platform__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sf-platform--reddit .sf-platform__dot  { background: #FF4500; }
+.sf-platform--linkedin .sf-platform__dot { background: #0A66C2; }
+.sf-platform--instagram .sf-platform__dot { background: #E1306C; }
+
+.sf-platform__name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #222;
+  flex: 1;
+}
+
+.sf-platform__check {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+
+.sf-platform--checked .sf-platform__check {
+  background: #111;
+  border-color: #111;
+}
+
+.sf-platform--checked .sf-platform__check::after {
+  content: '';
+  display: block;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+
+/* ── Subreddit field ───────────────────────────────── */
+.sf-sub-note {
+  font-size: 0.75rem;
+  color: #aaa;
+  margin: 0.35rem 0 0 0;
+}
+
+/* ── Upload ────────────────────────────────────────── */
+.sf-upload-area {
+  border: 1.5px dashed #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  position: relative;
+}
+
+.sf-upload-area:hover {
+  border-color: #aaa;
+  background: #fafafa;
+}
+
+.sf-upload-area input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.sf-upload-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.sf-upload-text {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0;
+}
+
+.sf-upload-text strong {
+  color: #111;
+}
+
+.sf-upload-preview {
+  margin-top: 0.75rem;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.sf-upload-preview img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+  border-radius: 6px;
+}
+
+.sf-upload-preview__remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sf-upload-progress {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #666;
+  text-align: center;
+}
+
+.sf-upload-bar {
+  height: 3px;
+  background: #eee;
+  border-radius: 2px;
+  margin-top: 0.25rem;
+  overflow: hidden;
+}
+
+.sf-upload-bar__fill {
+  height: 100%;
+  background: #111;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.sf-note {
+  font-size: 0.72rem;
+  color: #aaa;
+  margin: 0.4rem 0 0 0;
+  line-height: 1.5;
+}
+
+/* ── Submit button ─────────────────────────────────── */
+.sf-submit {
+  width: 100%;
+  padding: 0.85rem;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.925rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+  margin-top: 0.5rem;
+}
+
+.sf-submit:hover:not(:disabled) {
+  background: #333;
+}
+
+.sf-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Results ───────────────────────────────────────── */
+.sf-results {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sf-result {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.sf-result--success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+.sf-result--error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.sf-result__icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.sf-result__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.sf-result__platform {
+  font-weight: 700;
+  color: #111;
+  text-transform: capitalize;
+}
+
+.sf-result__msg {
+  color: #555;
+  margin: 0.15rem 0 0 0;
+  word-break: break-all;
+}
+
+.sf-result__link {
+  color: #0A66C2;
+  text-decoration: none;
+  font-size: 0.8rem;
+  display: inline-block;
+  margin-top: 0.25rem;
+}
+
+.sf-result__link:hover {
+  text-decoration: underline;
+}
+
+/* ── Notifications panel ───────────────────────────── */
+.sn-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.sn-tab {
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  border: 1.5px solid #e5e5e5;
+  background: transparent;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sn-tab--active {
+  background: #111;
+  border-color: #111;
+  color: #fff;
+}
+
+.sn-refresh {
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  border: 1.5px solid #e5e5e5;
+  background: transparent;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-left: auto;
+}
+
+.sn-refresh:hover {
+  border-color: #aaa;
+  color: #333;
+}
+
+.sn-refresh:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sn-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.sn-unread-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #FF4500;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 0.1rem 0.45rem;
+  margin-left: 0.3rem;
+}
+
+/* ── Notification list ─────────────────────────────── */
+.sn-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.sn-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 1rem 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.1s ease;
+  border-bottom: 1px solid #f3f3f3;
+  position: relative;
+}
+
+.sn-item:last-child {
+  border-bottom: none;
+}
+
+.sn-item:hover {
+  background: #f9f9f9;
+}
+
+.sn-item--unread::before {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #FF4500;
+}
+
+.sn-item__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: #fff;
+  margin-left: 0.5rem;
+}
+
+.sn-item__avatar--reddit    { background: #FF4500; }
+.sn-item__avatar--linkedin  { background: #0A66C2; }
+.sn-item__avatar--instagram { background: linear-gradient(135deg, #F58529, #DD2A7B, #8134AF); }
+
+.sn-item__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.sn-item__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.sn-item__author {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.sn-item__type {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.sn-item__type--reddit    { background: #FF4500; }
+.sn-item__type--linkedin  { background: #0A66C2; }
+.sn-item__type--instagram { background: #E1306C; }
+
+.sn-item__time {
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-left: auto;
+}
+
+.sn-item__text {
+  font-size: 0.85rem;
+  color: #555;
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Empty / loading states ────────────────────────── */
+.sn-state {
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.sn-state__icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.sn-state__title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.35rem 0;
+}
+
+.sn-state__sub {
+  font-size: 0.8rem;
+  color: #aaa;
+  margin: 0;
+}
+
+.sn-error-list {
+  padding: 0.75rem 1.5rem;
+  background: #fef2f2;
+  border-bottom: 1px solid #fecaca;
+}
+
+.sn-error-item {
+  font-size: 0.78rem;
+  color: #dc2626;
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.2rem;
+}
+
+.sn-error-item:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Responsive ────────────────────────────────────── */
+@media (max-width: 900px) {
+  .social-admin {
+    padding: 1rem;
+  }
+  .social-admin__grid {
+    grid-template-columns: 1fr;
+  }
+}

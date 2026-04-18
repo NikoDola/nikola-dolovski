@@ -356,6 +356,16 @@ No other elements should enter this area.
         <h2 className="vx-section__title">Animation</h2>
       </section>
 
+      <section className="section-regular vx-section vx-section--wip" id="section--animation">
+        <span className="vx-section__label">Brand Guidelines</span>
+        <h2 className="vx-section__title">Animation Processing</h2>
+      </section>
+
+      <section className="section-regular vx-section vx-section--wip" id="section--animation">
+        <span className="vx-section__label">Brand Guidelines</span>
+        <h2 className="vx-section__title">Animation Loading</h2>
+      </section>
+
       {/* ── Pattern ─────────────────────────────────── */}
       <section className="section-regular vx-section vx-section--wip" id="section--pattern">
         <span className="vx-section__label">Brand Guidelines</span>

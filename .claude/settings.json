@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat tailwind.config.ts)",
+      "Bash(cat tailwind.config.js)"
+    ]
+  }
+}

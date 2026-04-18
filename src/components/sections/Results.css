@@ -1,29 +1,70 @@
-.rsWrapper{
+.rsWrapper {
   display: grid;
-  grid-template-columns: repeat(4,1fr);
-  height: 25vh;
+  grid-template-columns: repeat(4, 1fr);
+  min-height: 25vh;
 }
-.box, .box2{
-  width: 100%;
- 
+
+.rsBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2.5rem 1rem;
+}
+
+.rsBox--primary {
   background-color: var(--primary-color);
+  color: var(--secondary-color);
 }
-.box2{
+
+.rsBox--secondary {
   background-color: var(--secondary-color);
+  color: var(--primary-color);
 }
 
-@media (max-width: 1025px){
+.rsBox__icon {
+  font-size: 2.5rem;
+  opacity: 0.85;
+}
+
+.rsBox__img-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+  filter: invert(9%) sepia(55%) saturate(700%) hue-rotate(205deg) brightness(60%);
+}
+
+.rsBox__number {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.rsBox__label {
+  font-size: clamp(0.75rem, 1.2vw, 1rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.8;
+  text-align: center;
+  font-weight: 600;
+}
+
+@media (max-width: 1025px) {
   .rsWrapper {
-    height: 50vh;
-    grid-template-columns: repeat(2, 1fr); /* I also changed 2fr → 1fr, usually better for equal widths */
+    grid-template-columns: repeat(2, 1fr);
+    min-height: 50vh;
   }
 
-  /* Swap colors for 3rd and 4th boxes */
-  .rsWrapper > :nth-child(3) {
-    background-color: var(--secondary-color); /* was secondary, now primary */
+  .rsBox:nth-child(3) {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
   }
 
-  .rsWrapper > :nth-child(4) {
-    background-color: var(--primary-color); /* was primary, now secondary */
+  .rsBox:nth-child(4) {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
   }
 }
+

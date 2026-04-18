@@ -11,12 +11,12 @@
 :root {
   --vx-accent:          #e8541a;
   --vx-accent-subtle:   rgba(232, 84, 26, 0.07);
-  --vx-ink:             #1a1a1a;
-  --vx-ink-secondary:   #5c5c5c;
+  --vx-ink:             #d0d2db;
+  --vx-ink-secondary:   #b8b9bf;
   --vx-ink-tertiary:    #9e9e9e;
   --vx-surface:         #ffffff;
   --vx-surface-alt:     #f4f3ef;
-  --vx-hero-bg:         #e6e5e1;
+  --vx-hero-bg:         #192028;
   --vx-chapter-bg:      #1a1a1a;
   --vx-border-light:    rgba(0, 0, 0, 0.08);
   --vx-border-medium:   rgba(0, 0, 0, 0.16);

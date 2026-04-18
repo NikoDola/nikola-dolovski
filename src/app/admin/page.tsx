@@ -5,9 +5,10 @@ export default async function AdminPage() { // ← Note the async keyword
 
 
   return (
-        <div>
+    <div>
       <ul>
-        <Link href={"/admin/logo-inspiration"}>Logo Inspiration</Link>
+        <li><Link href={"/admin/logo-inspiration"}>Logo Inspiration</Link></li>
+        <li><Link href={"/admin/social"}>Social Media</Link></li>
       </ul>
     </div>
   )
