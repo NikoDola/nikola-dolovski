@@ -1,0 +1,80 @@
+.pThumb {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* ── Frame ─────────────────────────────────────── */
+.pThumb__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background-color: var(--secondary-color);
+}
+
+/* ── Pan (single image) ─────────────────────────── */
+.pThumb__pan {
+  position: absolute;
+  inset: 0;
+  background-size: 160% auto;
+  background-repeat: no-repeat;
+  background-position: 0% 50%;
+  animation: pThumbPan 14s ease-in-out infinite;
+}
+
+@keyframes pThumbPan {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+
+/* ── Slideshow (multiple images) ─────────────────── */
+.pThumb__slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.pThumb__slide--active {
+  opacity: 1;
+}
+
+/* ── Info bar ───────────────────────────────────── */
+.pThumb__info {
+  padding: 1rem 1.25rem 1.25rem;
+  background-color: var(--white-color);
+  border-bottom: 3px solid var(--primary-color);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.pThumb__client {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.pThumb__name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--secondary-color);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.pThumb__desc {
+  font-size: 0.85rem;
+  color: #777;
+  margin: 0;
+  line-height: 1.5;
+}

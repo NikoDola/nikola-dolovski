@@ -1,0 +1,467 @@
+.apfa {
+  max-width: 720px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.apfa__title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 2rem;
+  color: var(--secondary-color);
+  margin: 0 0 0.25rem;
+}
+
+.apfa__subtitle {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0 0 2rem;
+}
+
+.apfa__form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.apfa__group {
+  border: 1px solid rgba(18, 27, 65, 0.15);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.apfa__group legend {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--secondary-color);
+  padding: 0 0.5rem;
+}
+
+.apfa__hint {
+  font-size: 0.75rem;
+  color: #999;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.apfa__group label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.apfa__group input,
+.apfa__group select,
+.apfa__group textarea {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(18, 27, 65, 0.2);
+  font-size: 0.9rem;
+  background: white;
+  outline: none;
+}
+
+.apfa__group input:focus,
+.apfa__group select:focus,
+.apfa__group textarea:focus {
+  border-color: var(--primary-color);
+}
+
+/* Image lists */
+.apfa__imgList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.apfa__imgItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #f7f7f7;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.apfa__imgItem--err {
+  background: #fff3f3;
+  border-left: 3px solid #cc3333;
+}
+
+.apfa__imgThumb {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.apfa__imgMeta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.apfa__imgName {
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.apfa__imgErr {
+  color: #cc3333;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.apfa__imgRemove {
+  background: none;
+  border: none;
+  color: #cc3333;
+  cursor: pointer;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.apfa__fileInput {
+  display: none;
+}
+
+.apfa__addImg {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.05em;
+  margin-top: 0.5rem;
+}
+
+/* Client avatar */
+.apfa__clientThumb {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(18, 27, 65, 0.08);
+}
+
+.apfa__clientAvatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: var(--secondary-color);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.apfa__clientAvatar span {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  letter-spacing: 0.05em;
+}
+
+.apfa__clientAvatarMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.apfa__clientAvatarMeta p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+/* Status */
+.apfa__status {
+  padding: 0.75rem;
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-size: 0.9rem;
+}
+
+.apfa__status--error {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* Footer */
+.apfa__footer {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.apfa__cancel {
+  background: transparent;
+  border: 1px solid rgba(18, 27, 65, 0.3);
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: var(--secondary-color);
+}
+
+.apfa__save {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  border: none;
+  padding: 0.75rem 2rem;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.apfa__save:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── Asset Grid ─────────────────────────────────────────────────────────── */
+.apfa__assetEmpty {
+  font-size: 0.85rem;
+  color: #999;
+  font-style: italic;
+  margin: 0;
+}
+
+.apfa__assetGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.apfa__assetCard {
+  position: relative;
+  border: 2px solid rgba(18, 27, 65, 0.15);
+  background: #fafafa;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.apfa__assetCard--valid {
+  border-color: var(--primary-color);
+}
+
+.apfa__assetCard--invalid {
+  border-color: #cc3333;
+}
+
+.apfa__assetRemove {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  background: rgba(0, 0, 0, 0.55);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 0.75rem;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.apfa__assetCard:hover .apfa__assetRemove {
+  opacity: 1;
+}
+
+.apfa__assetPreview {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  overflow: hidden;
+}
+
+.apfa__assetPreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.25rem;
+}
+
+.apfa__assetInfo {
+  padding: 0.5rem 0.6rem;
+  border-top: 1px solid rgba(18, 27, 65, 0.08);
+}
+
+.apfa__assetNameRow {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.apfa__assetNameInput {
+  flex: 1;
+  border: none;
+  border-bottom: 1px solid rgba(18, 27, 65, 0.2);
+  font-size: 0.7rem;
+  padding: 0.15rem 0;
+  background: transparent;
+  min-width: 0;
+  outline: none;
+  font-family: monospace;
+}
+
+.apfa__assetNameInput:focus {
+  border-bottom-color: var(--secondary-color);
+}
+
+.apfa__assetExt {
+  font-size: 0.65rem;
+  color: #999;
+  white-space: nowrap;
+  font-family: monospace;
+}
+
+.apfa__assetStatus {
+  margin-top: 0.3rem;
+  font-size: 0.65rem;
+  line-height: 1.3;
+}
+
+.apfa__assetOk {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.apfa__assetErr {
+  color: #cc3333;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.apfa__assetActions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+.apfa__generateColors {
+  background: transparent;
+  border: 1px solid var(--secondary-color);
+  color: var(--secondary-color);
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.05em;
+  transition: background 0.2s, color 0.2s;
+}
+
+.apfa__generateColors:hover:not(:disabled) {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+.apfa__generateColors:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.apfa__assetNote {
+  font-size: 0.8rem;
+  color: #c62828;
+  margin: 0.25rem 0 0;
+}
+
+/* ── Brand Colors ────────────────────────────────────────────────────────── */
+.apfa__colorList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.apfa__colorSwatch {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #f7f7f7;
+  padding: 0.6rem 0.75rem;
+}
+
+.apfa__colorDot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.apfa__colorMeta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.apfa__colorLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--secondary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.apfa__colorHex {
+  font-size: 0.85rem;
+  font-family: monospace;
+  color: #333;
+}
+
+.apfa__colorRgb {
+  font-size: 0.72rem;
+  color: #888;
+  font-family: monospace;
+}
+
+.apfa__colorActions {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.apfa__colorActions button {
+  background: none;
+  border: 1px solid rgba(18, 27, 65, 0.2);
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--secondary-color);
+  transition: background 0.15s;
+}
+
+.apfa__colorActions button:hover:not(:disabled) {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+.apfa__colorActions button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}

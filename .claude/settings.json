@@ -4,6 +4,9 @@
       "Bash(cat tailwind.config.ts)",
       "Bash(cat tailwind.config.js)",
       "Read(//c/Users/Dolov/Junk code/nikola-dolovski/public/**)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\Dolov\\Junk code\\nikola-dolovski\\src\\app\\my-work"
     ]
   }
 }
