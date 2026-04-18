@@ -7,6 +7,8 @@ export interface BrandColor {
   hex: string
   rgb: string
   order: number
+  name?: string
+  usage?: string
 }
 
 export interface Project {

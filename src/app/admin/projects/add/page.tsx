@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { getProjects } from "@/lib/actions/projects"
 import { TagsInput } from "@/components/ui/TagsInput"
-import { validateImageFile } from "@/lib/imageNames"
+import { validateImageFile, autoCorrectFilename } from "@/lib/imageNames"
 import type { Project, BrandColor } from "@/types/project"
 import "./add.css"
 
@@ -25,11 +25,25 @@ function getInitials(firstName: string, lastName: string) {
   return (a + b).toUpperCase() || "?"
 }
 
-// ─── Asset entry ────────────────────────────────────────────────────────────
+function capitalize(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
+// ── Brand prefix extraction ──────────────────────────────────────────────────
+// "gmunchies_horizontal-logo_branding.svg" → "gmunchies"
+function extractBrandPrefix(filename: string): string {
+  const lastDot = filename.lastIndexOf(".")
+  const base = lastDot >= 0 ? filename.slice(0, lastDot) : filename
+  const parts = base.split("_")
+  if (parts.length >= 3) return parts.slice(0, parts.length - 2).join(" ")
+  return ""
+}
+
+// ── Asset entry ──────────────────────────────────────────────────────────────
 interface AssetEntry {
   file: File
-  baseName: string   // editable: "primary-logo_branding"
-  ext: string        // fixed: "svg"
+  baseName: string
+  ext: string
   preview: string
   valid: boolean
   error?: string
@@ -40,14 +54,7 @@ function makeEntry(file: File): AssetEntry {
   const ext = lastDot >= 0 ? file.name.slice(lastDot + 1).toLowerCase() : ""
   const baseName = lastDot >= 0 ? file.name.slice(0, lastDot) : file.name
   const v = validateImageFile(file.name)
-  return {
-    file,
-    baseName,
-    ext,
-    preview: URL.createObjectURL(file),
-    valid: v.valid,
-    error: v.error,
-  }
+  return { file, baseName, ext, preview: URL.createObjectURL(file), valid: v.valid, error: v.error }
 }
 
 function revalidate(entry: AssetEntry, newBaseName: string): AssetEntry {
@@ -55,48 +62,65 @@ function revalidate(entry: AssetEntry, newBaseName: string): AssetEntry {
   return { ...entry, baseName: newBaseName, valid: v.valid, error: v.error }
 }
 
-// ─── SVG color extraction ────────────────────────────────────────────────────
-async function extractColorsFromSvgs(entries: AssetEntry[]): Promise<BrandColor[]> {
-  const svgEntries = entries.filter((e) => e.ext === "svg")
-  const hexCounts = new Map<string, number>()
+// ── Color extraction ─────────────────────────────────────────────────────────
+function extractHexSet(svgText: string): Set<string> {
+  const set = new Set<string>()
+  const regex = /#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})\b/g
+  let m
+  while ((m = regex.exec(svgText)) !== null) {
+    let h = m[1].toLowerCase()
+    if (h.length === 3) h = h.split("").map((c) => c + c).join("")
+    const full = `#${h}`
+    if (full === "#000000" || full === "#ffffff" || full === "#000" || full === "#fff") continue
+    set.add(full)
+  }
+  return set
+}
 
-  for (const entry of svgEntries) {
-    const text = await entry.file.text()
-    const hexRegex = /#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})\b/g
-    let match
-    while ((match = hexRegex.exec(text)) !== null) {
-      let h = match[1].toLowerCase()
-      if (h.length === 3) h = h.split("").map((c) => c + c).join("")
-      const full = `#${h}`
-      if (full === "#000000" || full === "#ffffff") continue
-      hexCounts.set(full, (hexCounts.get(full) ?? 0) + 1)
+function hexToRgb(hex: string): string {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return `rgb(${r}, ${g}, ${b})`
+}
+
+async function extractColorsFromAssets(entries: AssetEntry[]): Promise<BrandColor[]> {
+  const svgs = entries.filter((e) => e.ext === "svg")
+  if (svgs.length === 0) return []
+
+  // For each SVG, collect its color set
+  const sets: Set<string>[] = await Promise.all(
+    svgs.map(async (e) => extractHexSet(await e.file.text()))
+  )
+
+  // Count how many SVG files each color appears in (cross-file frequency)
+  const fileCount = new Map<string, number>()
+  for (const s of sets) {
+    for (const hex of s) {
+      fileCount.set(hex, (fileCount.get(hex) ?? 0) + 1)
     }
   }
 
-  return Array.from(hexCounts.entries())
-    .sort((a, b) => b[1] - a[1])
+  return Array.from(fileCount.entries())
+    .sort((a, b) => b[1] - a[1])       // colors in more files = more brand-like
     .slice(0, 10)
-    .map(([hex], order) => {
-      const r = parseInt(hex.slice(1, 3), 16)
-      const g = parseInt(hex.slice(3, 5), 16)
-      const b = parseInt(hex.slice(5, 7), 16)
-      return { hex, rgb: `rgb(${r}, ${g}, ${b})`, order }
-    })
+    .map(([hex], order) => ({ hex, rgb: hexToRgb(hex), order, name: "", usage: "" }))
 }
 
-// ─── Asset Card ─────────────────────────────────────────────────────────────
+// ── Asset Card ───────────────────────────────────────────────────────────────
 function AssetCard({
-  entry, index, onChange, onRemove,
+  entry, index, onChange, onRemove, onAutoCorrect,
 }: {
-  entry: AssetEntry
-  index: number
-  onChange: (i: number, newBase: string) => void
+  entry: AssetEntry; index: number
+  onChange: (i: number, v: string) => void
   onRemove: (i: number) => void
+  onAutoCorrect: (i: number) => void
 }) {
   return (
     <div className={`apfa__assetCard${entry.valid ? " apfa__assetCard--valid" : " apfa__assetCard--invalid"}`}>
       <button type="button" className="apfa__assetRemove" onClick={() => onRemove(index)} title="Remove">✕</button>
       <div className="apfa__assetPreview">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={entry.preview} alt={entry.baseName} />
       </div>
       <div className="apfa__assetInfo">
@@ -106,44 +130,99 @@ function AssetCard({
             value={entry.baseName}
             onChange={(e) => onChange(index, e.target.value)}
             spellCheck={false}
-            title="Edit filename (without extension)"
           />
           <span className="apfa__assetExt">.{entry.ext}</span>
         </div>
         <div className="apfa__assetStatus">
           {entry.valid
             ? <span className="apfa__assetOk">✓ Valid</span>
-            : <span className="apfa__assetErr" title={entry.error}>✗ {entry.error}</span>
-          }
+            : (
+              <span className="apfa__assetErrRow">
+                <span className="apfa__assetErr" title={entry.error}>✗ {entry.error}</span>
+                <button type="button" className="apfa__assetFixBtn" onClick={() => onAutoCorrect(index)} title="Auto-correct this file">
+                  Fix
+                </button>
+              </span>
+            )}
         </div>
       </div>
     </div>
   )
 }
 
-// ─── Color Swatch ───────────────────────────────────────────────────────────
+// ── Color Swatch ─────────────────────────────────────────────────────────────
+const COLOR_ROLE_LABELS = [
+  "Primary", "Secondary", "Accent",
+  "Support 1", "Support 2", "Support 3",
+  "Support 4", "Support 5", "Support 6", "Support 7",
+]
+
 function ColorSwatch({
-  color, index, total,
-  onMoveUp, onMoveDown, onRemove,
+  color, index, total, isDragOver,
+  onUpdate, onMoveUp, onMoveDown, onRemove,
+  onDragStart, onDragOver, onDrop,
 }: {
-  color: BrandColor
-  index: number
-  total: number
-  onMoveUp: () => void
-  onMoveDown: () => void
-  onRemove: () => void
+  color: BrandColor; index: number; total: number; isDragOver: boolean
+  onUpdate: (patch: Partial<BrandColor>) => void
+  onMoveUp: () => void; onMoveDown: () => void; onRemove: () => void
+  onDragStart: () => void; onDragOver: () => void; onDrop: () => void
 }) {
-  const labels = ["Primary", "Secondary", "Accent", "Support 1", "Support 2",
-    "Support 3", "Support 4", "Support 5", "Support 6", "Support 7"]
+  const [editing, setEditing] = useState(false)
+  const defaultLabel = COLOR_ROLE_LABELS[index] ?? `Color ${index + 1}`
+
   return (
-    <div className="apfa__colorSwatch">
-      <div className="apfa__colorDot" style={{ background: color.hex }} />
-      <div className="apfa__colorMeta">
-        <span className="apfa__colorLabel">{labels[index] ?? `Color ${index + 1}`}</span>
-        <span className="apfa__colorHex">{color.hex}</span>
-        <span className="apfa__colorRgb">{color.rgb}</span>
-      </div>
+    <div
+      className={`apfa__colorSwatch${isDragOver ? " apfa__colorSwatch--over" : ""}`}
+      draggable
+      onDragStart={onDragStart}
+      onDragOver={(e) => { e.preventDefault(); onDragOver() }}
+      onDrop={onDrop}
+      onDragEnd={() => onDrop()}
+    >
+      <span className="apfa__colorDrag" title="Drag to reorder">⠿</span>
+
+      {/* Hex color picker */}
+      <label className="apfa__colorDotWrap" title="Change color">
+        <div className="apfa__colorDot" style={{ background: color.hex }} />
+        <input
+          type="color"
+          value={color.hex}
+          onChange={(e) => {
+            const hex = e.target.value
+            onUpdate({ hex, rgb: hexToRgb(hex) })
+          }}
+          className="apfa__colorInput"
+        />
+      </label>
+
+      {editing ? (
+        <div className="apfa__colorEdit">
+          <input
+            className="apfa__colorEditName"
+            value={color.name ?? ""}
+            placeholder={defaultLabel}
+            onChange={(e) => onUpdate({ name: e.target.value })}
+          />
+          <input
+            className="apfa__colorEditUsage"
+            value={color.usage ?? ""}
+            placeholder="Usage (e.g. Primary: Passion & Energy)"
+            onChange={(e) => onUpdate({ usage: e.target.value })}
+          />
+        </div>
+      ) : (
+        <div className="apfa__colorMeta">
+          <span className="apfa__colorLabel">{color.name || defaultLabel}</span>
+          <span className="apfa__colorHex">{color.hex}</span>
+          <span className="apfa__colorRgb">{color.rgb}</span>
+          {color.usage && <span className="apfa__colorUsage">{color.usage}</span>}
+        </div>
+      )}
+
       <div className="apfa__colorActions">
+        <button type="button" onClick={() => setEditing((e) => !e)} title={editing ? "Done" : "Edit name & usage"}>
+          {editing ? "✓" : "✏"}
+        </button>
         <button type="button" onClick={onMoveUp} disabled={index === 0} title="Move up">↑</button>
         <button type="button" onClick={onMoveDown} disabled={index === total - 1} title="Move down">↓</button>
         <button type="button" onClick={onRemove} title="Remove">✕</button>
@@ -152,7 +231,7 @@ function ColorSwatch({
   )
 }
 
-// ─── Main Page ───────────────────────────────────────────────────────────────
+// ── Main Page ─────────────────────────────────────────────────────────────────
 export default function AddProjectPage() {
   const params = useSearchParams()
   const router = useRouter()
@@ -161,11 +240,14 @@ export default function AddProjectPage() {
   const [form, setForm] = useState<Project>(empty)
   const [assets, setAssets] = useState<AssetEntry[]>([])
   const [colors, setColors] = useState<BrandColor[]>([])
+  const [pickerHex, setPickerHex] = useState("#88D1D4")
   const [extracting, setExtracting] = useState(false)
   const [clientThumbFile, setClientThumbFile] = useState<File | null>(null)
   const [clientThumbPreview, setClientThumbPreview] = useState<string>("")
   const [saving, setSaving] = useState(false)
   const [status, setStatus] = useState<{ msg: string; ok: boolean } | null>(null)
+  const [dragOverIdx, setDragOverIdx] = useState<number | null>(null)
+  const dragSrcRef = useRef<number | null>(null)
   const clientThumbRef = useRef<HTMLInputElement>(null)
   const assetInputRef = useRef<HTMLInputElement>(null)
 
@@ -186,18 +268,55 @@ export default function AddProjectPage() {
   const setClient = (field: keyof Project["client"], value: string) =>
     setForm((f) => ({ ...f, client: { ...f.client, [field]: value } }))
 
-  const handleAssetFiles = (files: File[]) => {
-    setAssets((prev) => [...prev, ...files.map(makeEntry)])
+  const handleAssetFiles = async (files: File[]) => {
+    const entries = files.map(makeEntry)
+    const combined = [...assets, ...entries]
+    setAssets(combined)
     if (assetInputRef.current) assetInputRef.current.value = ""
+
+    // Auto-fill project name from brand prefix (only if currently empty)
+    if (!form.name && files.length > 0) {
+      const prefix = extractBrandPrefix(files[0].name)
+      if (prefix) {
+        const brandName = capitalize(prefix)
+        setForm((f) => ({
+          ...f,
+          name: f.name || brandName,
+          slug: f.slug || slugify(prefix),
+        }))
+      }
+    }
+
+    // Auto-extract colors whenever SVG files are present
+    const hasSvgs = combined.some((e) => e.ext === "svg")
+    if (hasSvgs) {
+      setExtracting(true)
+      const extracted = await extractColorsFromAssets(combined)
+      if (extracted.length > 0) setColors(extracted)
+      setExtracting(false)
+    }
   }
 
-  const handleAssetChange = (i: number, newBase: string) => {
+  const handleAssetChange = (i: number, newBase: string) =>
     setAssets((prev) => prev.map((e, j) => (j === i ? revalidate(e, newBase) : e)))
+
+  const handleAssetRemove = (i: number) =>
+    setAssets((prev) => prev.filter((_, j) => j !== i))
+
+  const correctEntry = (entry: AssetEntry): AssetEntry => {
+    if (entry.valid) return entry
+    const corrected = autoCorrectFilename(entry.baseName, entry.ext)
+    if (!corrected) return entry
+    const lastDot = corrected.lastIndexOf(".")
+    const newBase = lastDot >= 0 ? corrected.slice(0, lastDot) : corrected
+    return revalidate(entry, newBase)
   }
 
-  const handleAssetRemove = (i: number) => {
-    setAssets((prev) => prev.filter((_, j) => j !== i))
-  }
+  const handleAutoCorrect = () =>
+    setAssets((prev) => prev.map(correctEntry))
+
+  const handleAutoCorrectOne = (i: number) =>
+    setAssets((prev) => prev.map((e, j) => (j === i ? correctEntry(e) : e)))
 
   const handleClientThumb = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -206,12 +325,9 @@ export default function AddProjectPage() {
     setClientThumbPreview(URL.createObjectURL(file))
   }
 
-  const handleGenerateColors = async () => {
-    setExtracting(true)
-    const extracted = await extractColorsFromSvgs(assets)
-    setColors(extracted)
-    setExtracting(false)
-  }
+  // ── Color management ──
+  const updateColor = (i: number, patch: Partial<BrandColor>) =>
+    setColors((prev) => prev.map((c, j) => (j === i ? { ...c, ...patch } : c)))
 
   const moveColor = (from: number, to: number) => {
     setColors((prev) => {
@@ -222,12 +338,38 @@ export default function AddProjectPage() {
     })
   }
 
-  const removeColor = (i: number) => {
+  const removeColor = (i: number) =>
     setColors((prev) => prev.filter((_, j) => j !== i).map((c, i) => ({ ...c, order: i })))
+
+  const addPickerColor = () => {
+    const hex = pickerHex
+    setColors((prev) => [
+      ...prev,
+      { hex, rgb: hexToRgb(hex), order: prev.length, name: "", usage: "" },
+    ].map((c, i) => ({ ...c, order: i })))
+  }
+
+  const handleReExtract = async () => {
+    setExtracting(true)
+    const extracted = await extractColorsFromAssets(assets)
+    if (extracted.length > 0) setColors(extracted)
+    setExtracting(false)
+  }
+
+  // ── Drag handlers ──
+  const handleColorDragStart = (i: number) => { dragSrcRef.current = i }
+  const handleColorDragOver = (i: number) => { setDragOverIdx(i) }
+  const handleColorDrop = (i: number) => {
+    if (dragSrcRef.current !== null && dragSrcRef.current !== i) {
+      moveColor(dragSrcRef.current, i)
+    }
+    dragSrcRef.current = null
+    setDragOverIdx(null)
   }
 
   const hasErrors = assets.some((e) => !e.valid)
   const hasSvgs = assets.some((e) => e.ext === "svg")
+  const initials = getInitials(form.client.firstName, form.client.lastName)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -235,10 +377,8 @@ export default function AddProjectPage() {
       setStatus({ msg: "Fix all image naming errors before saving.", ok: false })
       return
     }
-
     setSaving(true)
     setStatus(null)
-
     try {
       const clientThumbPath = clientThumbFile
         ? `/my-work/${form.slug}/images/client-thumbnail.${clientThumbFile.name.split(".").pop()}`
@@ -253,18 +393,13 @@ export default function AddProjectPage() {
 
       const fd = new FormData()
       fd.append("project", JSON.stringify(project))
-
-      // Append each asset with its renamed filename
       for (const entry of assets) {
-        const renamed = new File([entry.file], `${entry.baseName}.${entry.ext}`, { type: entry.file.type })
-        fd.append("images", renamed)
+        fd.append("images", new File([entry.file], `${entry.baseName}.${entry.ext}`, { type: entry.file.type }))
       }
-
       if (clientThumbFile) fd.append("clientThumbnail", clientThumbFile)
 
       const res = await fetch("/api/push-project", { method: "POST", body: fd })
       const data = await res.json()
-
       if (!res.ok) throw new Error(data.error ?? "Push failed")
 
       setStatus({ msg: `Pushed to GitHub! Slug: ${project.slug}`, ok: true })
@@ -276,16 +411,73 @@ export default function AddProjectPage() {
     }
   }
 
-  const initials = getInitials(form.client.firstName, form.client.lastName)
-
   return (
     <div className="apfa">
       <h1 className="apfa__title">{editSlug ? "Edit Project" : "Add Project"}</h1>
-      <p className="apfa__subtitle">Files push directly to GitHub and update the live portfolio.</p>
+      <p className="apfa__subtitle">Upload assets first — project name and colors are detected automatically.</p>
 
       <form onSubmit={handleSubmit} className="apfa__form">
 
-        {/* ── Project Info ── */}
+        {/* ── 1. Project Assets (first) ── */}
+        <fieldset className="apfa__group">
+          <legend>
+            Project Assets
+            <span className="apfa__hint">
+              {" "}— <strong>_</strong> separates sections · <strong>-</strong> stays within a section
+              · e.g. <code>gmunchies_icon-stock_branding.svg</code>
+            </span>
+          </legend>
+
+          {assets.length === 0 ? (
+            <p className="apfa__assetEmpty">
+              Upload your design files. Brand name and colors will be auto-detected from SVGs.
+            </p>
+          ) : (
+            <>
+              {hasErrors && (
+                <div className="apfa__autoCorrectBar">
+                  <span className="apfa__autoCorrectInfo">
+                    {assets.filter(e => !e.valid).length} file{assets.filter(e => !e.valid).length !== 1 ? "s" : ""} with naming errors
+                  </span>
+                  <button type="button" onClick={handleAutoCorrect} className="apfa__autoCorrectBtn">
+                    Auto-correct All
+                  </button>
+                </div>
+              )}
+            <div className="apfa__assetGrid">
+              {assets.map((entry, i) => (
+                <AssetCard key={i} entry={entry} index={i} onChange={handleAssetChange} onRemove={handleAssetRemove} onAutoCorrect={handleAutoCorrectOne} />
+              ))}
+            </div>
+            </>
+          )}
+
+          <input
+            ref={assetInputRef}
+            type="file"
+            accept="image/*,.svg"
+            multiple
+            style={{ display: "none" }}
+            onChange={(e) => handleAssetFiles(Array.from(e.target.files ?? []))}
+          />
+          <div className="apfa__assetActions">
+            <button type="button" onClick={() => assetInputRef.current?.click()} className="apfa__addImg">
+              + Upload Assets
+            </button>
+            {hasSvgs && (
+              <button type="button" onClick={handleReExtract} className="apfa__generateColors" disabled={extracting}>
+                {extracting ? "Extracting..." : "Re-extract Colors"}
+              </button>
+            )}
+          </div>
+
+          {assets.length > 0 && hasErrors && (
+            <p className="apfa__assetNote">Rename files with ✗ — it validates as you type.</p>
+          )}
+          {extracting && <p className="apfa__assetNote apfa__assetNote--info">Detecting colors from SVGs…</p>}
+        </fieldset>
+
+        {/* ── 2. Project Info ── */}
         <fieldset className="apfa__group">
           <legend>Project Info</legend>
           <label>Project Name
@@ -303,15 +495,16 @@ export default function AddProjectPage() {
               <option value="other">Other</option>
             </select>
           </label>
-          <label>Description <span className="apfa__hint">(max 60 chars — shown on home thumbnail)</span>
-            <input value={form.description} maxLength={60} onChange={(e) => set("description", e.target.value)} required />
+          <label>Description <span className="apfa__hint">(60–500 chars)</span>
+            <textarea value={form.description} minLength={60} maxLength={500} rows={4}
+              onChange={(e) => set("description", e.target.value)} required />
           </label>
           <label>Page Link (href) <span className="apfa__hint">(leave blank to use /my-work/{"{slug}"})</span>
             <input value={form.href} placeholder={`/my-work/${form.slug || "slug"}`} onChange={(e) => set("href", e.target.value)} />
           </label>
         </fieldset>
 
-        {/* ── Brand Strategy ── */}
+        {/* ── 3. Brand Strategy ── */}
         <fieldset className="apfa__group">
           <legend>Brand Strategy</legend>
           <label>Mission <span className="apfa__hint">(what the brand does and for whom)</span>
@@ -322,7 +515,7 @@ export default function AddProjectPage() {
           </label>
         </fieldset>
 
-        {/* ── Client ── */}
+        {/* ── 4. Client ── */}
         <fieldset className="apfa__group">
           <legend>Client</legend>
           <div className="apfa__clientThumb">
@@ -330,7 +523,7 @@ export default function AddProjectPage() {
               {!clientThumbPreview && <span>{initials}</span>}
             </div>
             <div className="apfa__clientAvatarMeta">
-              <p>Client logo or photo <span className="apfa__hint">(optional — initials shown if empty)</span></p>
+              <p>Client logo or photo <span className="apfa__hint">(optional)</span></p>
               <button type="button" onClick={() => clientThumbRef.current?.click()} className="apfa__addImg">
                 {clientThumbFile ? "Change Image" : "Upload Image"}
               </button>
@@ -341,82 +534,32 @@ export default function AddProjectPage() {
           <label>Last Name <input value={form.client.lastName} onChange={(e) => setClient("lastName", e.target.value)} required /></label>
         </fieldset>
 
-        {/* ── Services ── */}
+        {/* ── 5. Services ── */}
         <fieldset className="apfa__group">
           <legend>Services</legend>
           <TagsInput tags={form.services} onAddTag={(t) => set("services", [...form.services, t])} onRemoveTag={(t) => set("services", form.services.filter((s) => s !== t))} />
         </fieldset>
 
-        {/* ── Technology ── */}
+        {/* ── 6. Technology ── */}
         <fieldset className="apfa__group">
           <legend>Technology Used</legend>
           <TagsInput tags={form.technologyUsed} onAddTag={(t) => set("technologyUsed", [...form.technologyUsed, t])} onRemoveTag={(t) => set("technologyUsed", form.technologyUsed.filter((s) => s !== t))} />
         </fieldset>
 
-        {/* ── Review ── */}
+        {/* ── 7. Review ── */}
         <fieldset className="apfa__group">
           <legend>Client Review</legend>
           <textarea value={form.review} onChange={(e) => set("review", e.target.value)} rows={4} placeholder="Client testimonial..." />
         </fieldset>
 
-        {/* ── Project Assets ── */}
+        {/* ── 8. Brand Colors ── */}
         <fieldset className="apfa__group">
           <legend>
-            Project Assets
-            <span className="apfa__hint"> — name files as: primary-logo_branding.svg · landing-page_ui.png</span>
+            Brand Colors
+            <span className="apfa__hint"> — auto-detected from SVGs · drag to reorder · click swatch to change</span>
           </legend>
 
-          {assets.length === 0 ? (
-            <p className="apfa__assetEmpty">No files uploaded yet. Images are optional.</p>
-          ) : (
-            <div className="apfa__assetGrid">
-              {assets.map((entry, i) => (
-                <AssetCard
-                  key={i}
-                  entry={entry}
-                  index={i}
-                  onChange={handleAssetChange}
-                  onRemove={handleAssetRemove}
-                />
-              ))}
-            </div>
-          )}
-
-          <input
-            ref={assetInputRef}
-            type="file"
-            accept="image/*,.svg"
-            multiple
-            style={{ display: "none" }}
-            onChange={(e) => handleAssetFiles(Array.from(e.target.files ?? []))}
-          />
-          <div className="apfa__assetActions">
-            <button type="button" onClick={() => assetInputRef.current?.click()} className="apfa__addImg">
-              + Upload Assets
-            </button>
-            {hasSvgs && (
-              <button
-                type="button"
-                onClick={handleGenerateColors}
-                className="apfa__generateColors"
-                disabled={extracting}
-              >
-                {extracting ? "Extracting..." : "Generate Colors from SVG"}
-              </button>
-            )}
-          </div>
-
-          {assets.length > 0 && hasErrors && (
-            <p className="apfa__assetNote">
-              Rename files with ✗ before saving. Edit the input — it validates as you type.
-            </p>
-          )}
-        </fieldset>
-
-        {/* ── Brand Colors ── */}
-        {colors.length > 0 && (
-          <fieldset className="apfa__group">
-            <legend>Brand Colors <span className="apfa__hint">(drag to reorder — first = primary)</span></legend>
+          {colors.length > 0 && (
             <div className="apfa__colorList">
               {colors.map((color, i) => (
                 <ColorSwatch
@@ -424,19 +567,40 @@ export default function AddProjectPage() {
                   color={color}
                   index={i}
                   total={colors.length}
+                  isDragOver={dragOverIdx === i}
+                  onUpdate={(patch) => updateColor(i, patch)}
                   onMoveUp={() => moveColor(i, i - 1)}
                   onMoveDown={() => moveColor(i, i + 1)}
                   onRemove={() => removeColor(i)}
+                  onDragStart={() => handleColorDragStart(i)}
+                  onDragOver={() => handleColorDragOver(i)}
+                  onDrop={() => handleColorDrop(i)}
                 />
               ))}
             </div>
-          </fieldset>
-        )}
+          )}
+
+          <div className="apfa__colorPickerRow">
+            <label className="apfa__colorPickerLabel" title="Pick a color to add">
+              <div className="apfa__colorPickerDot" style={{ background: pickerHex }} />
+              <input
+                type="color"
+                value={pickerHex}
+                onChange={(e) => setPickerHex(e.target.value)}
+                className="apfa__colorInput"
+              />
+            </label>
+            <button type="button" onClick={addPickerColor} className="apfa__addImg">
+              + Add Color
+            </button>
+            {colors.length === 0 && !hasSvgs && (
+              <span className="apfa__hint">Upload SVG files above to auto-detect colors</span>
+            )}
+          </div>
+        </fieldset>
 
         {status && (
-          <p className={`apfa__status${status.ok ? "" : " apfa__status--error"}`}>
-            {status.msg}
-          </p>
+          <p className={`apfa__status${status.ok ? "" : " apfa__status--error"}`}>{status.msg}</p>
         )}
 
         <div className="apfa__footer">
@@ -445,6 +609,7 @@ export default function AddProjectPage() {
             {saving ? "Pushing to GitHub..." : "Save & Push"}
           </button>
         </div>
+
       </form>
     </div>
   )

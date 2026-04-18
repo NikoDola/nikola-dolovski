@@ -237,6 +237,40 @@
   margin: 0;
 }
 
+/* ── Auto-correct bar ────────────────────────────────────────────────────── */
+.apfa__autoCorrectBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff8e1;
+  border-left: 3px solid #f5c01e;
+  padding: 0.6rem 0.9rem;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.apfa__autoCorrectInfo {
+  font-size: 0.82rem;
+  color: #7a5c00;
+}
+
+.apfa__autoCorrectBtn {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  border: none;
+  padding: 0.45rem 1.1rem;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.apfa__autoCorrectBtn:hover { opacity: 0.85; }
+
 .apfa__assetGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -381,6 +415,30 @@
   cursor: not-allowed;
 }
 
+.apfa__assetErrRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+
+.apfa__assetFixBtn {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  border: none;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.62rem;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.6;
+  transition: opacity 0.15s;
+}
+
+.apfa__assetFixBtn:hover { opacity: 0.8; }
+
 .apfa__assetNote {
   font-size: 0.8rem;
   color: #c62828;
@@ -392,22 +450,60 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .apfa__colorSwatch {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   background: #f7f7f7;
   padding: 0.6rem 0.75rem;
+  cursor: grab;
+  transition: background 0.15s, box-shadow 0.15s;
+  user-select: none;
+}
+
+.apfa__colorSwatch--over {
+  background: rgba(136, 209, 212, 0.15);
+  box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+.apfa__colorSwatch:active { cursor: grabbing; }
+
+.apfa__colorDrag {
+  font-size: 1rem;
+  color: #bbb;
+  flex-shrink: 0;
+  cursor: grab;
+  line-height: 1;
+}
+
+/* Swatch dot + hidden color input overlay */
+.apfa__colorDotWrap {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  cursor: pointer;
 }
 
 .apfa__colorDot {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  flex-shrink: 0;
   border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.apfa__colorInput {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  border: none;
+  padding: 0;
 }
 
 .apfa__colorMeta {
@@ -415,6 +511,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
+  min-width: 0;
 }
 
 .apfa__colorLabel {
@@ -437,9 +534,44 @@
   font-family: monospace;
 }
 
+.apfa__colorUsage {
+  font-size: 0.72rem;
+  color: #aaa;
+  font-style: italic;
+}
+
+/* Inline edit mode */
+.apfa__colorEdit {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.apfa__colorEditName,
+.apfa__colorEditUsage {
+  border: none;
+  border-bottom: 1px solid rgba(18, 27, 65, 0.2);
+  font-size: 0.8rem;
+  padding: 0.2rem 0;
+  background: transparent;
+  outline: none;
+  width: 100%;
+}
+
+.apfa__colorEditName { font-weight: 700; color: var(--secondary-color); }
+.apfa__colorEditUsage { color: #888; font-style: italic; }
+
+.apfa__colorEditName:focus,
+.apfa__colorEditUsage:focus {
+  border-bottom-color: var(--primary-color);
+}
+
 .apfa__colorActions {
   display: flex;
-  gap: 0.35rem;
+  gap: 0.3rem;
+  flex-shrink: 0;
 }
 
 .apfa__colorActions button {
@@ -454,6 +586,7 @@
   justify-content: center;
   color: var(--secondary-color);
   transition: background 0.15s;
+  flex-shrink: 0;
 }
 
 .apfa__colorActions button:hover:not(:disabled) {
@@ -464,4 +597,36 @@
 .apfa__colorActions button:disabled {
   opacity: 0.3;
   cursor: not-allowed;
+}
+
+/* Color picker row (add new color) */
+.apfa__colorPickerRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.apfa__colorPickerLabel {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(18, 27, 65, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.apfa__colorPickerDot {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.apfa__assetNote--info {
+  color: #888;
 }

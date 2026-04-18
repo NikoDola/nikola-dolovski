@@ -3,7 +3,7 @@ import Image from "next/image"
 import { readFileSync } from "fs"
 import path from "path"
 import type { Project } from "@/types/project"
-import { getImageSection, SECTION_ORDER } from "@/lib/imageNames"
+import { getImageSection, getIconLabel, SECTION_ORDER } from "@/lib/imageNames"
 import "./page.css"
 
 export const dynamic = "force-dynamic"
@@ -112,6 +112,34 @@ export default async function ProjectPage({
       {orderedSections.map((sectionName, i) => {
         const sectionImages = groups.get(sectionName) ?? []
         const id = makeSectionId(sectionName, i)
+
+        // Icons section — all branding icons in a grid, labeled by @label or path
+        if (sectionName === "Icons") {
+          return (
+            <section key={id} id={id} className="section-regular proj-section">
+              <div className="proj-section__header">
+                <span className="proj-section__label">Branding</span>
+                <h2 className="proj-section__title">Icons</h2>
+              </div>
+              <div className="proj-icon-grid">
+                {sectionImages.map((img) => {
+                  const filename = img.split("/").pop() ?? ""
+                  const label = getIconLabel(filename)
+                  return (
+                    <div key={img} className="proj-icon-card">
+                      <div className="proj-icon-card__imgWrap">
+                        <Image src={img} alt={label} fill className="proj-icon-card__img" />
+                      </div>
+                      <p className="proj-icon-card__label">{label}</p>
+                    </div>
+                  )
+                })}
+              </div>
+            </section>
+          )
+        }
+
+        // All other sections
         const mockupIdx = sectionImages.findIndex((img) => img.includes("logo-mockup"))
         const hero = mockupIdx >= 0 ? sectionImages[mockupIdx] : null
         const gridImages = hero
@@ -174,9 +202,10 @@ export default async function ProjectPage({
                 <div key={color.hex + i} className="proj-color-card">
                   <div className="proj-color-card__swatch" style={{ backgroundColor: color.hex }} />
                   <div className="proj-color-card__info">
-                    <p className="proj-color-card__role">{labels[i] ?? `Color ${i + 1}`}</p>
+                    <p className="proj-color-card__role">{color.name || labels[i] || `Color ${i + 1}`}</p>
                     <p className="proj-color-card__hex">{color.hex}</p>
                     <p className="proj-color-card__rgb">{color.rgb}</p>
+                    {color.usage && <p className="proj-color-card__usage">{color.usage}</p>}
                   </div>
                 </div>
               )

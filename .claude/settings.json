@@ -3,7 +3,11 @@
     "allow": [
       "Bash(cat tailwind.config.ts)",
       "Bash(cat tailwind.config.js)",
-      "Read(//c/Users/Dolov/Junk code/nikola-dolovski/public/**)"
+      "Read(//c/Users/Dolov/Junk code/nikola-dolovski/public/**)",
+      "Bash(git merge *)",
+      "Bash(git push *)",
+      "Read(//c/Users/Dolov/**)",
+      "Bash(node -e ' *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\Dolov\\Junk code\\nikola-dolovski\\src\\app\\my-work"

@@ -31,7 +31,7 @@ function deriveThumbnailsAndHero(
   const logoPaths = names
     .filter((n) => {
       const parsed = parseImageFilename(n)
-      return parsed?.name.includes("logo")
+      return parsed?.pathSegments[0] === "logo"
     })
     .map((n) => `/my-work/${slug}/images/${n}`)
 

@@ -1,112 +1,254 @@
 {
-  "branding": [
-    "logo-mockup",
-    "primary-logo",
-    "horizontal-logo",
-    "horizontal-aspect-ratio",
-    "horizontal-clearspace",
-    "horizontal-mockup",
-    "vertical-logo",
-    "vertical-logo-aspect-ratio",
-    "vertical-logo-clearspace",
-    "vertical-logo-mockup",
-    "icon-logo",
-    "icon-logo-mockup",
-    "icon-logo-clearspace",
-    "icon-logo-aspect-ratio",
-    "badge-logo",
-    "logo-mark",
-    "logo-grid",
-    "logo-clearspace",
-    "logo-variations",
-    "color-palette",
-    "color-usage",
-    "typography",
-    "font-pairing",
-    "type-scale",
-    "brand-guidelines",
-    "brand-book",
-    "visual-identity",
-    "brand-strategy",
-    "brand-positioning",
-    "business-card",
-    "letterhead",
-    "envelope",
-    "invoice",
-    "email-signature",
-    "brochure",
-    "flyer",
-    "poster",
-    "catalog",
-    "menu",
-    "packaging",
-    "label",
-    "box",
-    "bottle",
-    "bag",
-    "merchandise",
-    "t-shirt",
-    "hoodie",
-    "tote-bag",
-    "sticker",
-    "social-media",
-    "social-post",
-    "social-banner",
-    "ad-creative",
-    "billboard",
-    "signage",
-    "storefront",
-    "vehicle-branding",
-    "exhibition",
-    "mascot"
-  ],
-  "ui": [
-    "landing-page",
-    "homepage",
-    "dashboard",
-    "web-app",
-    "mobile-app",
-    "wireframe",
-    "user-flow",
-    "sitemap",
-    "workflow",
-    "journey",
-    "components",
-    "ui-kit",
-    "design-system",
-    "style-guide",
-    "typography",
-    "color-system",
-    "iconography",
-    "illustrations",
-    "navbar",
-    "footer",
-    "sidebar",
-    "forms",
-    "tables",
-    "cards",
-    "modals",
-    "login",
-    "register",
-    "onboarding",
-    "profile",
-    "settings",
-    "product-page",
-    "checkout",
-    "cart",
-    "pricing",
-    "email",
-    "email-signature",
-    "newsletter",
-    "popup",
-    "animations",
-    "microinteractions",
-    "hover-states",
-    "empty-states",
-    "error-states",
-    "accessibility",
-    "responsive",
-    "dark-mode",
-    "prototype"
-  ]
+  "branding": {
+    "logo": {
+      "primary": {
+        "mods": ["outline", "fill", "black", "white", "color"],
+        "clearspace": {},
+        "grid": {},
+        "ratio": {}
+      },
+      "horizontal": {
+        "mods": ["outline", "fill", "black", "white", "color"],
+        "clearspace": {},
+        "grid": {},
+        "ratio": {}
+      },
+      "vertical": {
+        "mods": ["outline", "fill", "black", "white", "color"],
+        "clearspace": {},
+        "grid": {},
+        "ratio": {}
+      },
+      "icon": {
+        "mods": ["outline", "fill", "black", "white", "color", "gradient"]
+      },
+      "badge": {
+        "mods": ["outline", "fill", "black", "white"]
+      },
+      "wordmark": {},
+      "monogram": {},
+      "mascot": {
+        "mods": ["outline", "fill", "black", "white", "color"]
+      }
+    },
+    "icon": {
+      "custom": {
+        "mods": ["outline", "fill", "colorful", "black", "white"]
+      },
+      "stock": {
+        "mods": ["outline", "fill", "colorful", "black", "white"]
+      },
+      "mods": ["outline", "fill", "colorful", "black", "white"]
+    },
+    "mascot": {
+      "full": {},
+      "head": {},
+      "pose": {
+        "mods": ["front", "side", "action"]
+      }
+    },
+    "illustration": {
+      "mods": ["outline", "fill", "colorful", "mono"]
+    },
+    "pattern": {
+      "mods": ["geometric", "organic", "minimal", "complex"]
+    },
+    "color": {
+      "palette": {},
+      "usage": {},
+      "gradient": {}
+    },
+    "typography": {
+      "pairing": {},
+      "scale": {},
+      "hierarchy": {}
+    },
+    "brand-guidelines": {
+      "book": {},
+      "cover": {},
+      "layout": {}
+    },
+
+    "print": {
+          "stationery": {
+      "business-card": {
+        "mods": ["back", "front"],
+        "back": {},
+        "front":{}
+      },
+      "letterhead": {},
+      "envelope": {},
+      "invoice": {},
+      "email-signature": {}
+    },
+      "brochure": {
+        "mods": ["tri-fold", "bi-fold", "z-fold", "gate-fold"]
+      },
+      "flyer": {
+        "mods": ["a4", "a5", "dl"]
+      },
+      "poster": {
+        "mods": ["a1", "a2", "a3"]
+      },
+      "catalog": {},
+      "menu": {}
+    },
+    "packaging": {
+      "box": {
+        "mods": ["rigid", "folding", "mailer"]
+      },
+      "label": {
+        "mods": ["round", "square", "wrap"]
+      },
+      "bottle": {},
+      "can": {},
+      "bag": {
+        "mods": ["paper", "plastic", "tote"]
+      }
+    },
+    "merch": {
+      "t-shirt": {
+        "mods": ["front", "back", "full"]
+      },
+      "hoodie": {},
+      "cap": {},
+      "sticker": {
+        "mods": ["die-cut", "circle", "rectangle"]
+      },
+      "tote-bag": {}
+    },
+    "social": {
+      "post": {
+        "mods": ["instagram", "facebook", "square"]
+      },
+      "story": {},
+      "banner": {
+        "mods": ["linkedin", "youtube", "website"]
+      },
+      "ad": {}
+    },
+    "signage": {
+      "storefront": {},
+      "billboard": {},
+      "vehicle": {},
+      "wayfinding": {}
+    }
+  },
+  "ui": {
+    "page": {
+      "landing-page": {},
+      "homepage": {},
+      "dashboard": {},
+      "web-app": {},
+      "mobile-app": {}
+    },
+    "structure": {
+      "wireframe": {},
+      "sitemap": {},
+      "user-flow": {},
+      "journey": {},
+      "workflow": {}
+    },
+    "components": {
+      "button": {
+        "mods": ["primary", "secondary", "icon", "disabled"]
+      },
+      "card": {
+        "mods": ["product", "profile", "info"]
+      },
+      "modal": {
+        "mods": ["confirmation", "form", "alert"]
+      },
+      "table": {},
+      "form": {
+        "input": {},
+        "select": {},
+        "checkbox": {},
+        "radio": {}
+      }
+    },
+    "navigation": {
+      "navbar": {
+        "mods": ["desktop", "mobile", "sticky"]
+      },
+      "sidebar": {
+        "mods": ["collapsed", "expanded"]
+      },
+      "footer": {}
+    },
+    "sections": {
+      "hero": {
+        "mods": ["centered", "split", "image-left", "image-right"]
+      },
+      "features": {},
+      "pricing": {},
+      "testimonials": {},
+      "cta": {},
+      "faq": {}
+    },
+    "auth": {
+      "login": {},
+      "register": {},
+      "forgot-password": {},
+      "reset-password": {}
+    },
+    "user": {
+      "profile": {},
+      "settings": {},
+      "dashboard": {}
+    },
+    "ecommerce": {
+      "product-page": {},
+      "product-card": {},
+      "cart": {},
+      "checkout": {},
+      "pricing": {}
+    },
+    "email": {
+      "newsletter": {},
+      "transactional": {},
+      "email-signature": {}
+    },
+    "states": {
+      "empty": {},
+      "error": {},
+      "success": {},
+      "loading": {}
+    },
+    "animation": {
+      "loading": {
+        "mods": ["spinner", "skeleton", "progress"]
+      },
+      "hover": {},
+      "transition": {},
+      "microinteraction": {},
+      "hero": {},
+      "scroll": {}
+    },
+    "visual": {
+      "typography": {},
+      "color-system": {},
+      "iconography": {},
+      "illustration": {},
+      "images": {}
+    },
+    "system": {
+      "design-system": {},
+      "ui-kit": {},
+      "style-guide": {}
+    },
+    "responsive": {
+      "mobile": {},
+      "tablet": {},
+      "desktop": {}
+    },
+    "theme": {
+      "dark-mode": {},
+      "light-mode": {}
+    },
+    "prototype": {
+      "interactive": {},
+      "flow": {}
+    }
+  }
 }
