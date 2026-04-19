@@ -58,6 +58,7 @@ export default function AdminProjectsPage() {
                 <td><span className={`apj__badge apj__badge--${p.category}`}>{p.category}</span></td>
                 <td>{p.thumbnails.length}</td>
                 <td className="apj__actions">
+                  <Link href={`/my-work/${p.slug}`} className="apj__view" target="_blank">View</Link>
                   <Link href={`/admin/projects/add?slug=${p.slug}`} className="apj__edit">Edit</Link>
                   <button onClick={() => handleDelete(p.slug)} className="apj__delete">Delete</button>
                 </td>

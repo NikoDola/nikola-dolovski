@@ -82,6 +82,12 @@
   align-items: center;
 }
 
+.apj__view {
+  color: var(--primary-color);
+  font-size: 0.85rem;
+  text-decoration: underline;
+}
+
 .apj__edit {
   color: var(--secondary-color);
   font-size: 0.85rem;

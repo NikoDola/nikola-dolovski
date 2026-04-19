@@ -9,7 +9,7 @@ export default function Home() {
     <main>
       <Hero />
       <Results />
-      <HomePortfolio defaultProjects={staticProjects as Project[]} />
+      <HomePortfolio defaultProjects={(staticProjects as Project[]).filter((p) => p.images && p.images.length > 0)} />
     </main>
   )
 }

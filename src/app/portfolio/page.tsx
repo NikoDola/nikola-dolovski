@@ -1,44 +1,12 @@
 import Link from "next/link"
 import Image from "next/image"
+import staticProjects from "@/data/projects.json"
+import type { Project } from "@/types/project"
 import "./portfolio.css"
 
-const projects = [
-  {
-    slug: "freaky",
-    title: "Freaky",
-    category: "Branding, Visual Identity",
-    cover: "/portfolio/freaky/freaky-cover-pattern.webp",
-    href: "/my-work/freaky",
-  },
-  {
-    slug: "bee-branded",
-    title: "Bee Branded",
-    category: "Graphic Design, Social Media",
-    cover: "/portfolio/bee-branded/graphic-design_add/graphic-design_job-add-feed.webp",
-    href: "/my-work/bee-branded",
-  },
-  {
-    slug: "gmunchies",
-    title: "GMunchies",
-    category: "Branding, Illustration",
-    cover: "/portfolio/gmunchies/portfolio_logo.svg",
-    href: "/my-work/gmunchies",
-  },
-  {
-    slug: "horny-rhino",
-    title: "Horny Rhino",
-    category: "Brand Identity, Packaging",
-    cover: "/portfolio/horny-rhino/mood-bord copy.jpg",
-    href: "/my-work/horny-rhino",
-  },
-  {
-    slug: "vexel",
-    title: "Vexel",
-    category: "Brand Identity, Web Design",
-    cover: "/portfolio/vexel/section-6_logo-symbo_mockup-topaz-faceai-sharpen_AA.webp",
-    href: "/my-work/vexel",
-  },
-]
+const projects = (staticProjects as Project[]).filter(
+  (p) => p.images && p.images.length > 0
+)
 
 export default function PortfolioPage() {
   return (
@@ -57,16 +25,18 @@ export default function PortfolioPage() {
           <Link key={p.slug} href={p.href} className="portfolioCard">
             <div className="portfolioCard__img-wrap">
               <Image
-                src={p.cover}
-                alt={p.title}
+                src={p.thumbnails[0]}
+                alt={p.name}
                 fill
                 className="portfolioCard__img"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
             <div className="portfolioCard__info">
-              <span className="portfolioCard__category">{p.category}</span>
-              <h3 className="portfolioCard__title">{p.title}</h3>
+              <span className="portfolioCard__category">
+                {p.services.slice(0, 2).join(", ")}
+              </span>
+              <h3 className="portfolioCard__title">{p.name}</h3>
             </div>
           </Link>
         ))}

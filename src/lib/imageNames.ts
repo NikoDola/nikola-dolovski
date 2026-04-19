@@ -52,6 +52,10 @@ export function parseImageFilename(filename: string): ParsedImage | null {
   if (parts[idx]?.startsWith("@")) {
     brand = parts[idx].slice(1)
     idx++
+  } else if (parts[idx] !== "branding" && parts[idx] !== "ui") {
+    // Bare brand prefix (@ was stripped on upload), e.g. "gmunchies_branding_..."
+    brand = parts[idx]
+    idx++
   }
 
   const category = parts[idx]
