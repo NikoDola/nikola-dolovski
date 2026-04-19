@@ -20,7 +20,7 @@
 }
 
 .aboutHero__title {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: clamp(3rem, 6vw, 6rem);
   font-weight: 700;
   line-height: 0.95;
@@ -48,7 +48,7 @@
   display: inline-block;
   background-color: var(--primary-color);
   color: var(--secondary-color);
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -118,10 +118,10 @@
 }
 
 .aboutSection__cardNum {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--primary-dark);
 }
 
 .aboutSection__cardLabel {
@@ -161,15 +161,15 @@
 }
 
 .timeline__year {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--primary-dark);
   padding-top: 0.25rem;
 }
 
 .timeline__content h4 {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 1.2rem;
   font-weight: 400;
   margin: 0 0 0.5rem;

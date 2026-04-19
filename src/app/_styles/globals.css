@@ -1,9 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
 @import url('./variables.css');
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 html, body {
   overflow-x: hidden;
@@ -24,7 +34,7 @@ img::selection{
 }
 h1{
   font-size: 65px;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
 }
 
 h1::selection{
@@ -34,7 +44,7 @@ h1::selection{
 
 h2{
   font-size: var(--text-5xl) ;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-weight: 400;
   letter-spacing: var(--space-1);
   margin-bottom: 1rem;

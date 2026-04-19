@@ -36,7 +36,7 @@
 }
 
 .rsBox__number {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 700;
   line-height: 1;
@@ -46,22 +46,36 @@
   font-size: clamp(0.75rem, 1.2vw, 1rem);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  opacity: 0.8;
   text-align: center;
   font-weight: 600;
+}
+
+.rsBox--secondary .rsBox__label {
+  color: white;
+}
+
+.rsBox--primary .rsBox__label {
+  color: var(--secondary-color);
 }
 
 .rsBox__readmore {
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  font-family: 'Oswald', sans-serif;
-  opacity: 0.6;
+  font-family: var(--font-oswald), sans-serif;
   text-decoration: underline;
   text-underline-offset: 3px;
-  color: inherit;
   transition: opacity 0.2s;
   margin-top: 0.25rem;
+  opacity: 0.75;
+}
+
+.rsBox--secondary .rsBox__readmore {
+  color: white;
+}
+
+.rsBox--primary .rsBox__readmore {
+  color: var(--secondary-color);
 }
 
 .rsBox__readmore:hover {
@@ -74,13 +88,29 @@
     min-height: 50vh;
   }
 
+  /* Box 3 swaps to dark navy bg */
   .rsBox:nth-child(3) {
     background-color: var(--secondary-color);
     color: var(--primary-color);
   }
 
+  .rsBox:nth-child(3) .rsBox__img-icon {
+    filter: invert(72%) sepia(28%) saturate(521%) hue-rotate(144deg) brightness(104%) contrast(88%);
+  }
+
+  .rsBox:nth-child(3) .rsBox__label,
+  .rsBox:nth-child(3) .rsBox__readmore {
+    color: var(--primary-color);
+  }
+
+  /* Box 4 swaps to teal bg */
   .rsBox:nth-child(4) {
     background-color: var(--primary-color);
+    color: var(--secondary-color);
+  }
+
+  .rsBox:nth-child(4) .rsBox__label,
+  .rsBox:nth-child(4) .rsBox__readmore {
     color: var(--secondary-color);
   }
 }

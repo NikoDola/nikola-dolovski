@@ -5,7 +5,7 @@
 }
 
 .apfa__title {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 2rem;
   color: var(--secondary-color);
   margin: 0 0 0.25rem;
@@ -32,7 +32,7 @@
 }
 
 .apfa__group legend {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -138,7 +138,7 @@
   padding: 0.5rem 1rem;
   font-size: 0.85rem;
   cursor: pointer;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   letter-spacing: 0.05em;
   margin-top: 0.5rem;
 }
@@ -166,7 +166,7 @@
 }
 
 .apfa__clientAvatar span {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 1.3rem;
   font-weight: 700;
   color: var(--primary-color);
@@ -219,7 +219,7 @@
   color: var(--primary-color);
   border: none;
   padding: 0.75rem 2rem;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 0.95rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -285,7 +285,7 @@
   color: var(--primary-color);
   border: none;
   padding: 0.45rem 1.1rem;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 0.82rem;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -426,7 +426,7 @@
   padding: 0.5rem 1rem;
   font-size: 0.85rem;
   cursor: pointer;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   letter-spacing: 0.05em;
   transition: background 0.2s, color 0.2s;
 }
@@ -453,7 +453,7 @@
   border: none;
   padding: 0.1rem 0.45rem;
   font-size: 0.62rem;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;

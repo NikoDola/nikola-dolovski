@@ -13,7 +13,7 @@
 }
 
 .apj__title {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 2rem;
   color: var(--secondary-color);
   margin: 0;
@@ -22,7 +22,7 @@
 .apj__add {
   background-color: var(--secondary-color);
   color: var(--primary-color);
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 0.9rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;

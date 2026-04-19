@@ -26,7 +26,7 @@
 }
 
 .clientsTitle {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: clamp(2.5rem, 5vw, 4.5rem);
   margin: 0 0 1.5rem;
   color: var(--white-color);
@@ -68,7 +68,7 @@
 }
 
 .clientCard__name {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 1.5rem;
   font-weight: 400;
   color: var(--secondary-color);
@@ -79,7 +79,7 @@
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--primary-color);
+  color: var(--secondary-color);
   font-weight: 700;
 }
 
@@ -115,7 +115,7 @@
   display: inline-block;
   background-color: var(--secondary-color);
   color: var(--white-color);
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 0.1em;

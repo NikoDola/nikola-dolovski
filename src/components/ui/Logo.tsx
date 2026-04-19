@@ -87,7 +87,7 @@ const { ip } = await ipRes.json();
 
   return (
     <div className="logoItemsWrapper">
-      <Link className="linkInputWrapper" href={link}>
+      <Link className="linkInputWrapper" href={link} aria-label="Niko Dola — home">
         <div style={{ width: size, height: size }} className="logoWrapper">
           <div className="hair"></div>
           <div className="glasses">

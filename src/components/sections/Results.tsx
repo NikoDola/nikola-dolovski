@@ -51,7 +51,9 @@ function StatBox({ label, value, suffix, Icon, imgSrc, variant, href, active }: 
       {imgSrc && <Image src={imgSrc} alt={label} width={40} height={40} className="rsBox__icon rsBox__img-icon" />}
       <span className="rsBox__number">{count}{suffix}</span>
       <span className="rsBox__label">{label}</span>
-      <Link href={href} className="rsBox__readmore">Read More</Link>
+      <Link href={href} className="rsBox__readmore">
+        Read More<span className="sr-only"> about {label}</span>
+      </Link>
     </div>
   )
 }

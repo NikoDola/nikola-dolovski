@@ -27,7 +27,7 @@
 }
 
 .proj-hero__title {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: clamp(3rem, 7vw, 6rem);
   font-weight: 700;
   margin: 0 0 1.25rem;
@@ -117,7 +117,7 @@
 }
 
 .proj-toc__num {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 0.7rem;
   color: var(--primary-color);
   letter-spacing: 0.05em;
@@ -170,14 +170,14 @@
   font-size: 0.7rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--primary-color);
+  color: var(--secondary-color);
   font-weight: 700;
   display: block;
   margin-bottom: 0.5rem;
 }
 
 .proj-section__title {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 700;
   color: var(--secondary-color);
@@ -252,7 +252,7 @@
 }
 
 .proj-icon-subheading {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 1rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -352,7 +352,7 @@
 
 /* ── Icon group (fill / outline sub-labels) ───────────────────────────────── */
 .proj-icon-group__label {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -458,7 +458,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--secondary-color);
@@ -475,7 +475,7 @@
 }
 
 .proj-review__author {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 0.8rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;

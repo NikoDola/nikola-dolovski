@@ -65,7 +65,7 @@
 
 .gm-hero__title {
   font-size: var(--text-9xl);
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-weight: 700;
   line-height: 0.88;
   letter-spacing: -0.02em;

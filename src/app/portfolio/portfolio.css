@@ -20,7 +20,7 @@
 }
 
 .portfolioPage__title {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: clamp(2.5rem, 5vw, 4.5rem);
   margin: 0 0 1rem;
   color: var(--secondary-color);
@@ -79,7 +79,7 @@
 }
 
 .portfolioCard__title {
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-size: 1.5rem;
   font-weight: 400;
   margin: 0;

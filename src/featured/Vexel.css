@@ -69,7 +69,7 @@
 
 .vx-hero__title {
   font-size: var(--text-9xl);
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-weight: 700;
   line-height: 0.9;
   letter-spacing: -0.02em;
@@ -275,7 +275,7 @@
 
 .vx-symbol-hero__title {
   font-size: var(--text-5xl);
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-weight: 400;
   letter-spacing: var(--space-1);
   margin: 0;
@@ -348,7 +348,7 @@
 
 .vx-chapter__title {
   font-size: var(--text-7xl);
-  font-family: 'Oswald', sans-serif;
+  font-family: var(--font-oswald), sans-serif;
   font-weight: 400;
   color: #ffffff;
   margin: 0;
