@@ -326,14 +326,18 @@
 }
 
 .proj-print-card {
-  position: relative;
   width: 420px;
-  aspect-ratio: 85 / 54;
   background: white;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.14), 0 3px 10px rgba(0, 0, 0, 0.08);
   border-radius: 6px;
   overflow: hidden;
   flex-shrink: 0;
+}
+
+.proj-print-card img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 /* ── Section description ──────────────────────────────────────────────────── */

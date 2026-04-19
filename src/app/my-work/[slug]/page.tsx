@@ -375,12 +375,22 @@ export default async function ProjectPage({
                 <div className={isPrint ? "proj-print-grid" : `proj-section__grid${gridImages.length === 1 ? " proj-section__grid--single" : ""}`}>
                   {gridImages.map((img) => (
                     <div key={img} className={isPrint ? "proj-print-card" : "proj-section__imgWrap"}>
-                      <Image
-                        src={img}
-                        alt={img.split("/").pop()?.replace(/[_@-]/g, " ") ?? ""}
-                        fill
-                        className="proj-section__img"
-                      />
+                      {isPrint ? (
+                        <Image
+                          src={img}
+                          alt={img.split("/").pop()?.replace(/[_@-]/g, " ") ?? ""}
+                          width={840}
+                          height={540}
+                          style={{ width: "100%", height: "auto" }}
+                        />
+                      ) : (
+                        <Image
+                          src={img}
+                          alt={img.split("/").pop()?.replace(/[_@-]/g, " ") ?? ""}
+                          fill
+                          className="proj-section__img"
+                        />
+                      )}
                     </div>
                   ))}
                 </div>
