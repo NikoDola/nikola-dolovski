@@ -128,8 +128,8 @@ function buildSections(
       if (desc) shownDesc.add(topSection)
 
       // icon-stock: split fill vs outline
-      let fillImages: string[] = []
-      let outlineImages: string[] = []
+      const fillImages: string[] = []
+      const outlineImages: string[] = []
       if (type === "icon-stock") {
         for (const img of imgs) {
           const filename = img.split("/").pop() ?? img
