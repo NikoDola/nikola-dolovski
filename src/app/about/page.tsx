@@ -1,26 +1,19 @@
 import "./about.css"
+import AboutHero from "@/components/sections/AboutHero"
+import SkillsSection from "@/components/sections/SkillsSection"
 
 export default function AboutPage() {
   return (
     <main className="aboutPage">
 
       {/* General about */}
-      <section className="aboutHero section-full">
-        <div className="aboutHero__text">
-          <h1 className="aboutHero__title">NIKOLA<br />DOLOVSKI</h1>
-          <p className="aboutHero__role">Branding, UI/UX and Web Developer</p>
-          <p className="aboutHero__bio">
-            I help brands find their visual voice. From naming and identity to interfaces and code,
-            I work across the full spectrum of brand building, combining strategic thinking with a sharp eye
-            for design and a developer&apos;s instinct for making it work in the real world.
-            With over 14 years in the field, I have partnered with startups, established businesses,
-            and creative studios across multiple industries.
-          </p>
-          <a className="aboutHero__cv" href="/about-me/Nikola-Dolovski_CV.pdf" download>
-            Download CV
-          </a>
-        </div>
-        <div className="aboutHero__accent" />
+      <AboutHero />
+
+      {/* Skills */}
+      <section className="aboutSection section-regular">
+        <span className="aboutSection__tag">Skills</span>
+        <h2>Tools &amp; Technologies</h2>
+        <SkillsSection />
       </section>
 
       {/* Contest Winner */}

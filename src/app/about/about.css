@@ -2,72 +2,6 @@
   overflow-x: hidden;
 }
 
-/* Hero */
-.aboutHero {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 80vh;
-  background-color: var(--secondary-color);
-  color: var(--white-color);
-  align-items: center;
-}
-
-.aboutHero__text {
-  padding: 5rem 10% 5rem 10%;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.aboutHero__title {
-  font-family: var(--font-oswald), sans-serif;
-  font-size: clamp(3rem, 6vw, 6rem);
-  font-weight: 700;
-  line-height: 0.95;
-  margin: 0;
-  color: var(--white-color);
-}
-
-.aboutHero__role {
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--primary-color);
-  margin: 0;
-}
-
-.aboutHero__bio {
-  font-size: 1.05rem;
-  line-height: 1.75;
-  opacity: 0.85;
-  max-width: 520px;
-  margin: 0;
-}
-
-.aboutHero__cv {
-  display: inline-block;
-  background-color: var(--primary-color);
-  color: var(--secondary-color);
-  font-family: var(--font-oswald), sans-serif;
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.75rem 2rem;
-  text-decoration: none;
-  align-self: flex-start;
-  transition: opacity 0.2s;
-}
-
-.aboutHero__cv:hover {
-  opacity: 0.85;
-}
-
-.aboutHero__accent {
-  background-color: var(--primary-color);
-  height: 100%;
-  min-height: 80vh;
-}
 
 /* Sections */
 .aboutSection {
@@ -184,14 +118,6 @@
 }
 
 @media (max-width: 900px) {
-  .aboutHero {
-    grid-template-columns: 1fr;
-  }
-
-  .aboutHero__accent {
-    display: none;
-  }
-
   .aboutSection__grid {
     grid-template-columns: 1fr;
   }

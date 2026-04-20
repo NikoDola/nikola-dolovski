@@ -3,7 +3,7 @@
    (General wrapper, main layout, and responsive defaults)
    ========================================================================== */
 .skillsWrapper{
-  width: 50%;
+  width: 100%;
   margin: 0 auto;
   margin-top: 10rem;
 }
@@ -303,7 +303,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-
 }
 .designIcons,
 .codeIcons {
@@ -402,10 +401,9 @@
     width: 80%;
   }
   .skillIcon.active {
-    transform: scale(1.8); /* Slightly smaller scale for active icon on smaller screens */
+    transform: scale(1.8);
   }
   .skillsWrapper{
-  width: 100%;
-
-}
+    width: 100%;
+  }
 }
