@@ -130,6 +130,9 @@
       "billboard": {},
       "vehicle": {},
       "wayfinding": {}
+    },
+    "thumbnail": {
+      "mods": ["horizontal", "vertical", "square"]
     }
   },
   "ui": {

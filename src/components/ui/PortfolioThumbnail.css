@@ -30,6 +30,21 @@
   50%       { background-position: 100% 50%; }
 }
 
+/* ── Horizontal pan (right to left, one direction loop) ── */
+.pThumb__pan--horizontal {
+  position: absolute;
+  inset: 0;
+  background-size: 220% auto;
+  background-repeat: no-repeat;
+  background-position: 100% 50%;
+  animation: pThumbRTL 12s linear infinite;
+}
+
+@keyframes pThumbRTL {
+  0%   { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 /* ── Slideshow (multiple images) ─────────────────── */
 .pThumb__slide {
   position: absolute;

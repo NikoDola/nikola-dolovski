@@ -48,6 +48,7 @@ export default function PortfolioThumbnail({ images, name, description, client, 
   }
 
   const desc = description.length > 60 ? description.slice(0, 57) + "..." : description
+  const isHorizontal = !isSlideshow && images[0]?.includes("horizontal")
 
   return (
     <Link href={href} className="pThumb" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
@@ -62,7 +63,7 @@ export default function PortfolioThumbnail({ images, name, description, client, 
           ))
         ) : (
           <div
-            className="pThumb__pan"
+            className={isHorizontal ? "pThumb__pan--horizontal" : "pThumb__pan"}
             style={{ backgroundImage: `url(${images[0]})` }}
           />
         )}
