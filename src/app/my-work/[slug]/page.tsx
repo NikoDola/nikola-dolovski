@@ -4,6 +4,7 @@ import { readFileSync } from "fs"
 import path from "path"
 import type { Project } from "@/types/project"
 import { getIconLabel, parseImageFilename } from "@/lib/imageNames"
+import ProjectHero from "@/components/sections/ProjectHero"
 import "./page.css"
 
 export const dynamic = "force-dynamic"
@@ -145,12 +146,142 @@ function buildSections(
     })
 }
 
-// ── TOC ───────────────────────────────────────────────────────────────────────
+// ── TOC (hierarchical) ────────────────────────────────────────────────────────
 
-type TocItem = { id: string; label: string }
+type TocNode = { id: string; label: string; children?: TocNode[] }
 
 function makeSectionId(key: string, idx: number) {
   return `section-${idx}-${key.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`
+}
+
+const LOGO_TOPS = new Set(["Logo", "Mascot", "Wordmark"])
+const ICON_TOPS = new Set(["Icons"])
+const BRAND_TOPS = new Set(["Colors", "Typography"])
+
+function buildHierarchicalToc(
+  sections: SectionDef[],
+  hasMission: boolean,
+  hasVision: boolean
+): TocNode[] {
+  const result: TocNode[] = []
+
+  // Introduction (mission + vision as children)
+  if (hasMission || hasVision) {
+    const introChildren: TocNode[] = []
+    if (hasMission) introChildren.push({ id: "proj-mission", label: "Mission" })
+    if (hasVision) introChildren.push({ id: "proj-vision", label: "Vision" })
+    result.push({ id: "proj-introduction", label: "Introduction", children: introChildren })
+  }
+
+  let logoIdx = -1
+  const logoChildren: TocNode[] = []
+
+  let iconIdx = -1
+  const iconChildren: TocNode[] = []
+
+  let brandIdx = -1
+  const brandChildren: TocNode[] = []
+
+  const otherChildren = new Map<string, TocNode[]>()
+
+  sections.forEach((s, i) => {
+    const id = makeSectionId(s.key, i)
+
+    // ── Logo family
+    if (LOGO_TOPS.has(s.topSection)) {
+      if (logoIdx === -1) {
+        logoIdx = result.length
+        result.push({ id, label: "Logo", children: logoChildren })
+      }
+      // Prefer primary or mockup as the parent link target
+      if (s.key === "logo_primary" || s.images.some(img => img.includes("mockup"))) {
+        result[logoIdx].id = id
+      }
+      logoChildren.push({ id, label: s.label })
+      return
+    }
+
+    // ── Icons (custom + stock)
+    if (ICON_TOPS.has(s.topSection)) {
+      if (iconIdx === -1) {
+        iconIdx = result.length
+        result.push({ id, label: "Icons", children: iconChildren })
+      }
+      iconChildren.push({ id, label: s.label })
+      return
+    }
+
+    // ── Brand Style (Colors + Typography)
+    if (BRAND_TOPS.has(s.topSection)) {
+      if (brandIdx === -1) {
+        brandIdx = result.length
+        result.push({ id, label: "Brand Style", children: brandChildren })
+      }
+
+      if (s.topSection === "Colors") {
+        const hasGradient = s.images.some(img => img.includes("gradient"))
+        const hasSolid = s.images.some(img => !img.includes("gradient"))
+        brandChildren.push({
+          id,
+          label: "Colors",
+          children: hasGradient && hasSolid
+            ? [{ id, label: "Solid" }, { id, label: "Gradient" }]
+            : undefined,
+        })
+      }
+
+      if (s.topSection === "Typography") {
+        const hasMockup = s.images.some(img => img.includes("mockup"))
+        const typChildren: TocNode[] = []
+        if (s.images.some(img => img.includes("hierarchy") || img.includes("heading"))) typChildren.push({ id, label: "Heading" })
+        if (s.images.some(img => img.includes("pairing") || img.includes("scale") || img.includes("body"))) typChildren.push({ id, label: "Body" })
+        if (s.images.some(img => img.includes("custom"))) typChildren.push({ id, label: "Custom" })
+        // Parent link: mockup if exists, else first child's section
+        if (hasMockup) result[brandIdx].id = id
+        brandChildren.push({ id, label: "Typography", children: typChildren.length > 0 ? typChildren : undefined })
+      }
+      return
+    }
+
+    // ── Everything else — group by topSection
+    const top = s.topSection
+    if (!otherChildren.has(top)) {
+      otherChildren.set(top, [])
+      result.push({ id, label: top, children: otherChildren.get(top) })
+    } else {
+      otherChildren.get(top)!.push({ id, label: s.label })
+    }
+  })
+
+  // Clean up empty/single children
+  for (const node of result) {
+    if (!node.children) continue
+    if (node.children.length === 0) { node.children = undefined; continue }
+    if (node.label !== "Logo" && node.label !== "Brand Style" && node.label !== "Introduction" && node.children.length === 1) {
+      node.id = node.children[0].id
+      node.children = undefined
+    }
+  }
+  if (logoIdx !== -1 && logoChildren.length <= 1) result[logoIdx].children = undefined
+  if (iconIdx !== -1 && iconChildren.length <= 1) result[iconIdx].children = undefined
+
+  return result
+}
+
+function TocTree({ nodes, depth = 0 }: { nodes: TocNode[]; depth?: number }) {
+  return (
+    <ol className={depth === 0 ? "proj-toc__list" : "proj-toc__children"}>
+      {nodes.map((node, i) => (
+        <li key={`${node.id}-${i}`} className="proj-toc__item">
+          <a href={`#${node.id}`} className={`proj-toc__link${depth > 0 ? " proj-toc__link--child" : ""}`}>
+            {depth === 0 && <span className="proj-toc__num">{String(i + 1).padStart(2, "0")}</span>}
+            {node.label}
+          </a>
+          {node.children && <TocTree nodes={node.children} depth={depth + 1} />}
+        </li>
+      ))}
+    </ol>
+  )
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────────
@@ -167,72 +298,53 @@ export default async function ProjectPage({
   const images = [...new Set(project.images ?? [])]
   const sections = buildSections(images, project.sectionDescriptions)
   const hasBrandColors = project.brandColors && project.brandColors.length > 0
+  const hasMission = !!project.mission
+  const hasVision = !!project.vision
 
-  const toc: TocItem[] = sections.map((s, i) => ({
-    id: makeSectionId(s.key, i),
-    label: s.label,
-  }))
+  const tocNodes = buildHierarchicalToc(sections, hasMission, hasVision)
+
+  const thumbnail = project.thumbnails?.[0] ?? project.images?.[0] ?? ""
 
   return (
     <main className="proj-page">
 
       {/* ── Hero ── */}
-      <section className="section-full proj-hero">
-        <div className="section-regular proj-hero__inner">
-          <div className="proj-hero__identity">
-            <p className="proj-hero__eyebrow">
-              {project.category === "branding" ? "Brand Identity" : "Project"} {new Date().getFullYear()}
-            </p>
-            <h1 className="proj-hero__title">{project.name}</h1>
-            {project.description && (
-              <p className="proj-hero__desc">{project.description}</p>
-            )}
-            {(project.mission || project.vision) && (
-              <div className="proj-hero__strategy">
-                {project.mission && (
-                  <div className="proj-hero__strategy-item">
-                    <p className="proj-hero__strategy-label">Mission</p>
-                    <p className="proj-hero__strategy-text">{project.mission}</p>
-                  </div>
-                )}
-                {project.vision && (
-                  <div className="proj-hero__strategy-item">
-                    <p className="proj-hero__strategy-label">Vision</p>
-                    <p className="proj-hero__strategy-text">{project.vision}</p>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+      <ProjectHero
+        thumbnail={thumbnail}
+        eyebrow={`${project.category === "branding" ? "Brand Identity" : "Project"} ${new Date().getFullYear()}`}
+        title={project.name}
+        desc={project.description}
+      />
 
-          {(toc.length > 0 || hasBrandColors) && (
+      {/* ── Contents (blends with hero) ── */}
+      <section className="section-full proj-intro">
+        <div className="section-regular proj-intro__inner">
+          {tocNodes.length > 0 && (
             <nav className="proj-toc" aria-label="Contents">
               <p className="proj-toc__heading">Contents</p>
-              <ol className="proj-toc__list">
-                {toc.map((item, i) => (
-                  <li key={item.id} className="proj-toc__item">
-                    <a href={`#${item.id}`} className="proj-toc__link">
-                      <span className="proj-toc__num">{String(i + 1).padStart(2, "0")}</span>
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
-              </ol>
-
-              {project.services.length > 0 && (
-                <div className="proj-toc__services">
-                  <p className="proj-toc__servLabel">Services</p>
-                  <ul className="proj-toc__servList">
-                    {project.services.map((s) => (
-                      <li key={s}>{s}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+              <TocTree nodes={tocNodes} />
             </nav>
           )}
         </div>
       </section>
+
+      {/* ── Mission & Vision ── */}
+      {(project.mission || project.vision) && (
+        <section id="proj-introduction" className="section-regular proj-strategy">
+          {project.mission && (
+            <div id="proj-mission" className="proj-strategy__item">
+              <p className="proj-strategy__label">Mission</p>
+              <p className="proj-strategy__text">{project.mission}</p>
+            </div>
+          )}
+          {project.vision && (
+            <div id="proj-vision" className="proj-strategy__item">
+              <p className="proj-strategy__label">Vision</p>
+              <p className="proj-strategy__text">{project.vision}</p>
+            </div>
+          )}
+        </section>
+      )}
 
       {/* ── Sections ── */}
       {sections.map((section, i) => {

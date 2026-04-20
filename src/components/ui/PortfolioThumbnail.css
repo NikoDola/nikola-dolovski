@@ -10,39 +10,33 @@
 .pThumb__frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: 300px;
   overflow: hidden;
   background-color: var(--secondary-color);
 }
 
-/* ── Pan (single image) ─────────────────────────── */
-.pThumb__pan {
+/* ── Single image marquee ───────────────────────── */
+.pThumb__marquee {
   position: absolute;
-  inset: 0;
-  background-size: 160% auto;
-  background-repeat: no-repeat;
-  background-position: 0% 50%;
-  animation: pThumbPan 14s ease-in-out infinite;
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  animation: pThumbMarquee 18s linear infinite;
+  will-change: transform;
 }
 
-@keyframes pThumbPan {
-  0%, 100% { background-position: 0% 50%; }
-  50%       { background-position: 100% 50%; }
+.pThumb__img {
+  height: 100%;
+  width: auto !important;
+  max-width: none;
+  flex-shrink: 0;
+  display: block;
 }
 
-/* ── Horizontal pan (right to left, one direction loop) ── */
-.pThumb__pan--horizontal {
-  position: absolute;
-  inset: 0;
-  background-size: 220% auto;
-  background-repeat: no-repeat;
-  background-position: 100% 50%;
-  animation: pThumbRTL 12s linear infinite;
-}
-
-@keyframes pThumbRTL {
-  0%   { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+@keyframes pThumbMarquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 /* ── Slideshow (multiple images) ─────────────────── */

@@ -34,9 +34,11 @@ export default function Navbar() {
     return () => window.removeEventListener("keydown", onKey)
   }, [])
 
+  const isProjectTop = pathname.startsWith("/my-work/") && !scrolled
+
   return (
     <>
-      <nav className={`navbar${scrolled ? " navbar--scrolled" : ""}`}>
+      <nav className={`navbar${scrolled ? " navbar--scrolled" : ""}${isProjectTop ? " navbar--project-top" : ""}`}>
         <div className="navbar__left">
           <div className="navbar__logo-wrap">
             <Logo size="48px" link="/" />

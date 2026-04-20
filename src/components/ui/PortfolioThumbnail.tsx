@@ -11,9 +11,13 @@ interface Props {
   href: string
 }
 
+const PX_PER_SECOND = 50
+
 export default function PortfolioThumbnail({ images, name, description, client, href }: Props) {
   const isSlideshow = images.length > 1
   const [current, setCurrent] = useState(0)
+  const [duration, setDuration] = useState<number | null>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -34,6 +38,13 @@ export default function PortfolioThumbnail({ images, name, description, client, 
     return clearAll
   }, [isSlideshow]) // eslint-disable-line
 
+  useEffect(() => {
+    if (isSlideshow) return
+    if (imgRef.current?.complete && imgRef.current.naturalWidth) {
+      setDuration(imgRef.current.naturalWidth / PX_PER_SECOND)
+    }
+  }, [isSlideshow])
+
   const handleMouseEnter = () => {
     if (!isSlideshow) return
     clearAll()
@@ -48,7 +59,6 @@ export default function PortfolioThumbnail({ images, name, description, client, 
   }
 
   const desc = description.length > 60 ? description.slice(0, 57) + "..." : description
-  const isHorizontal = !isSlideshow && images[0]?.includes("horizontal")
 
   return (
     <Link href={href} className="pThumb" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
@@ -63,9 +73,22 @@ export default function PortfolioThumbnail({ images, name, description, client, 
           ))
         ) : (
           <div
-            className={isHorizontal ? "pThumb__pan--horizontal" : "pThumb__pan"}
-            style={{ backgroundImage: `url(${images[0]})` }}
-          />
+            className="pThumb__marquee"
+            style={duration ? { animationDuration: `${duration}s` } : { animationPlayState: "paused" }}
+          >
+            <img
+              ref={imgRef}
+              src={images[0]}
+              className="pThumb__img"
+              alt=""
+              draggable={false}
+              onLoad={(e) => {
+                const w = (e.currentTarget as HTMLImageElement).naturalWidth
+                setDuration(w / PX_PER_SECOND)
+              }}
+            />
+            <img src={images[0]} className="pThumb__img" alt="" draggable={false} aria-hidden="true" />
+          </div>
         )}
       </div>
       <div className="pThumb__info">
