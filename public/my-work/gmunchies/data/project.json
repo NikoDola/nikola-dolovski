@@ -6,7 +6,7 @@
   "mission": "To provide easy access to fresh snacks, drinks, and coffee through well-designed vending machines that fit naturally into everyday environments. GMunchies aims to improve convenience while keeping service fast, simple, and dependable.",
   "vision": "To become a trusted vending brand known for smart technology, clean design, and consistent service across multiple locations. GMunchies aims to grow into a recognizable name that people rely on for quick, quality refreshment wherever they are.",
   "href": "/my-work/gmunchies",
-  "clientThumbnail": "",
+  "clientThumbnail": "/my-work/gmunchies/images/client-thumbnail.avif",
   "client": {
     "firstName": "Guillermo ",
     "lastName": "Guerrero"
@@ -32,13 +32,14 @@
   ],
   "review": "We added a GMunchies machine to our space and it’s been great. Easy to use, clean, and always stocked. The cashless option makes everything faster, and support has been reliable whenever we needed it",
   "technologyUsed": [
-    "Adobe Illustrator"
+    "Adobe Illustrator",
+    "Adobe Photoshop"
   ],
   "thumbnails": [
-    "/my-work/gmunchies/images/gmunchies_branding_icon_custom_coffee.svg"
+    "/my-work/gmunchies/images/gumunchies_branding_thumbnail_horizontal.avif"
   ],
   "heroSection": [
-    "/my-work/gmunchies/images/gmunchies_branding_icon_custom_coffee.svg"
+    "/my-work/gmunchies/images/gumunchies_branding_thumbnail_horizontal.avif"
   ],
   "images": [
     "/my-work/gmunchies/images/@gmunchies_branding_icon_custom_@drinks.svg",
@@ -65,7 +66,8 @@
     "/my-work/gmunchies/images/@gmunchies_branding_logo_wordmark.svg",
     "/my-work/gmunchies/images/@gmunchies_branding_print_stationery_business-card_back.svg",
     "/my-work/gmunchies/images/gmunchies_branding_icon_custom_coffee.svg",
-    "/my-work/gmunchies/images/gmunchies_branding_print_stationery_business-card_front.svg"
+    "/my-work/gmunchies/images/gmunchies_branding_print_stationery_business-card_front.svg",
+    "/my-work/gmunchies/images/gumunchies_branding_thumbnail_horizontal.avif"
   ],
   "sectionDescriptions": {
     "Logo": "The Gmunchies logo is a direct expression of the brand's character. Bold, rounded, and unapologetically fun, it commands attention without aggression. Designed to work at any scale, from a vending machine fascia to a mobile screen, the mark always lands with clarity, warmth, and a personality that is impossible to ignore.",
