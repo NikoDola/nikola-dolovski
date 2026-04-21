@@ -4,7 +4,7 @@
   flex-direction: column;
   margin-top: 8rem;
   gap:1rem;
-  width: 50%;
+  width: 80%;
   margin: 0 auto;
 }
 
@@ -12,7 +12,8 @@
 
 .ctfHeadline {
   line-height: auto;
-  text-align: right;
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
 .questionmark {
@@ -36,7 +37,7 @@
 }
 
 .ctfBody {
-  text-align: right;
+  text-align: center;
 }
 
 .ctfInputWrapper {
