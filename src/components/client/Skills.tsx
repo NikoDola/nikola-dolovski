@@ -4,7 +4,6 @@ import NextImage from "next/image";
 import "./Skills.css";
 import { useEffect, useState, useRef, useCallback, memo } from "react";
 import Link from "next/link";
-import Logo from "./Logo";
 
 interface SkillData {
   name: string;
@@ -30,12 +29,12 @@ const SKILL_CATEGORIES = [
   {
     title: "Graphic Design",
     skills: [
-      "illustrator", "photoshop", "figma", "aftereffects", "premiere", "openai", "midjourney",
+      "illustrator", "photoshop", "figma", "aftereffects", "premiere",
     ],
   },
   {
     title: "Web Developer",
-    skills: ["HTML", "CSS", "canvas", "JS", "react", "next", "firebase"],
+    skills: ["HTML", "CSS", "JS", "react", "next"],
   },
 ];
 
@@ -46,15 +45,11 @@ const COLOR_SCHEMES: Record<string, { main: string; alt: string }> = {
   figma: { main: "#F27264", alt: "#53C0DD" },
   aftereffects: { main: "#101519", alt: "#918FC6" },
   premiere: { main: "#918FC6", alt: "#918FC6" },
-  openai: { main: "white", alt: "#74A89A" },
-  midjourney: { main: "black", alt: "white" },
   html: { main: "#E24E26", alt: "#E24E26" },
   css: { main: "#3555A5", alt: "#3555A5" },
-  canvas: { main: "#47B97E", alt: "#47B97E" },
   js: { main: "#F5DE17", alt: "#F5DE17" },
   react: { main: "#101519", alt: "#2ECEE8" },
   next: { main: "#101519", alt: "#101519" },
-  firebase: { main: "#DA3226", alt: "#FFC40D" },
 };
 
 const preloadImage = (src: string) => {
@@ -299,9 +294,7 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
         </p>
       </div>
 
-      <div className={activeSkill === "openai" ? "imageChat" : "hidden"}>
-        <Logo size="0" link="" chat={true} loadingState={false} />
-      </div>
+
     </div>
   );
 }

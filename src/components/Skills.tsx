@@ -4,7 +4,6 @@ import NextImage from "next/image";
 import "./Skills.css";
 import { useEffect, useState, useRef, useCallback, memo } from "react";
 import Link from "next/link";
-import Logo from "./client/Logo";
 
 interface SkillData {
   name: string;
@@ -30,12 +29,12 @@ const SKILL_CATEGORIES = [
   {
     title: "Graphic Design",
     skills: [
-      "illustrator", "photoshop", "figma", "aftereffects", "premiere", "openai", "midjourney",
+      "illustrator", "photoshop", "figma", "aftereffects", "premiere",
     ],
   },
   {
     title: "Web Developer",
-    skills: ["HTML", "CSS", "canvas", "JS", "react", "next", "firebase"],
+    skills: ["HTML", "CSS", "JS", "react", "next"],
   },
 ];
 
@@ -157,20 +156,11 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
             case "premiere":
               colorScheme = { main: "#918FC6", alt: "#918FC6" };
               break;
-            case "openai":
-              colorScheme = { main: "white", alt: "#74A89A" };
-              break;
-            case "midjourney":
-              colorScheme = { main: "black", alt: "white" };
-              break;
             case "html":
               colorScheme = { main: "#E24E26", alt: "#E24E26" };
               break;
             case "css":
               colorScheme = { main: "#3555A5", alt: "#3555A5" };
-              break;
-            case "canvas":
-              colorScheme = { main: "#47B97E", alt: "#47B97E" };
               break;
             case "js":
               colorScheme = { main: "#F5DE17", alt: "#F5DE17" };
@@ -180,9 +170,6 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
               break;
             case "next":
               colorScheme = { main: "#101519", alt: "#101519" };
-              break;
-            case "firebase":
-              colorScheme = { main: "#DA3226", alt: "#FFC40D" };
               break;
           }
           return {
@@ -357,9 +344,6 @@ export default function HeroSection({ onLoadComplete }: HeroSectionProps) {
         </p>
       </div>
       
-      <div className={activeSkill === "openai" ? "imageChat" : "hidden"}>
-        <Logo size="0" link="" chat={true} loadingState={false} />
-      </div>
     </div>
   );
 }

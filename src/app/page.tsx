@@ -26,7 +26,7 @@ export default function Home() {
           pointerEvents: isSkillsLoading ? 'none' : 'auto'
         }}
       >
-        <h2 className="text-center mb-[8rem]">My Skills</h2>
+        <h2 className="text-center">My Skills</h2>
         <Skills onLoadComplete={() => setSkillsLoading(false)} />
       </section>
 

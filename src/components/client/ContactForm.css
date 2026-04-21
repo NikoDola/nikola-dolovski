@@ -1,8 +1,11 @@
 .ctfWrapper {
   display: flex;
   justify-content: space-between;
+  flex-direction: column;
   margin-top: 8rem;
-  gap: 4rem;
+  gap:1rem;
+  width: 50%;
+  margin: 0 auto;
 }
 
 .ctfTextWrapper {}
