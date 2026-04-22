@@ -515,20 +515,25 @@ export default async function ProjectPage({
         )
       })}
 
-      {/* ── Website Videos ── */}
+      {/* ── Website Videos / GIFs ── */}
       {videos.length > 0 && (
         <section className="section-regular proj-section">
-          {videos.map((src) => (
-            <video
-              key={src}
-              src={src}
-              autoPlay
-              muted
-              loop
-              playsInline
-              style={{ width: "100%", height: "auto", display: "block" }}
-            />
-          ))}
+          {videos.map((src) =>
+            src.toLowerCase().endsWith(".gif") ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img key={src} src={src} alt="" style={{ width: "100%", height: "auto", display: "block" }} />
+            ) : (
+              <video
+                key={src}
+                src={src}
+                autoPlay
+                muted
+                loop
+                playsInline
+                style={{ width: "100%", height: "auto", display: "block" }}
+              />
+            )
+          )}
         </section>
       )}
 

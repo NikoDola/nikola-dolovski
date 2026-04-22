@@ -566,7 +566,7 @@ export default function AddProjectPage() {
           <input
             ref={assetInputRef}
             type="file"
-            accept="image/*,.svg"
+            accept="image/*,.svg,video/mp4,video/webm,.mov"
             multiple
             style={{ display: "none" }}
             onChange={(e) => handleAssetFiles(Array.from(e.target.files ?? []))}
