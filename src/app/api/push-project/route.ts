@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { pushTextFile, pushBinaryFile, readTextFile } from "@/lib/github"
-import { isLogoMockup, parseImageFilename } from "@/lib/imageNames"
+import { isLogoMockup, isVideoFile, parseImageFilename } from "@/lib/imageNames"
 import type { Project } from "@/types/project"
 import { writeFileSync, mkdirSync } from "fs"
 import path from "path"
@@ -66,9 +66,12 @@ export async function POST(req: NextRequest) {
       const newPaths = imageFiles.map((f) => `/my-work/${slug}/images/${f.name}`)
       const existing = project.images ?? []
       project.images = [...new Set([...existing, ...newPaths])]
-      const { thumbnails, heroSection } = deriveThumbnailsAndHero(slug, imageFiles)
-      project.thumbnails = thumbnails
-      project.heroSection = heroSection
+      const nonVideoFiles = imageFiles.filter((f) => !isVideoFile(f.name))
+      if (nonVideoFiles.length > 0) {
+        const { thumbnails, heroSection } = deriveThumbnailsAndHero(slug, nonVideoFiles)
+        project.thumbnails = thumbnails
+        project.heroSection = heroSection
+      }
     }
 
     // 1. Push per-project JSON
@@ -95,16 +98,16 @@ export async function POST(req: NextRequest) {
     // 3. Write index locally so /api/projects reflects immediately
     writeLocal(indexPath, JSON.stringify(allProjects, null, 2))
 
-    // 4. Push and write images
+    // 4. Write images locally first (dev server serves immediately), then push to GitHub
     for (const file of imageFiles) {
       const buf = await file.arrayBuffer()
       const base64 = Buffer.from(buf).toString("base64")
+      writeBinaryLocal(`public/my-work/${slug}/images/${file.name}`, base64)
       await pushBinaryFile(
         `public/my-work/${slug}/images/${file.name}`,
         base64,
         `chore: add image ${file.name} to ${slug}`
       )
-      writeBinaryLocal(`public/my-work/${slug}/images/${file.name}`, base64)
     }
 
     // 5. Push client thumbnail (if provided)
