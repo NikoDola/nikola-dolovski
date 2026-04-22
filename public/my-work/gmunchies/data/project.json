@@ -28,18 +28,24 @@
     "print-stationery-business-card-front",
     "stationery",
     "business-card",
-    "business-card-front"
+    "business-card-front",
+    "website"
   ],
   "review": "We added a GMunchies machine to our space and it’s been great. Easy to use, clean, and always stocked. The cashless option makes everything faster, and support has been reliable whenever we needed it",
   "technologyUsed": [
     "Adobe Illustrator",
-    "Adobe Photoshop"
+    "Adobe Photoshop",
+    "Figma",
+    "HTML",
+    "CSS",
+    "React",
+    "Next.js"
   ],
   "thumbnails": [
-    "/my-work/gmunchies/images/branding_thumbnail_horizontal.avif"
+    "/my-work/gmunchies/images/gmunchies_ui_website.gif"
   ],
   "heroSection": [
-    "/my-work/gmunchies/images/branding_thumbnail_horizontal.avif"
+    "/my-work/gmunchies/images/gmunchies_ui_website.gif"
   ],
   "images": [
     "/my-work/gmunchies/images/@gmunchies_branding_icon_custom_@drinks.svg",
@@ -67,7 +73,8 @@
     "/my-work/gmunchies/images/@gmunchies_branding_print_stationery_business-card_back.svg",
     "/my-work/gmunchies/images/gmunchies_branding_icon_custom_coffee.svg",
     "/my-work/gmunchies/images/gmunchies_branding_print_stationery_business-card_front.svg",
-    "/my-work/gmunchies/images/branding_thumbnail_horizontal.avif"
+    "/my-work/gmunchies/images/branding_thumbnail_horizontal.avif",
+    "/my-work/gmunchies/images/gmunchies_ui_website.gif"
   ],
   "sectionDescriptions": {
     "Logo": "The Gmunchies logo is a direct expression of the brand's character. Bold, rounded, and unapologetically fun, it commands attention without aggression. Designed to work at any scale, from a vending machine fascia to a mobile screen, the mark always lands with clarity, warmth, and a personality that is impossible to ignore.",
