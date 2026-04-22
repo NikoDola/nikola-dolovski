@@ -3,7 +3,7 @@ import Image from "next/image"
 import { readFileSync } from "fs"
 import path from "path"
 import type { Project } from "@/types/project"
-import { getIconLabel, parseImageFilename } from "@/lib/imageNames"
+import { getIconLabel, parseImageFilename, isVideoFile } from "@/lib/imageNames"
 import ProjectHero from "@/components/sections/ProjectHero"
 import "./page.css"
 
@@ -81,6 +81,7 @@ const SECTION_KEY_DEFS: Array<{
   { key: "responsive",      topSection: "Responsive",     label: "Responsive",      type: "default" },
   { key: "theme",           topSection: "Theme",          label: "Theme",           type: "default" },
   { key: "prototype",       topSection: "Prototype",      label: "Prototype",       type: "default" },
+  { key: "website",         topSection: "Website",        label: "Website",         type: "default" },
 ]
 
 function imageToKey(img: string): string {
@@ -295,7 +296,9 @@ export default async function ProjectPage({
   const project = loadProject(slug)
   if (!project) notFound()
 
-  const images = [...new Set(project.images ?? [])]
+  const allFiles = [...new Set(project.images ?? [])]
+  const images = allFiles.filter((f) => !isVideoFile(f.split("/").pop() ?? f))
+  const videos = allFiles.filter((f) => isVideoFile(f.split("/").pop() ?? f))
   const sections = buildSections(images, project.sectionDescriptions)
   const hasBrandColors = project.brandColors && project.brandColors.length > 0
   const hasMission = !!project.mission
@@ -511,6 +514,23 @@ export default async function ProjectPage({
           </section>
         )
       })}
+
+      {/* ── Website Videos ── */}
+      {videos.length > 0 && (
+        <section className="section-regular proj-section">
+          {videos.map((src) => (
+            <video
+              key={src}
+              src={src}
+              autoPlay
+              muted
+              loop
+              playsInline
+              style={{ width: "100%", height: "auto", display: "block" }}
+            />
+          ))}
+        </section>
+      )}
 
       {/* ── Brand Colors ── */}
       {hasBrandColors && (

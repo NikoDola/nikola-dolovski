@@ -1,8 +1,15 @@
 import treeData from "@/data/imageNames.json"
 
 export const ALLOWED_EXTENSIONS = ["svg", "avif", "webp", "png", "jpg", "jpeg"] as const
+export const VIDEO_EXTENSIONS = ["mp4", "webm", "mov", "gif"] as const
 export type AllowedExtension = (typeof ALLOWED_EXTENSIONS)[number]
+export type VideoExtension = (typeof VIDEO_EXTENSIONS)[number]
 export type ImageCategory = "branding" | "ui"
+
+export function isVideoFile(filename: string): boolean {
+  const ext = filename.slice(filename.lastIndexOf(".") + 1).toLowerCase()
+  return (VIDEO_EXTENSIONS as readonly string[]).includes(ext)
+}
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -138,6 +145,7 @@ const SECTION_DISPLAY: Record<string, string> = {
   responsive: "Responsive",
   theme: "Theme",
   prototype: "Prototype",
+  website: "Website",
 }
 
 export const SECTION_ORDER = [
@@ -145,7 +153,7 @@ export const SECTION_ORDER = [
   "Brand Guidelines", "Stationery", "Print", "Packaging", "Merch", "Social", "Signage",
   "Pages", "Structure", "Components", "Navigation", "UI Sections", "Auth", "User",
   "E-Commerce", "Email", "States", "Animation", "Visual", "Design System",
-  "Responsive", "Theme", "Prototype",
+  "Responsive", "Theme", "Prototype", "Website",
   "Other",
 ]
 
@@ -161,8 +169,9 @@ export function validateImageFile(filename: string): ImageValidation {
     }
   }
 
-  if (!ALLOWED_EXTENSIONS.includes(parsed.ext as AllowedExtension)) {
-    return { valid: false, error: `".${parsed.ext}" not allowed. Use: ${ALLOWED_EXTENSIONS.join(", ")}` }
+  const allAllowed = [...ALLOWED_EXTENSIONS, ...VIDEO_EXTENSIONS] as string[]
+  if (!allAllowed.includes(parsed.ext)) {
+    return { valid: false, error: `".${parsed.ext}" not allowed. Use: ${allAllowed.join(", ")}` }
   }
 
   if (parsed.pathSegments.length === 0) {

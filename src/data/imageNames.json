@@ -2,56 +2,124 @@
   "branding": {
     "logo": {
       "primary": {
-        "mods": ["outline", "fill", "black", "white", "color"],
+        "mods": [
+          "outline",
+          "fill",
+          "black",
+          "white",
+          "color"
+        ],
         "clearspace": {},
         "grid": {},
         "ratio": {}
       },
       "horizontal": {
-        "mods": ["outline", "fill", "black", "white", "color"],
+        "mods": [
+          "outline",
+          "fill",
+          "black",
+          "white",
+          "color"
+        ],
         "clearspace": {},
         "grid": {},
         "ratio": {}
       },
       "vertical": {
-        "mods": ["outline", "fill", "black", "white", "color"],
+        "mods": [
+          "outline",
+          "fill",
+          "black",
+          "white",
+          "color"
+        ],
         "clearspace": {},
         "grid": {},
         "ratio": {}
       },
       "icon": {
-        "mods": ["outline", "fill", "black", "white", "color", "gradient"]
+        "mods": [
+          "outline",
+          "fill",
+          "black",
+          "white",
+          "color",
+          "gradient"
+        ]
       },
       "badge": {
-        "mods": ["outline", "fill", "black", "white"]
+        "mods": [
+          "outline",
+          "fill",
+          "black",
+          "white"
+        ]
       },
       "wordmark": {},
       "monogram": {},
       "mascot": {
-        "mods": ["outline", "fill", "black", "white", "color"]
+        "mods": [
+          "outline",
+          "fill",
+          "black",
+          "white",
+          "color"
+        ]
       }
     },
     "icon": {
       "custom": {
-        "mods": ["outline", "fill", "colorful", "black", "white"]
+        "mods": [
+          "outline",
+          "fill",
+          "colorful",
+          "black",
+          "white"
+        ]
       },
       "stock": {
-        "mods": ["outline", "fill", "colorful", "black", "white"]
+        "mods": [
+          "outline",
+          "fill",
+          "colorful",
+          "black",
+          "white"
+        ]
       },
-      "mods": ["outline", "fill", "colorful", "black", "white"]
+      "mods": [
+        "outline",
+        "fill",
+        "colorful",
+        "black",
+        "white"
+      ]
     },
     "mascot": {
       "full": {},
       "head": {},
       "pose": {
-        "mods": ["front", "side", "action"]
+        "mods": [
+          "front",
+          "side",
+          "action"
+        ]
       }
     },
     "illustration": {
-      "mods": ["outline", "fill", "colorful", "mono"]
+      "mods": [
+        "outline",
+        "fill",
+        "colorful",
+        "mono"
+      ]
     },
     "pattern": {
-      "mods": ["geometric", "organic", "minimal", "complex"]
+      "mods": [
+        "geometric",
+        "organic",
+        "minimal",
+        "complex"
+      ]
     },
     "color": {
       "palette": {},
@@ -68,11 +136,13 @@
       "cover": {},
       "layout": {}
     },
-
     "print": {
       "stationery": {
         "business-card": {
-          "mods": ["back", "front"]
+          "mods": [
+            "back",
+            "front"
+          ]
         },
         "letterhead": {},
         "envelope": {},
@@ -80,48 +150,89 @@
         "email-signature": {}
       },
       "brochure": {
-        "mods": ["tri-fold", "bi-fold", "z-fold", "gate-fold"]
+        "mods": [
+          "tri-fold",
+          "bi-fold",
+          "z-fold",
+          "gate-fold"
+        ]
       },
       "flyer": {
-        "mods": ["a4", "a5", "dl"]
+        "mods": [
+          "a4",
+          "a5",
+          "dl"
+        ]
       },
       "poster": {
-        "mods": ["a1", "a2", "a3"]
+        "mods": [
+          "a1",
+          "a2",
+          "a3"
+        ]
       },
       "catalog": {},
       "menu": {}
     },
     "packaging": {
       "box": {
-        "mods": ["rigid", "folding", "mailer"]
+        "mods": [
+          "rigid",
+          "folding",
+          "mailer"
+        ]
       },
       "label": {
-        "mods": ["round", "square", "wrap"]
+        "mods": [
+          "round",
+          "square",
+          "wrap"
+        ]
       },
       "bottle": {},
       "can": {},
       "bag": {
-        "mods": ["paper", "plastic", "tote"]
+        "mods": [
+          "paper",
+          "plastic",
+          "tote"
+        ]
       }
     },
     "merch": {
       "t-shirt": {
-        "mods": ["front", "back", "full"]
+        "mods": [
+          "front",
+          "back",
+          "full"
+        ]
       },
       "hoodie": {},
       "cap": {},
       "sticker": {
-        "mods": ["die-cut", "circle", "rectangle"]
+        "mods": [
+          "die-cut",
+          "circle",
+          "rectangle"
+        ]
       },
       "tote-bag": {}
     },
     "social": {
       "post": {
-        "mods": ["instagram", "facebook", "square"]
+        "mods": [
+          "instagram",
+          "facebook",
+          "square"
+        ]
       },
       "story": {},
       "banner": {
-        "mods": ["linkedin", "youtube", "website"]
+        "mods": [
+          "linkedin",
+          "youtube",
+          "website"
+        ]
       },
       "ad": {}
     },
@@ -132,7 +243,11 @@
       "wayfinding": {}
     },
     "thumbnail": {
-      "mods": ["horizontal", "vertical", "square"]
+      "mods": [
+        "horizontal",
+        "vertical",
+        "square"
+      ]
     }
   },
   "ui": {
@@ -152,13 +267,26 @@
     },
     "components": {
       "button": {
-        "mods": ["primary", "secondary", "icon", "disabled"]
+        "mods": [
+          "primary",
+          "secondary",
+          "icon",
+          "disabled"
+        ]
       },
       "card": {
-        "mods": ["product", "profile", "info"]
+        "mods": [
+          "product",
+          "profile",
+          "info"
+        ]
       },
       "modal": {
-        "mods": ["confirmation", "form", "alert"]
+        "mods": [
+          "confirmation",
+          "form",
+          "alert"
+        ]
       },
       "table": {},
       "form": {
@@ -170,16 +298,28 @@
     },
     "navigation": {
       "navbar": {
-        "mods": ["desktop", "mobile", "sticky"]
+        "mods": [
+          "desktop",
+          "mobile",
+          "sticky"
+        ]
       },
       "sidebar": {
-        "mods": ["collapsed", "expanded"]
+        "mods": [
+          "collapsed",
+          "expanded"
+        ]
       },
       "footer": {}
     },
     "sections": {
       "hero": {
-        "mods": ["centered", "split", "image-left", "image-right"]
+        "mods": [
+          "centered",
+          "split",
+          "image-left",
+          "image-right"
+        ]
       },
       "features": {},
       "pricing": {},
@@ -218,7 +358,11 @@
     },
     "animation": {
       "loading": {
-        "mods": ["spinner", "skeleton", "progress"]
+        "mods": [
+          "spinner",
+          "skeleton",
+          "progress"
+        ]
       },
       "hover": {},
       "transition": {},
@@ -250,6 +394,7 @@
     "prototype": {
       "interactive": {},
       "flow": {}
-    }
+    },
+    "website": {}
   }
 }
