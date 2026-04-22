@@ -180,8 +180,12 @@ function AssetCard({
     <div className={`apfa__assetCard${entry.valid ? " apfa__assetCard--valid" : " apfa__assetCard--invalid"}`}>
       <button type="button" className="apfa__assetRemove" onClick={() => onRemove(index)} title="Remove">✕</button>
       <div className="apfa__assetPreview">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={entry.preview} alt={entry.baseName} />
+        {["mp4", "webm", "mov"].includes(entry.ext) ? (
+          <video src={entry.preview} muted autoPlay loop playsInline style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={entry.preview} alt={entry.baseName} />
+        )}
       </div>
       <div className="apfa__assetInfo">
         <div className="apfa__assetNameRow">
