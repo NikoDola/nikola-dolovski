@@ -87,7 +87,7 @@
       "business-card-front",
       "website"
     ],
-    "review": "We added a GMunchies machine to our space and it\u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u201e\u00a2s been great. Easy to use, clean, and always stocked. The cashless option makes everything faster, and support has been reliable whenever we needed it",
+    "review": "We added a GMunchies machine to our space and itÃ¢â‚¬â„¢s been great. Easy to use, clean, and always stocked. The cashless option makes everything faster, and support has been reliable whenever we needed it",
     "technologyUsed": [
       "Adobe Illustrator",
       "Adobe Photoshop",
@@ -200,7 +200,11 @@
         "name": "",
         "usage": ""
       }
-    ]
+    ],
+    "deviceVideos": {
+      "mobile": "gs://nikola-dolovski.firebasestorage.app/portfolio-videos/@gmunchies_website_mobile.mp4",
+      "type": "website"
+    }
   },
   {
     "slug": "horny-rhino",
