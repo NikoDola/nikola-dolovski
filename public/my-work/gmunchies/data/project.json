@@ -147,6 +147,7 @@
   ],
   "deviceVideos": {
     "mobile": "https://firebasestorage.googleapis.com/v0/b/nikola-dolovski.firebasestorage.app/o/portfolio-videos%2F%40gmunchies_website_mobile%20-%20Copy.mp4?alt=media&token=b8749317-ce1e-40f3-9d3d-cba8aa66df6d",
-    "type": "website"
+    "type": "website",
+    "desktop": "https://firebasestorage.googleapis.com/v0/b/nikola-dolovski.firebasestorage.app/o/portfolio-videos%2Fdesktop.mp4?alt=media&token=19066ef8-4fc7-4238-9a6e-462c24adbcc5"
   }
 }
