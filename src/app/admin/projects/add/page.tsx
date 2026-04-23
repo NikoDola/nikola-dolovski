@@ -768,7 +768,7 @@ export default function AddProjectPage() {
 
           <div className="apfa__row">
             <label className="apfa__label" htmlFor="dv-mobile">Mobile video URL
-              <span className="apfa__hint"> — 1080×1920</span>
+              <span className="apfa__hint"> — 1080×2400</span>
             </label>
             <input
               id="dv-mobile"
