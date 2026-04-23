@@ -146,6 +146,7 @@
     }
   ],
   "deviceVideos": {
-    "mobile": "gs://nikola-dolovski.firebasestorage.app/portfolio-videos/@gmunchies_website_mobile.mp4"
+    "mobile": "gs://nikola-dolovski.firebasestorage.app/portfolio-videos/@gmunchies_website_mobile.mp4",
+    "type": "website"
   }
 }
