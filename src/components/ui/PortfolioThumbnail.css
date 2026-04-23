@@ -22,8 +22,11 @@
   left: 0;
   height: 100%;
   display: flex;
-  animation: pThumbMarquee 18s linear infinite;
+  animation-name: pThumbMarquee;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
   will-change: transform;
+  backface-visibility: hidden;
 }
 
 .pThumb__img {

@@ -74,7 +74,10 @@ export default function PortfolioThumbnail({ images, name, description, client, 
         ) : (
           <div
             className="pThumb__marquee"
-            style={duration ? { animationDuration: `${duration}s` } : { animationPlayState: "paused" }}
+            style={{
+              animationDuration: `${duration ?? 18}s`,
+              animationPlayState: duration ? "running" : "paused",
+            }}
           >
             <img
               ref={imgRef}

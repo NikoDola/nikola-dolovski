@@ -744,6 +744,57 @@ export default function AddProjectPage() {
           </div>
         </fieldset>
 
+        {/* ── Device Preview Videos ── */}
+        <fieldset className="apfa__fieldset">
+          <legend className="apfa__legend">Device Preview
+            <span className="apfa__hint"> — Firebase video URLs for mobile and desktop mockups</span>
+          </legend>
+
+          <div className="apfa__row">
+            <label className="apfa__label">Type</label>
+            <div className="apfa__toggleRow">
+              {(["website", "application"] as const).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  className={`apfa__toggleBtn${(form.deviceVideos?.type ?? "website") === t ? " apfa__toggleBtn--active" : ""}`}
+                  onClick={() => set("deviceVideos", { ...form.deviceVideos, type: t })}
+                >
+                  {t === "website" ? "Website" : "Application"}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="apfa__row">
+            <label className="apfa__label" htmlFor="dv-mobile">Mobile video URL
+              <span className="apfa__hint"> — 1080×1920</span>
+            </label>
+            <input
+              id="dv-mobile"
+              className="apfa__input"
+              type="url"
+              placeholder="https://firebasestorage.googleapis.com/..."
+              value={form.deviceVideos?.mobile ?? ""}
+              onChange={(e) => set("deviceVideos", { ...form.deviceVideos, mobile: e.target.value })}
+            />
+          </div>
+
+          <div className="apfa__row">
+            <label className="apfa__label" htmlFor="dv-desktop">Desktop video URL
+              <span className="apfa__hint"> — 1920×1080</span>
+            </label>
+            <input
+              id="dv-desktop"
+              className="apfa__input"
+              type="url"
+              placeholder="https://firebasestorage.googleapis.com/..."
+              value={form.deviceVideos?.desktop ?? ""}
+              onChange={(e) => set("deviceVideos", { ...form.deviceVideos, desktop: e.target.value })}
+            />
+          </div>
+        </fieldset>
+
         {status && (
           <p className={`apfa__status${status.ok ? "" : " apfa__status--error"}`}>{status.msg}</p>
         )}

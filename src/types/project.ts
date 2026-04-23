@@ -30,4 +30,9 @@ export interface Project {
   images?: string[]
   brandColors?: BrandColor[]
   sectionDescriptions?: Record<string, string>
+  deviceVideos?: {
+    type?: "website" | "application"
+    mobile?: string
+    desktop?: string
+  }
 }

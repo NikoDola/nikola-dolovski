@@ -515,6 +515,42 @@ export default async function ProjectPage({
         )
       })}
 
+      {/* ── Device Preview (Website / Application) ── */}
+      {project.deviceVideos && (project.deviceVideos.mobile || project.deviceVideos.desktop) && (() => {
+        const { type = "website", mobile, desktop } = project.deviceVideos!
+        const title = type === "application" ? "Application" : "Website"
+        return (
+          <section className="section-full proj-section">
+            <div className="section-regular">
+              <div className="proj-section__header">
+                <span className="proj-section__label">UI / UX</span>
+                <h2 className="proj-section__title">{title}</h2>
+              </div>
+              <div className="proj-devices">
+                {desktop && (
+                  <div className="proj-device proj-device--laptop">
+                    <div className="proj-device__screen">
+                      <video src={desktop} autoPlay muted loop playsInline />
+                    </div>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/images/personal/devices/devices_laptop.svg" alt="" className="proj-device__frame" />
+                  </div>
+                )}
+                {mobile && (
+                  <div className="proj-device proj-device--mobile">
+                    <div className="proj-device__screen">
+                      <video src={mobile} autoPlay muted loop playsInline />
+                    </div>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/images/personal/devices/devices_mobile.svg" alt="" className="proj-device__frame" />
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        )
+      })()}
+
       {/* ── Website Videos / GIFs ── */}
       {videos.length > 0 && (
         <section className="section-regular proj-section">

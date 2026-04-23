@@ -656,3 +656,27 @@
 .apfa__assetNote--info {
   color: #888;
 }
+
+.apfa__toggleRow {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.apfa__toggleBtn {
+  padding: 0.4rem 1.1rem;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #444;
+  transition: all 0.15s;
+}
+
+.apfa__toggleBtn--active {
+  border-color: var(--primary-color, #88D1D4);
+  background: var(--primary-color, #88D1D4);
+  color: #fff;
+  font-weight: 600;
+}

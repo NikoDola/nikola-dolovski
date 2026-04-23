@@ -13,7 +13,8 @@
       "Bash(python -c ' *)"
     ],
     "additionalDirectories": [
-      "c:\\Users\\Dolov\\Junk code\\nikola-dolovski\\src\\app\\my-work"
+      "c:\\Users\\Dolov\\Junk code\\nikola-dolovski\\src\\app\\my-work",
+      "C:\\Users\\Dolov\\Junk code\\nikola-dolovski\\src\\app\\my-work\\[slug]"
     ]
   }
 }
