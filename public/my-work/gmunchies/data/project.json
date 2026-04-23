@@ -31,7 +31,7 @@
     "business-card-front",
     "website"
   ],
-  "review": "We added a GMunchies machine to our space and itâ€™s been great. Easy to use, clean, and always stocked. The cashless option makes everything faster, and support has been reliable whenever we needed it",
+  "review": "We added a GMunchies machine to our space and itÃ¢â‚¬â„¢s been great. Easy to use, clean, and always stocked. The cashless option makes everything faster, and support has been reliable whenever we needed it",
   "technologyUsed": [
     "Adobe Illustrator",
     "Adobe Photoshop",
@@ -73,8 +73,7 @@
     "/my-work/gmunchies/images/@gmunchies_branding_print_stationery_business-card_back.svg",
     "/my-work/gmunchies/images/gmunchies_branding_icon_custom_coffee.svg",
     "/my-work/gmunchies/images/gmunchies_branding_print_stationery_business-card_front.svg",
-    "/my-work/gmunchies/images/branding_thumbnail_horizontal.avif",
-    "/my-work/gmunchies/images/gmunchies_ui_website.gif"
+    "/my-work/gmunchies/images/branding_thumbnail_horizontal.avif"
   ],
   "sectionDescriptions": {
     "Logo": "The Gmunchies logo is a direct expression of the brand's character. Bold, rounded, and unapologetically fun, it commands attention without aggression. Designed to work at any scale, from a vending machine fascia to a mobile screen, the mark always lands with clarity, warmth, and a personality that is impossible to ignore.",
@@ -145,5 +144,8 @@
       "name": "",
       "usage": ""
     }
-  ]
+  ],
+  "deviceVideos": {
+    "mobile": "gs://nikola-dolovski.firebasestorage.app/portfolio-videos/@gmunchies_website_mobile.mp4"
+  }
 }
