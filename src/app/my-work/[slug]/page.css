@@ -537,18 +537,34 @@
 }
 
 /* ── Device mockups ─────────────────────────────────────────────────────────── */
+.proj-section--devices {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.proj-devices-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding-top: 2rem;
+}
+
 .proj-devices {
+  flex: 1;
+  min-height: 0;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 2rem;
-  padding: 2rem 0 1rem;
+  gap: 3rem;
+  padding-bottom: 2rem;
 }
 
 /* Each device is a positioned box that scales with aspect ratio */
 .proj-device {
   position: relative;
   flex-shrink: 0;
+  height: 100%;
 }
 
 /* The device SVG sits on top as a frame */
@@ -579,7 +595,8 @@
 
 /* Laptop: viewBox 520×301, screen rect at x=61 y=20 w=398 h=247 */
 .proj-device--laptop {
-  width: 600px;
+  aspect-ratio: 520 / 301;
+  max-width: 860px;
 }
 
 .proj-device--laptop .proj-device__screen {
@@ -591,7 +608,8 @@
 
 /* Mobile: viewBox 213×429.5, screen rounded-rect x=12 y=10.1 w=189 h=409.4 r=24.1 */
 .proj-device--mobile {
-  width: 180px;
+  aspect-ratio: 213 / 429.5;
+  max-width: 320px;
 }
 
 .proj-device--mobile .proj-device__screen {
@@ -603,15 +621,25 @@
 }
 
 @media (max-width: 900px) {
+  .proj-section--devices {
+    height: auto;
+    overflow: visible;
+  }
+  .proj-devices-inner {
+    height: auto;
+  }
   .proj-devices {
     flex-direction: column;
     align-items: center;
+  }
+  .proj-device {
+    height: auto;
   }
   .proj-device--laptop {
     width: 100%;
     max-width: 520px;
   }
   .proj-device--mobile {
-    width: 140px;
+    width: 200px;
   }
 }

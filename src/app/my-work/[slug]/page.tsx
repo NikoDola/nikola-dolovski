@@ -520,8 +520,8 @@ export default async function ProjectPage({
         const { type = "website", mobile, desktop } = project.deviceVideos!
         const title = type === "application" ? "Application" : "Website"
         return (
-          <section className="section-full proj-section">
-            <div className="section-regular">
+          <section className="section-full proj-section proj-section--devices">
+            <div className="section-regular proj-devices-inner">
               <div className="proj-section__header">
                 <span className="proj-section__label">UI / UX</span>
                 <h2 className="proj-section__title">{title}</h2>
