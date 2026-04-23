@@ -202,7 +202,7 @@
       }
     ],
     "deviceVideos": {
-      "mobile": "gs://nikola-dolovski.firebasestorage.app/portfolio-videos/@gmunchies_website_mobile.mp4",
+      "mobile": "https://firebasestorage.googleapis.com/v0/b/nikola-dolovski.firebasestorage.app/o/portfolio-videos%2F%40gmunchies_website_mobile.mp4?alt=media&token=982f168d-e9bb-409e-b935-ce1872b3a015",
       "type": "website"
     }
   },
