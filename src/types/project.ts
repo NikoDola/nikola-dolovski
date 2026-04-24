@@ -3,12 +3,22 @@ export interface ProjectClient {
   lastName: string
 }
 
+export interface ProjectSection {
+  id: string
+  path: string[]     // e.g. ["Branding", "Logo", "Vertical Logo"]
+  headline: string
+  body?: string
+  images: string[]
+  colors?: BrandColor[]  // populated for Colors sections
+}
+
 export interface BrandColor {
   hex: string
   rgb: string
   order: number
   name?: string
   usage?: string
+  children?: BrandColor[]
 }
 
 export interface Project {
@@ -28,6 +38,7 @@ export interface Project {
   thumbnails: string[]
   heroSection: string[]
   images?: string[]
+  sections?: ProjectSection[]
   brandColors?: BrandColor[]
   sectionDescriptions?: Record<string, string>
   deviceVideos?: {

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Branding Tree</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 20px;
+  }
+
+  li {
+    cursor: pointer;
+    margin: 4px 0;
+    position: relative;
+  }
+
+  li::before {
+    content: "▶";
+    position: absolute;
+    left: -15px;
+    font-size: 10px;
+    transition: transform 0.2s;
+  }
+
+  li.open::before {
+    transform: rotate(90deg);
+  }
+
+  li > ul {
+    display: none;
+  }
+
+  li.open > ul {
+    display: block;
+  }
+
+  .leaf {
+    cursor: default;
+  }
+
+  .leaf::before {
+    content: "";
+  }
+</style>
+</head>
+<body>
+
+<ul>
+  <li>Branding
+    <ul>
+
+      <li>Logo
+        <ul>
+
+          <li>Logo Horizontal
+            <ul>
+              <li class="leaf">Aspect Ratio</li>
+              <li class="leaf">Safe Zone</li>
+              <li class="leaf">Minimum Sizes</li>
+              <li class="leaf">Monochrome</li>
+            </ul>
+          </li>
+
+          <li>Vertical Logo
+            <ul>
+              <li class="leaf">Aspect Ratio</li>
+              <li class="leaf">Safe Zone</li>
+              <li class="leaf">Minimum Sizes</li>
+              <li class="leaf">Monochrome</li>
+            </ul>
+          </li>
+
+          <li>Icon Logo
+            <ul>
+              <li class="leaf">Aspect Ratio</li>
+              <li class="leaf">Safe Zone</li>
+              <li class="leaf">Minimum Sizes</li>
+              <li class="leaf">Monochrome</li>
+            </ul>
+          </li>
+
+          <li>Mascot Logo
+            <ul>
+              <li class="leaf">Aspect Ratio</li>
+              <li class="leaf">Safe Zone</li>
+              <li class="leaf">Sizes</li>
+              <li class="leaf">Monochrome</li>
+            </ul>
+          </li>
+
+          <li>Typography Logo
+            <ul>
+              <li class="leaf">Aspect Ratio</li>
+              <li class="leaf">Safe Zone</li>
+              <li class="leaf">Minimum Sizes</li>
+              <li class="leaf">Monochrome</li>
+            </ul>
+          </li>
+
+          <li>Badge Logo
+            <ul>
+              <li class="leaf">Minimum Sizes</li>
+              <li class="leaf">Monochrome</li>
+            </ul>
+          </li>
+
+        </ul>
+      </li>
+
+      <li>Colors
+        <ul>
+          <li class="leaf">Solid</li>
+          <li class="leaf">Gradient</li>
+        </ul>
+      </li>
+
+      <li>Typography
+        <ul>
+          <li class="leaf">Heading</li>
+          <li class="leaf">Body</li>
+        </ul>
+      </li>
+
+      <li class="leaf">Patterns</li>
+
+      <li>Print / Physical
+        <ul>
+          <li>Stationery
+            <ul>
+              <li class="leaf">Envelope</li>
+              <li class="leaf">Business Cards</li>
+              <li class="leaf">LetterHead</li>
+            </ul>
+          </li>
+          <li>Packaging
+            <ul>
+              <li class="leaf">Box</li>
+              <li class="leaf">Label</li>
+              <li class="leaf">Wrapping</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+
+      <li>Digital Branding
+        <ul>
+          <li class="leaf">Email Signature</li>
+          <li class="leaf">Social Media Assets</li>
+        </ul>
+      </li>
+
+    </ul>
+  </li>
+</ul>
+
+<script>
+  document.querySelectorAll("li").forEach(item => {
+    item.addEventListener("click", e => {
+      e.stopPropagation();
+      if (!item.classList.contains("leaf")) {
+        item.classList.toggle("open");
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

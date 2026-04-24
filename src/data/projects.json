@@ -205,7 +205,104 @@
       "mobile": "https://firebasestorage.googleapis.com/v0/b/nikola-dolovski.firebasestorage.app/o/portfolio-videos%2F%40gmunchies_website_mobile%20-%20Copy.mp4?alt=media&token=b8749317-ce1e-40f3-9d3d-cba8aa66df6d",
       "type": "website",
       "desktop": "https://firebasestorage.googleapis.com/v0/b/nikola-dolovski.firebasestorage.app/o/portfolio-videos%2Fdesktop.mp4?alt=media&token=19066ef8-4fc7-4238-9a6e-462c24adbcc5"
-    }
+    },
+    "sections": [
+      {
+        "id": "s-gm-1",
+        "path": [
+          "Branding",
+          "Logo",
+          "Vertical Logo"
+        ],
+        "headline": "Primary Logo",
+        "body": "The GMunchies logo is a direct expression of the brand character. Bold, rounded, and unapologetically fun, it commands attention without aggression. Designed to work at any scale, from a vending machine fascia to a mobile screen, the mark always lands with clarity, warmth, and a personality that is impossible to ignore.",
+        "images": [
+          "/my-work/gmunchies/images/@gmunchies_branding_logo_primary.svg"
+        ]
+      },
+      {
+        "id": "s-gm-2",
+        "path": [
+          "Branding",
+          "Logo",
+          "Mascot Logo"
+        ],
+        "headline": "Mascot",
+        "images": [
+          "/my-work/gmunchies/images/@gmunchies_branding_logo_mascot.svg"
+        ]
+      },
+      {
+        "id": "s-gm-3",
+        "path": [
+          "Branding",
+          "Logo",
+          "Typography Logo"
+        ],
+        "headline": "Wordmark",
+        "images": [
+          "/my-work/gmunchies/images/@gmunchies_branding_logo_wordmark.svg"
+        ]
+      },
+      {
+        "id": "s-gm-4",
+        "path": [
+          "Branding",
+          "Logo",
+          "Icon Logo"
+        ],
+        "headline": "Custom Icons",
+        "body": "The GMunchies icon system is built in two tiers. Custom icons define the core product world, crafted exclusively for this brand. Stock location icons extend that identity into every environment where a GMunchies machine might live: consistent, clear, and always on-brand.",
+        "images": [
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_custom_@drinks.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_custom_@micro-market.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_custom_@snacks.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_custom_@snacks-and-drinks.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_custom_@vending.svg",
+          "/my-work/gmunchies/images/gmunchies_branding_icon_custom_coffee.svg"
+        ]
+      },
+      {
+        "id": "s-gm-5",
+        "path": [
+          "Branding",
+          "Logo",
+          "Icon Logo"
+        ],
+        "headline": "Service Icons",
+        "images": [
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_fill_@appartments-14.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_fill_@appartments-15.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_fill_@gym.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_fill_@hospital.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_fill_@location.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_fill_@school.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_fill_@ware-house.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_outline_@appartments-21.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_outline_@appartments-22.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_outline_@gym.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_outline_@hospital.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_outline_@location.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_outline_@school.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_icon_stock_outline_@ware-house.svg"
+        ]
+      },
+      {
+        "id": "s-gm-6",
+        "path": [
+          "Branding",
+          "Print / Physical",
+          "Stationery",
+          "Business Cards"
+        ],
+        "headline": "Business Cards",
+        "body": "The business card takes the brand into the physical world. Front and back are tightly coordinated: bold enough to make an immediate impression, structured enough to communicate the essentials. The card is the brand in your hand.",
+        "images": [
+          "/my-work/gmunchies/images/gmunchies_branding_print_stationery_business-card_front.svg",
+          "/my-work/gmunchies/images/@gmunchies_branding_print_stationery_business-card_back.svg"
+        ]
+      }
+    ]
   },
   {
     "slug": "horny-rhino",

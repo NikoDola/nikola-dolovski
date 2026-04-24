@@ -2,7 +2,7 @@ import { notFound } from "next/navigation"
 import Image from "next/image"
 import { readFileSync } from "fs"
 import path from "path"
-import type { Project } from "@/types/project"
+import type { Project, ProjectSection, BrandColor } from "@/types/project"
 import { getIconLabel, parseImageFilename, isVideoFile } from "@/lib/imageNames"
 import ProjectHero from "@/components/sections/ProjectHero"
 import "./page.css"
@@ -285,6 +285,197 @@ function TocTree({ nodes, depth = 0 }: { nodes: TocNode[]; depth?: number }) {
   )
 }
 
+// ── New sections rendering (from ProjectSection[]) ───────────────────────────
+
+function sectionDisplayType(path: string[], colors?: BrandColor[]): "logo" | "icon" | "print" | "colors" | "default" {
+  if (colors && colors.length > 0) return "colors"
+  const lower = path.map((s) => s.toLowerCase())
+  if (lower.some((s) => s === "icon logo")) return "icon"
+  if (lower.some((s) =>
+    s === "logo" || s.includes("horizontal") || s.includes("vertical logo") ||
+    s.includes("mascot") || s.includes("typography logo") || s.includes("badge logo")
+  )) return "logo"
+  if (lower.some((s) =>
+    s.includes("print") || s.includes("stationery") || s.includes("business") || s.includes("packaging")
+  )) return "print"
+  return "default"
+}
+
+function renderSection(section: ProjectSection, i: number, projectName: string) {
+  const id = `section-${i}-${section.id}`
+  const catLabel = section.path[0] === "Branding" ? "Branding" : section.path[0] ?? "Project"
+  const type = sectionDisplayType(section.path, section.colors)
+
+  if (type === "logo") {
+    return (
+      <section key={id} id={id} className="section-full proj-section">
+        <div className="section-regular">
+          <div className="proj-section__header">
+            <span className="proj-section__label">{catLabel}</span>
+            <h2 className="proj-section__title">{section.headline}</h2>
+          </div>
+          {section.body && <p className="proj-section__desc">{section.body}</p>}
+          <div className="proj-logo-stage">
+            {section.images.map((img) => (
+              <div key={img} className="proj-logo-backdrop">
+                <div className="proj-logo-art" style={{ width: 700, height: 420 }}>
+                  <Image src={img} alt={section.headline} fill style={{ objectFit: "contain" }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (type === "icon") {
+    return (
+      <section key={id} id={id} className="section-full proj-section">
+        <div className="section-regular">
+          <div className="proj-section__header">
+            <span className="proj-section__label">{catLabel}</span>
+            <h2 className="proj-section__title">{section.headline}</h2>
+          </div>
+          {section.body && <p className="proj-section__desc">{section.body}</p>}
+          <div className="proj-icon-grid proj-icon-grid--custom">
+            {section.images.map((img) => {
+              const filename = img.split("/").pop() ?? ""
+              const label = getIconLabel(filename)
+              return (
+                <div key={img} className="proj-icon-card">
+                  <div className="proj-icon-card__imgWrap">
+                    <Image src={img} alt={label} fill className="proj-icon-card__img" />
+                  </div>
+                  <p className="proj-icon-card__label">{label}</p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (type === "print") {
+    return (
+      <section key={id} id={id} className="section-full proj-section">
+        <div className="section-regular">
+          <div className="proj-section__header">
+            <span className="proj-section__label">{catLabel}</span>
+            <h2 className="proj-section__title">{section.headline}</h2>
+          </div>
+          {section.body && <p className="proj-section__desc">{section.body}</p>}
+          <div className="proj-print-grid">
+            {section.images.map((img) => (
+              <div key={img} className="proj-print-card">
+                <Image
+                  src={img}
+                  alt={`${projectName} ${section.headline}`}
+                  width={840}
+                  height={540}
+                  style={{ width: "100%", height: "auto" }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (type === "colors") {
+    const pathLower = section.path.map((s) => s.toLowerCase())
+    const isGradient = pathLower.includes("gradient")
+    const gradientCss = `linear-gradient(135deg, ${section.colors!.map((c) => c.hex).join(", ")})`
+
+    return (
+      <section key={id} id={id} className="section-full proj-section">
+        <div className="section-regular">
+          <div className="proj-section__header">
+            <span className="proj-section__label">{catLabel}</span>
+            <h2 className="proj-section__title">{section.headline}</h2>
+          </div>
+          {section.body && <p className="proj-section__desc">{section.body}</p>}
+
+          {isGradient ? (
+            <div className="proj-colors--gradient">
+              {section.colors!.length >= 2 && (
+                <div className="proj-color-gradient-bar" style={{ background: gradientCss }} />
+              )}
+              <div className="proj-colors proj-colors__swatches">
+                {section.colors!.map((color, ci) => (
+                  <div key={color.hex + ci} className="proj-color-card proj-color-card--small">
+                    <div className="proj-color-card__swatch" style={{ backgroundColor: color.hex }} />
+                    <div className="proj-color-card__info">
+                      <p className="proj-color-card__role">{color.name || `Stop ${ci + 1}`}</p>
+                      <p className="proj-color-card__hex">{color.hex}</p>
+                      <p className="proj-color-card__rgb">{color.rgb}</p>
+                      {color.usage && <p className="proj-color-card__usage">{color.usage}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="proj-colors">
+              {section.colors!.map((color, ci) => (
+                <div key={color.hex + ci} className="proj-color-family">
+                  <div className="proj-color-card">
+                    <div className="proj-color-card__swatch" style={{ backgroundColor: color.hex }} />
+                    <div className="proj-color-card__info">
+                      <p className="proj-color-card__role">{color.name || `Color ${ci + 1}`}</p>
+                      <p className="proj-color-card__hex">{color.hex}</p>
+                      <p className="proj-color-card__rgb">{color.rgb}</p>
+                      {color.usage && <p className="proj-color-card__usage">{color.usage}</p>}
+                    </div>
+                  </div>
+                  {color.children && color.children.length > 0 && (
+                    <div className="proj-color-children">
+                      {color.children.map((child, cj) => (
+                        <div key={child.hex + cj} className="proj-color-card proj-color-card--child">
+                          <div className="proj-color-card__swatch" style={{ backgroundColor: child.hex }} />
+                          <div className="proj-color-card__info">
+                            <p className="proj-color-card__role">{child.name || `Tone ${cj + 1}`}</p>
+                            <p className="proj-color-card__hex">{child.hex}</p>
+                            <p className="proj-color-card__rgb">{child.rgb}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  // default — image grid
+  return (
+    <section key={id} id={id} className="section-full proj-section">
+      <div className="section-regular">
+        <div className="proj-section__header">
+          <span className="proj-section__label">{catLabel}</span>
+          <h2 className="proj-section__title">{section.headline}</h2>
+        </div>
+        {section.body && <p className="proj-section__desc">{section.body}</p>}
+        {section.images.length > 0 && (
+          <div className={`proj-section__grid${section.images.length === 1 ? " proj-section__grid--single" : ""}`}>
+            {section.images.map((img) => (
+              <div key={img} className="proj-section__imgWrap">
+                <Image src={img} alt={section.headline} fill className="proj-section__img" />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default async function ProjectPage({
@@ -296,15 +487,17 @@ export default async function ProjectPage({
   const project = loadProject(slug)
   if (!project) notFound()
 
+  const useNewSections = project.sections && project.sections.length > 0
+
   const allFiles = [...new Set(project.images ?? [])]
   const images = allFiles.filter((f) => !isVideoFile(f.split("/").pop() ?? f))
   const videos = allFiles.filter((f) => isVideoFile(f.split("/").pop() ?? f))
-  const sections = buildSections(images, project.sectionDescriptions)
+  const legacySections = useNewSections ? [] : buildSections(images, project.sectionDescriptions)
   const hasBrandColors = project.brandColors && project.brandColors.length > 0
   const hasMission = !!project.mission
   const hasVision = !!project.vision
 
-  const tocNodes = buildHierarchicalToc(sections, hasMission, hasVision)
+  const tocNodes = useNewSections ? [] : buildHierarchicalToc(legacySections, hasMission, hasVision)
 
   const thumbnail = project.thumbnails?.[0] ?? project.images?.[0] ?? ""
 
@@ -349,8 +542,13 @@ export default async function ProjectPage({
         </section>
       )}
 
-      {/* ── Sections ── */}
-      {sections.map((section, i) => {
+      {/* ── Sections (new tree-based) ── */}
+      {useNewSections && project.sections!.map((section, i) =>
+        renderSection(section, i, project.name)
+      )}
+
+      {/* ── Sections (legacy image-name-based) ── */}
+      {!useNewSections && legacySections.map((section, i) => {
         const id = makeSectionId(section.key, i)
 
         // ── Logo sections ─────────────────────────────────────────────────────

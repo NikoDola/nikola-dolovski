@@ -10,7 +10,8 @@
       "Bash(node -e ' *)",
       "Bash(node -e \"const fs=require\\('fs'\\); const p=JSON.parse\\(fs.readFileSync\\('c:/Users/Dolov/Junk code/nikola-dolovski/src/data/projects.json','utf-8'\\)\\); p.forEach\\(x=>console.log\\(x.slug, 'thumbnails:', x.thumbnails?.length, 'category:', x.category\\)\\)\")",
       "Bash(python -c \"import json; d=json.load\\(open\\('src/data/imageNames.json'\\)\\); print\\(list\\(d.keys\\(\\)\\)\\); print\\(list\\(d.get\\('ui',{}\\).keys\\(\\)\\)\\)\")",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "Bash(node -e \"const p = require\\('./src/data/projects.json'\\); const g = p.find\\(x => x.slug === 'gmunchies'\\); console.log\\(JSON.stringify\\(g, null, 2\\)\\)\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\Dolov\\Junk code\\nikola-dolovski\\src\\app\\my-work",
