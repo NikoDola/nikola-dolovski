@@ -1,70 +1,64 @@
 {
   "hourlyRate": 25,
-  "categories": [
-    {
-      "id": "logo",
-      "label": "Logo",
-      "hours": 10,
-      "items": [
-        {
-          "id": "branding/logo/vertical-logo",
-          "label": "Vertical Logo",
-          "sectionPath": [
-            "Branding",
-            "Logo",
-            "Vertical Logo"
-          ],
-          "hours": 1
-        },
-        {
-          "id": "branding/logo/mascot-logo",
-          "label": "Mascot Logo",
-          "sectionPath": [
-            "Branding",
-            "Logo",
-            "Mascot Logo"
-          ],
-          "hours": 1
-        },
-        {
-          "id": "branding/logo/typography-logo",
-          "label": "Typography Logo",
-          "sectionPath": [
-            "Branding",
-            "Logo",
-            "Typography Logo"
-          ],
-          "hours": 1
-        },
-        {
-          "id": "branding/logo/icon-logo",
-          "label": "Icon Logo",
-          "sectionPath": [
-            "Branding",
-            "Logo",
-            "Icon Logo"
-          ],
-          "hours": 1
-        }
-      ]
-    },
-    {
-      "id": "print--physical",
-      "label": "Print / Physical",
-      "hours": 0,
-      "items": [
-        {
-          "id": "branding/print-/-physical/stationery/business-cards",
-          "label": "Stationery / Business Cards",
-          "sectionPath": [
-            "Branding",
-            "Print / Physical",
-            "Stationery",
-            "Business Cards"
-          ],
-          "hours": 0
-        }
-      ]
-    }
-  ]
+  "logoBaseHours": 10,
+  "items": {
+    "branding/logo": 10,
+    "branding/logo/horizontal-logo": 1,
+    "branding/logo/horizontal-logo/aspect-ratio": 1,
+    "branding/logo/horizontal-logo/safe-zone": 1,
+    "branding/logo/horizontal-logo/mono": 1,
+    "branding/logo/vertical-logo": 1,
+    "branding/logo/vertical-logo/aspect-ratio": 1,
+    "branding/logo/vertical-logo/safe-zone": 1,
+    "branding/logo/vertical-logo/mono": 1,
+    "branding/logo/badge": 1,
+    "branding/logo/icon": 1,
+    "branding/logo/mascot": 1,
+    "branding/logo/badge/aspect-ratio": 1,
+    "branding/logo/badge/safe-zone": 1,
+    "branding/logo/badge/mono": 1,
+    "branding/logo/icon/aspect-ratio": 1,
+    "branding/logo/icon/safe-zone": 1,
+    "branding/logo/icon/mono": 1,
+    "branding/logo/mascot/aspect-ratio": 1,
+    "branding/logo/mascot/safe-zone": 1,
+    "branding/logo/mascot/mono": 1,
+    "branding/logo/animation": 5,
+    "branding/print/stationery": 4,
+    "branding/print/stationery/business-cards": 3,
+    "branding/print/stationery/letterhead-and-envelope": 3,
+    "branding/print/menu": 6,
+    "branding/print/flyers": 6,
+    "branding/print/brochures": 8,
+    "branding/print/magazine": 20,
+    "branding/packaging/box": 8,
+    "branding/packaging/label": 8,
+    "branding/packaging/wrapper": 8,
+    "branding/iconography/custom-icons": 2,
+    "branding/iconography/stock-icons": 0.2,
+    "branding/iconography/stock-icons/illustration": 1,
+    "branding/typography": 2,
+    "branding/colors": 5,
+    "branding/social-media": 2,
+    "branding/pattern-and-texture": 6,
+    "web-design/navigation-and-footer": 4,
+    "web-design/hero-section": 10,
+    "web-design/typography": 1,
+    "web-design/colors": 3,
+    "web-design/digital-assets/email-signature": 5,
+    "web-design/digital-assets/email-template": 5,
+    "web-design/maintenance": 2,
+    "web-design/payment-system": 15,
+    "web-design/pages/landing": 10,
+    "web-design/pages/about": 2,
+    "web-design/pages/location": 2,
+    "web-design/pages/product": 10,
+    "web-design/pages/custom-page": 3,
+    "web-design/pages/contact": 2,
+    "web-design/pages/thank-you-page": 3,
+    "web-design/pages/404-page-not-found": 2,
+    "web-design/pages/portfolio": 4,
+    "web-design/animation/logo-hover": 5,
+    "web-design/animation/loading": 2
+  }
 }

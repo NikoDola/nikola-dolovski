@@ -1,107 +1,205 @@
 "use client"
 import { useState } from "react"
-import type { PricingData, PricingItem } from "@/app/api/pricing/route"
+import { LABEL_MAP } from "@/lib/serviceTree"
+import type { PricingData } from "@/app/api/pricing/route"
 
 interface Props {
   pricing: PricingData
 }
 
-function isMascot(item: PricingItem) {
-  return item.label.toLowerCase().includes("mascot")
+// ── Tree building ─────────────────────────────────────────────────────────────
+
+interface FormTreeNode {
+  label: string
+  id: string
+  hours: number
+  children: Record<string, FormTreeNode>
 }
+
+function buildFormTree(
+  items: Record<string, number>,
+  filterPrefix?: string
+): Record<string, FormTreeNode> {
+  const root: Record<string, FormTreeNode> = {}
+  const entries = Object.entries(items)
+    .filter(([id, h]) => h > 0 && (!filterPrefix || id.startsWith(filterPrefix)))
+    .map(([id, h]) => ({ id, h, parts: id.split("/") }))
+
+  for (const { id, h, parts } of entries) {
+    const label = LABEL_MAP[id] ?? parts[parts.length - 1]
+    let cur = root
+    for (let i = 0; i < parts.length; i++) {
+      const seg = parts[i]
+      const segId = parts.slice(0, i + 1).join("/")
+      if (!cur[seg]) {
+        cur[seg] = {
+          label: LABEL_MAP[segId] ?? seg,
+          id: segId,
+          hours: i === parts.length - 1 ? h : 0,
+          children: {},
+        }
+      }
+      if (i === parts.length - 1) {
+        cur[seg].hours = h
+        cur[seg].label = label
+      }
+      cur = cur[seg].children
+    }
+  }
+  return root
+}
+
+// ── Tree renderer ─────────────────────────────────────────────────────────────
+
+function FormTreeNodes({
+  nodes, depth, hourlyRate, selected, onToggle,
+}: {
+  nodes: Record<string, FormTreeNode>
+  depth: number
+  hourlyRate: number
+  selected: Set<string>
+  onToggle: (id: string) => void
+}) {
+  return (
+    <>
+      {Object.values(nodes).map((node) => (
+        <FormTreeNode key={node.id} node={node} depth={depth}
+          hourlyRate={hourlyRate} selected={selected} onToggle={onToggle} />
+      ))}
+    </>
+  )
+}
+
+function FormTreeNode({
+  node, depth, hourlyRate, selected, onToggle,
+}: {
+  node: FormTreeNode
+  depth: number
+  hourlyRate: number
+  selected: Set<string>
+  onToggle: (id: string) => void
+}) {
+  const [open, setOpen] = useState(false)
+  const isLeaf = Object.keys(node.children).length === 0
+  const indent = `${0.9 + depth * 1.1}rem`
+
+  if (isLeaf) {
+    const checked = selected.has(node.id)
+    const price = node.hours * hourlyRate
+    return (
+      <label className={`prc__item${checked ? " prc__item--checked" : ""}`}
+        style={{ paddingLeft: indent }}>
+        <input type="checkbox" className="prc__itemCheck"
+          checked={checked} onChange={() => onToggle(node.id)} />
+        <span className="prc__itemName">{node.label}</span>
+        {price > 0 && <span className="prc__itemPrice">${price.toLocaleString()}</span>}
+      </label>
+    )
+  }
+
+  return (
+    <>
+      <button type="button"
+        className={`prc__treeBranch${open ? " prc__treeBranch--open" : ""}`}
+        style={{ paddingLeft: indent }}
+        onClick={() => setOpen((o) => !o)}>
+        <span className="prc__treeArrow">{open ? "▾" : "▸"}</span>
+        <span className="prc__treeBranchName">{node.label}</span>
+      </button>
+      {open && (
+        <FormTreeNodes nodes={node.children} depth={depth + 1}
+          hourlyRate={hourlyRate} selected={selected} onToggle={onToggle} />
+      )}
+    </>
+  )
+}
+
+// ── Main form ─────────────────────────────────────────────────────────────────
 
 export function PricingForm({ pricing }: Props) {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [phone, setPhone] = useState("")
 
-  // Logo: one primary type (radio) + variation extras (checkboxes)
-  const [primaryLogoId, setPrimaryLogoId] = useState<string | null>(null)
-  const [logoVariationIds, setLogoVariationIds] = useState<Set<string>>(new Set())
+  // Logo
+  const [logoActive, setLogoActive] = useState(false)
+  const [logoVariationOrder, setLogoVariationOrder] = useState<string[]>([])
 
-  // All other categories: map of catId → Set of selected itemIds
-  const [otherSelections, setOtherSelections] = useState<Map<string, Set<string>>>(new Map())
+  // Non-logo selected leaf ids
+  const [otherSelected, setOtherSelected] = useState<Set<string>>(new Set())
 
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState("")
 
-  const logoCat = pricing.categories.find((c) => c.id === "logo")
-  const otherCats = pricing.categories.filter((c) => c.id !== "logo")
+  const logoBasePrice = pricing.logoBaseHours * pricing.hourlyRate
 
-  function selectPrimaryLogo(id: string) {
-    setPrimaryLogoId(id)
-    // Drop any variation that is now invalid (selected primary itself, or mascot if non-mascot chosen)
-    const item = logoCat?.items.find((i) => i.id === id)
-    const choosingMascot = item ? isMascot(item) : false
-    setLogoVariationIds((prev) => {
-      const next = new Set(prev)
-      next.delete(id)
-      if (!choosingMascot) {
-        for (const vid of next) {
-          const v = logoCat?.items.find((i) => i.id === vid)
-          if (v && isMascot(v)) next.delete(vid)
-        }
-      }
-      return next
+  // Logo variants: direct children of branding/logo (one level deep)
+  const logoVariants = Object.entries(pricing.items)
+    .filter(([id, h]) => {
+      if (h <= 0) return false
+      if (!id.startsWith("branding/logo/")) return false
+      const rest = id.slice("branding/logo/".length)
+      return !rest.includes("/")
     })
-  }
+    .map(([id, h]) => ({ id, label: LABEL_MAP[id] ?? id.split("/").pop() ?? id, hours: h }))
+
+  // Non-logo tree: all items except branding/logo/*
+  const otherItems = Object.fromEntries(
+    Object.entries(pricing.items).filter(([id, h]) => h > 0 && !id.startsWith("branding/logo/"))
+  )
+  const otherTree = buildFormTree(otherItems)
+
+  // ── Logo handlers ──
 
   function toggleLogoVariation(id: string) {
-    setLogoVariationIds((prev) => {
+    setLogoVariationOrder((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    )
+  }
+
+  function logoVariantDisplay(id: string, h: number): { text: string; cls: string } {
+    const idx = logoVariationOrder.indexOf(id)
+    if (idx === -1) {
+      if (logoVariationOrder.length === 0) return { text: "—", cls: "none" }
+      const p = h * pricing.hourlyRate
+      return { text: p > 0 ? `+$${p.toLocaleString()}` : "—", cls: "price" }
+    }
+    if (idx === 0) return { text: "Included", cls: "free" }
+    const p = h * pricing.hourlyRate
+    return { text: p > 0 ? `+$${p.toLocaleString()}` : "Included", cls: p > 0 ? "price" : "free" }
+  }
+
+  // ── Other handlers ──
+
+  function toggleOtherLeaf(id: string) {
+    setOtherSelected((prev) => {
       const next = new Set(prev)
       next.has(id) ? next.delete(id) : next.add(id)
       return next
     })
   }
 
-  function toggleOtherItem(catId: string, itemId: string) {
-    setOtherSelections((prev) => {
-      const next = new Map(prev)
-      const ids = new Set(next.get(catId) ?? [])
-      ids.has(itemId) ? ids.delete(itemId) : ids.add(itemId)
-      if (ids.size === 0) next.delete(catId)
-      else next.set(catId, ids)
-      return next
-    })
-  }
-
-  // Variations = all logo items except the chosen primary, and exclude mascot if non-mascot chosen
-  function getLogoVariations(): PricingItem[] {
-    if (!primaryLogoId || !logoCat) return []
-    const primary = logoCat.items.find((i) => i.id === primaryLogoId)
-    if (!primary) return []
-    const choosingMascot = isMascot(primary)
-    return logoCat.items.filter((item) => {
-      if (item.id === primaryLogoId) return false
-      if (!choosingMascot && isMascot(item)) return false
-      return true
-    })
-  }
+  // ── Total ──
 
   function calcTotal(): number {
     let total = 0
-    if (primaryLogoId && logoCat) {
-      total += logoCat.hours * pricing.hourlyRate
-      for (const id of logoVariationIds) {
-        const item = logoCat.items.find((i) => i.id === id)
-        if (item) total += item.hours * pricing.hourlyRate
+    if (logoActive) {
+      total += pricing.logoBaseHours * pricing.hourlyRate
+      for (const id of logoVariationOrder.slice(1)) {
+        total += (pricing.items[id] ?? 0) * pricing.hourlyRate
       }
     }
-    for (const [catId, itemIds] of otherSelections) {
-      const cat = otherCats.find((c) => c.id === catId)
-      if (!cat) continue
-      for (const id of itemIds) {
-        const item = cat.items.find((i) => i.id === id)
-        if (item) total += item.hours * pricing.hourlyRate
-      }
+    for (const id of otherSelected) {
+      total += (pricing.items[id] ?? 0) * pricing.hourlyRate
     }
     return total
   }
 
+  const hasSelection = logoActive || otherSelected.size > 0
   const total = calcTotal()
-  const hasSelection = !!primaryLogoId || Array.from(otherSelections.values()).some((s) => s.size > 0)
-  const logoVariations = getLogoVariations()
+
+  // ── Submit ──
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -109,33 +207,30 @@ export function PricingForm({ pricing }: Props) {
     setError("")
     setSubmitting(true)
 
-    const selections: {
-      categoryId: string; categoryLabel: string; itemIds: string[]; itemLabels: string[]
-    }[] = []
+    const selections: { categoryId: string; categoryLabel: string; itemIds: string[]; itemLabels: string[] }[] = []
 
-    if (primaryLogoId && logoCat) {
-      const primary = logoCat.items.find((i) => i.id === primaryLogoId)
-      const varIds = Array.from(logoVariationIds)
+    if (logoActive) {
       selections.push({
         categoryId: "logo",
-        categoryLabel: "Logo",
-        itemIds: [primaryLogoId, ...varIds],
-        itemLabels: [
-          `${primary?.label ?? primaryLogoId} (primary)`,
-          ...varIds.map((id) => `${logoCat.items.find((i) => i.id === id)?.label ?? id} (variation)`),
-        ],
+        categoryLabel: "Logo Design",
+        itemIds: logoVariationOrder,
+        itemLabels: logoVariationOrder.map((id, i) => {
+          const label = LABEL_MAP[id] ?? id
+          return i === 0 ? `${label} (primary — included)` : `${label} (variation)`
+        }),
       })
     }
 
-    for (const [catId, itemIds] of otherSelections) {
-      const cat = otherCats.find((c) => c.id === catId)
-      if (!cat) continue
-      const ids = Array.from(itemIds)
+    if (otherSelected.size > 0) {
+      const ids = Array.from(otherSelected)
       selections.push({
-        categoryId: catId,
-        categoryLabel: cat.label,
+        categoryId: "other",
+        categoryLabel: "Additional Services",
         itemIds: ids,
-        itemLabels: ids.map((id) => cat.items.find((i) => i.id === id)?.label ?? id),
+        itemLabels: ids.map((id) => {
+          const parts = id.split("/").map((p) => LABEL_MAP[id.split("/").slice(0, id.split("/").indexOf(p) + 1).join("/")] ?? p)
+          return parts.join(" / ")
+        }),
       })
     }
 
@@ -154,6 +249,8 @@ export function PricingForm({ pricing }: Props) {
     }
   }
 
+  // ── Render ──
+
   if (submitted) {
     return (
       <div className="prc__body">
@@ -167,10 +264,12 @@ export function PricingForm({ pricing }: Props) {
     )
   }
 
-  if (pricing.categories.length === 0) {
+  const hasAnyPriced = logoVariants.length > 0 || Object.keys(otherItems).length > 0
+
+  if (!hasAnyPriced && logoBasePrice === 0) {
     return (
       <div className="prc__body">
-        <p className="prc__empty">Pricing details coming soon.</p>
+        <p className="prc__empty">Custom service details coming soon.</p>
       </div>
     )
   }
@@ -178,7 +277,6 @@ export function PricingForm({ pricing }: Props) {
   return (
     <form className="prc__body" onSubmit={handleSubmit}>
 
-      {/* Client details */}
       <div className="prc__clientSection">
         <h2 className="prc__sectionTitle">Your Details</h2>
         <div className="prc__clientFields">
@@ -197,62 +295,40 @@ export function PricingForm({ pricing }: Props) {
         </div>
       </div>
 
-      {/* Services */}
       <div className="prc__servicesSection">
         <h2 className="prc__sectionTitle">Select Services</h2>
 
-        {/* ── LOGO (special) ── */}
-        {logoCat && logoCat.items.length > 0 && (
-          <div className="prc__logoSection">
-            <div className="prc__logoHeader">
-              <h3 className="prc__logoTitle">Logo Design</h3>
-              {logoCat.hours > 0 && (
-                <span className="prc__logoPrice">
-                  from ${(logoCat.hours * pricing.hourlyRate).toLocaleString()}
-                </span>
-              )}
-            </div>
-            <p className="prc__logoHint">Choose one style — included in the base price.</p>
+        {/* Logo */}
+        {logoBasePrice > 0 && (
+          <div className={`prc__logoCard${logoActive ? " prc__logoCard--active" : ""}`}>
+            <button type="button" className="prc__logoCardBtn"
+              onClick={() => { setLogoActive((v) => !v); if (logoActive) setLogoVariationOrder([]) }}>
+              <span className="prc__logoCardCheck">{logoActive ? "✓" : ""}</span>
+              <div className="prc__logoCardInfo">
+                <span className="prc__logoCardName">New Logo</span>
+                <span className="prc__logoCardSub">Full logo design package</span>
+              </div>
+              <span className="prc__logoCardPrice">${logoBasePrice.toLocaleString()}</span>
+            </button>
 
-            <div className="prc__logoOptions">
-              {logoCat.items.map((item) => {
-                const isChosen = primaryLogoId === item.id
-                return (
-                  <label key={item.id} className={`prc__logoOpt${isChosen ? " prc__logoOpt--chosen" : ""}`}>
-                    <input
-                      type="radio"
-                      name="logoType"
-                      value={item.id}
-                      checked={isChosen}
-                      onChange={() => selectPrimaryLogo(item.id)}
-                      className="prc__logoRadio"
-                    />
-                    <span className="prc__logoOptName">{item.label}</span>
-                    <span className="prc__included">Included</span>
-                  </label>
-                )
-              })}
-            </div>
-
-            {/* Logo Variations — appear only after a type is chosen */}
-            {primaryLogoId && logoVariations.length > 0 && (
-              <div className="prc__logoVariations">
-                <p className="prc__variationsLabel">Logo Variations <span className="prc__opt">— extra styles, each billed separately</span></p>
-                {logoVariations.map((item) => {
-                  const checked = logoVariationIds.has(item.id)
-                  const extraPrice = item.hours * pricing.hourlyRate
+            {logoActive && logoVariants.length > 0 && (
+              <div className="prc__logoVariants">
+                <p className="prc__logoVariantsHint">
+                  {logoVariationOrder.length === 0
+                    ? "Choose your logo style — one is included in the package."
+                    : "First selection is included. Add more styles for an extra fee."}
+                </p>
+                {logoVariants.map(({ id, label, hours }) => {
+                  const checked = logoVariationOrder.includes(id)
+                  const display = logoVariantDisplay(id, hours)
                   return (
-                    <label key={item.id} className={`prc__item${checked ? " prc__item--checked" : ""}`}>
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => toggleLogoVariation(item.id)}
-                        className="prc__itemCheck"
-                      />
-                      <span className="prc__itemName">{item.label}</span>
-                      {extraPrice > 0 && (
-                        <span className="prc__itemPrice">+${extraPrice.toLocaleString()}</span>
-                      )}
+                    <label key={id} className={`prc__logoVariant${checked ? " prc__logoVariant--checked" : ""}`}>
+                      <input type="checkbox" className="prc__itemCheck"
+                        checked={checked} onChange={() => toggleLogoVariation(id)} />
+                      <span className="prc__itemName">{label}</span>
+                      <span className={`prc__variantPrice prc__variantPrice--${display.cls}`}>
+                        {display.text}
+                      </span>
                     </label>
                   )
                 })}
@@ -261,47 +337,29 @@ export function PricingForm({ pricing }: Props) {
           </div>
         )}
 
-        {/* ── ALL OTHER CATEGORIES ── */}
-        {otherCats.length > 0 && (
-          <div className="prc__categories">
-            {otherCats.map((cat) => {
-              const selectedIds = otherSelections.get(cat.id) ?? new Set<string>()
-              const pricedItems = cat.items.filter((i) => i.hours > 0)
-              if (pricedItems.length === 0) return null
-
-              return (
-                <div key={cat.id} className="prc__cat">
-                  <div className="prc__catHeader">
-                    <span className="prc__catName">{cat.label}</span>
-                  </div>
-                  <div className="prc__catItems">
-                    {pricedItems.map((item) => {
-                      const checked = selectedIds.has(item.id)
-                      const itemPrice = item.hours * pricing.hourlyRate
-                      return (
-                        <label key={item.id} className={`prc__item${checked ? " prc__item--checked" : ""}`}>
-                          <input
-                            type="checkbox"
-                            checked={checked}
-                            onChange={() => toggleOtherItem(cat.id, item.id)}
-                            className="prc__itemCheck"
-                          />
-                          <span className="prc__itemName">{item.label}</span>
-                          {itemPrice > 0 && (
-                            <span className="prc__itemPrice">${itemPrice.toLocaleString()}</span>
-                          )}
-                        </label>
-                      )
-                    })}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        )}
+        {/* Other categories tree */}
+        {Object.entries(otherTree).map(([sectionKey, sectionNode]) => {
+          const hasLeaves = Object.keys(sectionNode.children).length > 0 || sectionNode.hours > 0
+          if (!hasLeaves) return null
+          return (
+            <div key={sectionKey} className="prc__cat">
+              <div className="prc__catHeader">
+                <span className="prc__catName">{sectionNode.label}</span>
+              </div>
+              <div className="prc__catTree">
+                <FormTreeNodes
+                  nodes={sectionNode.children}
+                  depth={0}
+                  hourlyRate={pricing.hourlyRate}
+                  selected={otherSelected}
+                  onToggle={toggleOtherLeaf}
+                />
+              </div>
+            </div>
+          )
+        })}
       </div>
 
-      {/* Running total */}
       {hasSelection && (
         <div className="prc__summary">
           <div className="prc__summaryRow">
@@ -314,11 +372,8 @@ export function PricingForm({ pricing }: Props) {
 
       {error && <p className="prc__error">{error}</p>}
 
-      <button
-        type="submit"
-        className="prc__submitBtn"
-        disabled={submitting || !name || !email || !hasSelection}
-      >
+      <button type="submit" className="prc__submitBtn"
+        disabled={submitting || !name || !email || !hasSelection}>
         {submitting ? "Sending..." : "Request Quote"}
       </button>
     </form>

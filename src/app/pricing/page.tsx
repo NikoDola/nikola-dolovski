@@ -8,7 +8,7 @@ function getPricing(): PricingData {
   try {
     return JSON.parse(readFileSync(path.join(process.cwd(), "src/data/pricing.json"), "utf-8"))
   } catch {
-    return { hourlyRate: 25, categories: [] }
+    return { hourlyRate: 25, logoBaseHours: 10, items: {} }
   }
 }
 
@@ -17,7 +17,7 @@ export default function PricingPage() {
   return (
     <main className="prc">
       <section className="prc__hero">
-        <h1 className="prc__heroTitle">Pricing</h1>
+        <h1 className="prc__heroTitle">Custom Service</h1>
         <p className="prc__heroSub">Select what you need and get an instant estimate.</p>
       </section>
       <PricingForm pricing={pricing} />

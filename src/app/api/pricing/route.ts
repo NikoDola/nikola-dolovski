@@ -7,30 +7,17 @@ export const dynamic = "force-dynamic"
 
 const FILE = "src/data/pricing.json"
 
-export interface PricingItem {
-  id: string
-  label: string
-  sectionPath: string[]
-  hours: number
-}
-
-export interface PricingCategory {
-  id: string
-  label: string
-  hours: number
-  items: PricingItem[]
-}
-
 export interface PricingData {
   hourlyRate: number
-  categories: PricingCategory[]
+  logoBaseHours: number
+  items: Record<string, number>  // pathId → hours
 }
 
 function readPricing(): PricingData {
   try {
     return JSON.parse(readFileSync(path.join(process.cwd(), FILE), "utf-8"))
   } catch {
-    return { hourlyRate: 25, categories: [] }
+    return { hourlyRate: 25, logoBaseHours: 10, items: {} }
   }
 }
 
@@ -45,7 +32,7 @@ export async function POST(req: NextRequest) {
   mkdirSync(path.dirname(abs), { recursive: true })
   writeFileSync(abs, json, "utf-8")
   try {
-    await pushTextFile(FILE, json, "chore: update pricing")
+    await pushTextFile(FILE, json, "chore: update custom service pricing")
   } catch {
     // local save succeeded
   }

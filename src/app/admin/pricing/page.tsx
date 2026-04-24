@@ -1,87 +1,101 @@
 "use client"
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import type { PricingData, PricingCategory, PricingItem } from "@/app/api/pricing/route"
+import { SERVICE_TREE, pathToId, LABEL_MAP } from "@/lib/serviceTree"
+import type { ServiceTree } from "@/lib/serviceTree"
+import type { PricingData } from "@/app/api/pricing/route"
 import "./pricing.css"
 
-interface ProjectSection {
-  id: string
+// ── Recursive tree node ───────────────────────────────────────────────────────
+
+function TreeNode({
+  label, path, subtree, hours, hourlyRate, expanded, depth,
+  onToggle, onSetHours,
+}: {
+  label: string
   path: string[]
-  headline: string
+  subtree: ServiceTree | null
+  hours: Record<string, number>
+  hourlyRate: number
+  expanded: Set<string>
+  depth: number
+  onToggle: (id: string) => void
+  onSetHours: (id: string, h: number) => void
+}) {
+  const id = pathToId(path)
+  const isLeaf = subtree === null
+  const isOpen = expanded.has(id)
+  const h = hours[id] ?? 0
+  const price = h * hourlyRate
+
+  return (
+    <div className={`admp__node admp__node--d${Math.min(depth, 4)}`}>
+      <div className="admp__nodeRow">
+        {!isLeaf && (
+          <button type="button" className={`admp__nodeToggle${isOpen ? " admp__nodeToggle--open" : ""}`}
+            onClick={() => onToggle(id)}>
+            {isOpen ? "▾" : "▸"}
+          </button>
+        )}
+        {isLeaf && <span className="admp__nodeLeafDot" />}
+        <span className="admp__nodeLabel">{label}</span>
+        <div className="admp__nodePrice">
+          <input
+            type="number" min={0} step={0.5}
+            className="admp__hoursInput"
+            value={h || ""}
+            placeholder="0"
+            onChange={(e) => onSetHours(id, parseFloat(e.target.value) || 0)}
+          />
+          <span className="admp__hoursUnit">h</span>
+          <span className={`admp__priceTag${price > 0 ? " admp__priceTag--active" : ""}`}>
+            {price > 0 ? `$${price.toLocaleString()}` : "—"}
+          </span>
+        </div>
+      </div>
+
+      {!isLeaf && isOpen && subtree && (
+        <div className="admp__nodeChildren">
+          {Object.entries(subtree).map(([childLabel, childSubtree]) => (
+            <TreeNode
+              key={childLabel}
+              label={childLabel}
+              path={[...path, childLabel]}
+              subtree={childSubtree}
+              hours={hours}
+              hourlyRate={hourlyRate}
+              expanded={expanded}
+              depth={depth + 1}
+              onToggle={onToggle}
+              onSetHours={onSetHours}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  )
 }
 
-interface Project {
-  slug: string
-  name: string
-  sections?: ProjectSection[]
-}
-
-function pathToId(path: string[]): string {
-  return path.join("/").toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9/-]/g, "")
-}
-
-function catId(label: string): string {
-  return label.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")
-}
+// ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function AdminPricingPage() {
-  const [data, setData] = useState<PricingData>({ hourlyRate: 25, categories: [] })
+  const [hourlyRate, setHourlyRate] = useState(25)
+  const [logoBaseHours, setLogoBaseHours] = useState(10)
+  const [hours, setHours] = useState<Record<string, number>>({})
+  const [expanded, setExpanded] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [status, setStatus] = useState<{ ok: boolean; msg: string } | null>(null)
-  const [expanded, setExpanded] = useState<Set<string>>(new Set())
 
   useEffect(() => {
-    async function load() {
-      const [pricingRes, projectsRes] = await Promise.all([
-        fetch("/api/pricing"),
-        fetch("/api/projects"),
-      ])
-      const pricing: PricingData = await pricingRes.json()
-      const projects: Project[] = await projectsRes.json()
-
-      // Group sections by their top-level category (path[1])
-      const catMap = new Map<string, { label: string; items: Map<string, { label: string; sectionPath: string[] }> }>()
-
-      for (const proj of projects) {
-        for (const section of proj.sections ?? []) {
-          const catLabel = section.path[1]
-          if (!catLabel) continue
-          const cid = catId(catLabel)
-          if (!catMap.has(cid)) catMap.set(cid, { label: catLabel, items: new Map() })
-          const cat = catMap.get(cid)!
-          if (section.path.length > 2) {
-            const itemPath = section.path
-            const iid = pathToId(itemPath)
-            if (!cat.items.has(iid)) {
-              cat.items.set(iid, {
-                label: itemPath.slice(2).join(" / "),
-                sectionPath: itemPath,
-              })
-            }
-          }
-        }
-      }
-
-      // Merge with existing pricing data
-      const categories: PricingCategory[] = Array.from(catMap.entries()).map(([cid, catDef]) => {
-        const existing = pricing.categories.find((c) => c.id === cid)
-        const items: PricingItem[] = Array.from(catDef.items.entries()).map(([iid, itemDef]) => {
-          const existingItem = existing?.items.find((i) => i.id === iid)
-          return existingItem ?? { id: iid, label: itemDef.label, sectionPath: itemDef.sectionPath, hours: 0 }
-        })
-        return {
-          id: cid,
-          label: catDef.label,
-          hours: existing?.hours ?? 0,
-          items,
-        }
+    fetch("/api/pricing")
+      .then((r) => r.json())
+      .then((data: PricingData) => {
+        setHourlyRate(data.hourlyRate ?? 25)
+        setLogoBaseHours(data.logoBaseHours ?? 10)
+        setHours(data.items ?? {})
+        setLoading(false)
       })
-
-      setData({ hourlyRate: pricing.hourlyRate, categories })
-      setLoading(false)
-    }
-    load()
   }, [])
 
   function toggleExpand(id: string) {
@@ -92,34 +106,38 @@ export default function AdminPricingPage() {
     })
   }
 
-  function setCatHours(id: string, hours: number) {
-    setData((d) => ({
-      ...d,
-      categories: d.categories.map((c) => c.id === id ? { ...c, hours } : c),
-    }))
+  function expandAll() {
+    const ids = new Set(Object.keys(LABEL_MAP))
+    setExpanded(ids)
   }
 
-  function setItemHours(catId: string, itemId: string, hours: number) {
-    setData((d) => ({
-      ...d,
-      categories: d.categories.map((c) =>
-        c.id === catId
-          ? { ...c, items: c.items.map((i) => i.id === itemId ? { ...i, hours } : i) }
-          : c
-      ),
-    }))
+  function collapseAll() {
+    setExpanded(new Set())
+  }
+
+  function setNodeHours(id: string, h: number) {
+    setHours((prev) => {
+      const next = { ...prev }
+      if (h <= 0) delete next[id]
+      else next[id] = h
+      return next
+    })
   }
 
   async function save() {
     setSaving(true)
     setStatus(null)
+    const body: PricingData = { hourlyRate, logoBaseHours, items: hours }
     try {
       const res = await fetch("/api/pricing", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(body),
       })
-      setStatus(res.ok ? { ok: true, msg: "Saved and pushed to GitHub." } : { ok: false, msg: "Save failed." })
+      setStatus(res.ok
+        ? { ok: true, msg: "Saved and pushed to GitHub." }
+        : { ok: false, msg: "Save failed." }
+      )
     } catch {
       setStatus({ ok: false, msg: "Network error." })
     } finally {
@@ -127,13 +145,16 @@ export default function AdminPricingPage() {
     }
   }
 
+  const filledCount = Object.keys(hours).length
+  const totalHours = Object.values(hours).reduce((s, h) => s + h, 0)
+
   return (
     <div className="admp">
       <div className="admp__header">
-        <h1 className="admp__title">Pricing</h1>
+        <h1 className="admp__title">Custom Service</h1>
         <div className="admp__headerRight">
           <Link href="/pricing" target="_blank" className="admp__view">View Public Page →</Link>
-          <Link href="/admin/pricing/quotes" className="admp__quotesLink">View Quotes</Link>
+          <Link href="/admin/pricing/quotes" className="admp__quotesLink">Quotes</Link>
         </div>
       </div>
 
@@ -141,85 +162,75 @@ export default function AdminPricingPage() {
         <p className="admp__status">Loading...</p>
       ) : (
         <>
-          <div className="admp__rate">
-            <label className="admp__rateLabel">
-              Hourly Rate ($)
-              <input
-                type="number" min={0} className="admp__rateInput"
-                value={data.hourlyRate}
-                onChange={(e) => setData((d) => ({ ...d, hourlyRate: Number(e.target.value) }))}
-              />
-            </label>
-            <span className="admp__rateHint">Base rate applied to all hours</span>
+          {/* Global settings */}
+          <div className="admp__globals">
+            <div className="admp__rate">
+              <label className="admp__rateLabel">
+                Hourly Rate ($)
+                <input type="number" min={0} className="admp__rateInput"
+                  value={hourlyRate}
+                  onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)} />
+              </label>
+            </div>
+            <div className="admp__rate">
+              <label className="admp__rateLabel">
+                Logo Base Hours
+                <input type="number" min={0} step={0.5} className="admp__rateInput"
+                  value={logoBaseHours}
+                  onChange={(e) => setLogoBaseHours(parseFloat(e.target.value) || 0)} />
+              </label>
+              <span className="admp__rateHint">
+                = ${(logoBaseHours * hourlyRate).toLocaleString()} (Logo package base price)
+              </span>
+            </div>
           </div>
 
-          {data.categories.length === 0 ? (
-            <p className="admp__status">No sections posted yet. Add project sections and they will appear here.</p>
-          ) : (
-            <div className="admp__cats">
-              {data.categories.map((cat) => {
-                const isLogo = cat.id === "logo"
-                return (
-                  <div key={cat.id} className="admp__cat">
-                    <div className="admp__catRow">
-                      <button
-                        type="button"
-                        className={`admp__catToggle${expanded.has(cat.id) ? " admp__catToggle--open" : ""}`}
-                        onClick={() => toggleExpand(cat.id)}
-                      >
-                        {expanded.has(cat.id) ? "▼" : "▶"} {cat.label}
-                        {cat.items.length > 0 && (
-                          <span className="admp__catCount">
-                            {cat.items.length} {isLogo ? "variations" : "items"}
-                          </span>
-                        )}
-                      </button>
-
-                      {/* Base hours only for Logo */}
-                      {isLogo && (
-                        <div className="admp__catPrice">
-                          <label className="admp__inlineLabel">Base hours</label>
-                          <input
-                            type="number" min={0} className="admp__hoursInput"
-                            value={cat.hours}
-                            onChange={(e) => setCatHours(cat.id, Number(e.target.value))}
-                          />
-                          <span className="admp__priceTag">
-                            {cat.hours > 0 ? `$${(cat.hours * data.hourlyRate).toLocaleString()}` : "—"}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                    {expanded.has(cat.id) && cat.items.length > 0 && (
-                      <div className="admp__items">
-                        {cat.items.map((item) => (
-                          <div key={item.id} className="admp__itemRow">
-                            <span className="admp__itemLabel">
-                              {isLogo ? `+ ${item.label}` : item.label}
-                            </span>
-                            <div className="admp__catPrice">
-                              <label className="admp__inlineLabel">
-                                {isLogo ? "Extra hours" : "Hours"}
-                              </label>
-                              <input
-                                type="number" min={0} className="admp__hoursInput"
-                                value={item.hours}
-                                onChange={(e) => setItemHours(cat.id, item.id, Number(e.target.value))}
-                              />
-                              <span className="admp__priceTag">
-                                {item.hours > 0 ? `$${(item.hours * data.hourlyRate).toLocaleString()}` : "—"}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
+          {/* Stats + expand controls */}
+          <div className="admp__treeBar">
+            <span className="admp__treeStats">
+              {filledCount} items priced · {totalHours}h total · ${(totalHours * hourlyRate).toLocaleString()}
+            </span>
+            <div className="admp__treeControls">
+              <button type="button" className="admp__treeCtrl" onClick={expandAll}>Expand All</button>
+              <button type="button" className="admp__treeCtrl" onClick={collapseAll}>Collapse All</button>
             </div>
-          )}
+          </div>
+
+          {/* Full service tree */}
+          <div className="admp__tree">
+            {Object.entries(SERVICE_TREE).map(([sectionLabel, sectionTree]) => {
+              const sectionId = pathToId([sectionLabel])
+              const isOpen = expanded.has(sectionId)
+              return (
+                <div key={sectionLabel} className="admp__section">
+                  <button type="button"
+                    className={`admp__sectionBtn${isOpen ? " admp__sectionBtn--open" : ""}`}
+                    onClick={() => toggleExpand(sectionId)}>
+                    <span>{isOpen ? "▾" : "▸"}</span>
+                    <span>{sectionLabel}</span>
+                  </button>
+                  {isOpen && sectionTree && (
+                    <div className="admp__sectionBody">
+                      {Object.entries(sectionTree).map(([label, subtree]) => (
+                        <TreeNode
+                          key={label}
+                          label={label}
+                          path={[sectionLabel, label]}
+                          subtree={subtree}
+                          hours={hours}
+                          hourlyRate={hourlyRate}
+                          expanded={expanded}
+                          depth={1}
+                          onToggle={toggleExpand}
+                          onSetHours={setNodeHours}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
 
           {status && (
             <p className={`admp__msg${status.ok ? "" : " admp__msg--error"}`}>{status.msg}</p>

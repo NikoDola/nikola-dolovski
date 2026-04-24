@@ -8,7 +8,7 @@ import "./Navbar.css"
 const links = [
   { label: "Portfolio", href: "/portfolio" },
   { label: "Blog", href: "/blog" },
-  { label: "Pricing", href: "/pricing" },
+  { label: "Custom Service", href: "/pricing" },
   { label: "About", href: "/about" },
   { label: "My Clients", href: "/our-clients" },
   { label: "Contact", href: "/contact" },
