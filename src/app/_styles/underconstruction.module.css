@@ -1,0 +1,109 @@
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--tan-color);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 700px;
+  animation: fadeUp 0.8s ease both;
+}
+
+.tag {
+  font-family: 'Inter', sans-serif;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  background-color: var(--brand-color);
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  margin-bottom: 2rem;
+}
+
+.heading {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  color: var(--foreground);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+
+.sub {
+  font-family: 'Inter', sans-serif;
+  font-size: var(--text-lg);
+  color: #6b6b5c;
+  margin-bottom: 2.5rem;
+}
+
+.divider {
+  width: 3rem;
+  height: 3px;
+  background-color: var(--brand-color);
+  margin-bottom: 2.5rem;
+  border-radius: 2px;
+}
+
+.contact {
+  font-family: 'Inter', sans-serif;
+  font-size: var(--text-m);
+  color: #6b6b5c;
+  margin-bottom: 0.5rem;
+}
+
+.email {
+  font-family: 'Oswald', sans-serif;
+  font-size: var(--text-3xl);
+  font-weight: 400;
+  color: var(--foreground);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  border-bottom: 2px solid var(--brand-color);
+  padding-bottom: 2px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.email:hover {
+  color: var(--brand-color);
+  border-color: var(--foreground);
+}
+
+.bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, var(--brand-color) 0%, var(--dark-tan-color) 100%);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .email {
+    font-size: var(--text-2xl);
+  }
+}
