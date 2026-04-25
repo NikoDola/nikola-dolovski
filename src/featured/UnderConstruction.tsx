@@ -11,7 +11,7 @@ export default function UnderConstruction() {
           Construction
         </h1>
         <p className={styles.sub}>
-          Something great is being built here. Check back soon.
+          Something fun is being built here. Check back soon.
         </p>
         <div className={styles.divider} />
         <p className={styles.contact}>For work inquiries, contact me at</p>
