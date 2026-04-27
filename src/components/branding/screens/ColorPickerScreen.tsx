@@ -5,6 +5,7 @@ import BackButton from "../shared/BackButton"
 import { COLOR_FAMILIES } from "../data"
 import { hsvToHex, hexToHsv } from "../utils"
 import type { ServiceType } from "../types"
+import Button from "../shared/Button"
 
 interface ColorInfo { colorFamilies: string[]; customColors: string[]; useSameColors: boolean }
 interface Props { onBack: () => void; onNext: (info: ColorInfo) => void; serviceType: ServiceType; submitRef?: { current: (() => void) | null } }

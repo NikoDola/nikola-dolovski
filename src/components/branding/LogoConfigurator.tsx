@@ -64,6 +64,15 @@ export default function LogoConfigurator() {
 
   const submitRef = useRef<(() => void) | null>(null)
   const [nextDisabled, setNextDisabled] = useState(true)
+  const [maxReachedStep, setMaxReachedStep] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640)
+    check()
+    window.addEventListener("resize", check)
+    return () => window.removeEventListener("resize", check)
+  }, [])
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: "instant" }) }, [screen])
 
@@ -72,6 +81,7 @@ export default function LogoConfigurator() {
     submitRef.current = null
     setNextDisabled(screen === "service")
   }, [screen])
+
 
   // Sync browser back button with wizard screens
   useEffect(() => {
@@ -112,6 +122,11 @@ export default function LogoConfigurator() {
   const steps   = FLOW_STEPS[flowKey] || FLOW_STEPS.default
   const stepMap = SCREEN_STEP[screen] || {}
   const stepIdx = stepMap[flowKey] ?? stepMap["default"] ?? 0
+
+  // Track the furthest step ever reached so going back doesn't wipe progress
+  useEffect(() => {
+    setMaxReachedStep(prev => Math.max(prev, stepIdx))
+  }, [stepIdx])
 
   const nextLabel = screen === "style-icon"
     ? (variations.every(v => v === "icon") ? "Next — Colors" : "Next — Typography")
@@ -179,30 +194,54 @@ export default function LogoConfigurator() {
 
       {/* Sticky footer: progress + price + next */}
       {screen !== "summary" && (
-        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: T.color.surface, borderTop: `1px solid ${T.color.border}`, padding: `${T.space["3"]} ${T.space["8"]}` }}>
-          <div style={{ display: "flex", alignItems: "center", gap: T.space["12"] }}>
-            <div style={{ flex: 1 }}>
-              <ProgressBar steps={steps} current={stepIdx}
+        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: T.color.surface, borderTop: `1px solid ${T.color.border}`, padding: isMobile ? `${T.space["3"]} ${T.space["4"]}` : `${T.space["3"]} ${T.space["8"]}` }}>
+          {isMobile ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: T.space["3"] }}>
+              <ProgressBar steps={steps} current={stepIdx} maxReached={maxReachedStep}
                 onStepClick={i => { const target = STEP_SCREEN[flowKey]?.[i]; if (target) navigateTo(target) }}
               />
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: T.space["3"] }}>
+                <div style={{ display: "flex", alignItems: "center", gap: T.space["2"] }}>
+                  <span style={{ fontSize: T.fontSize.sm, color: T.color.textMuted }}>Estimate</span>
+                  <span style={{ fontSize: T.fontSize.xl, fontWeight: T.fontWeight.bold, color: T.color.textPrimary }}>${estimatedTotal}</span>
+                  {variations.length > 1 && (
+                    <span style={{ fontSize: T.fontSize.xs, color: T.color.textMuted, background: T.color.surfaceAlt, border: `1px solid ${T.color.border}`, borderRadius: T.radius.full, padding: `2px ${T.space["2"]}` }}>
+                      +${(variations.length - 1) * 25}
+                    </span>
+                  )}
+                </div>
+                {nextLabel && (
+                  <Button onClick={() => submitRef.current?.()} disabled={nextDisabled} size="md"
+                    icon={<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
+                    {nextLabel}
+                  </Button>
+                )}
+              </div>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: T.space["2"], flexShrink: 0 }}>
-              <span style={{ fontSize: T.fontSize.sm, color: T.color.textMuted }}>Estimate</span>
-              <span style={{ fontSize: T.fontSize.xl, fontWeight: T.fontWeight.bold, color: T.color.textPrimary }}>${estimatedTotal}</span>
-              {variations.length > 1 && (
-                <span style={{ fontSize: T.fontSize.xs, color: T.color.textMuted, background: T.color.surfaceAlt, border: `1px solid ${T.color.border}`, borderRadius: T.radius.full, padding: `2px ${T.space["3"]}` }}>
-                  +${(variations.length - 1) * 25} extras
-                </span>
+          ) : (
+            <div style={{ display: "flex", alignItems: "center", gap: T.space["12"] }}>
+              <div style={{ flex: 1 }}>
+                <ProgressBar steps={steps} current={stepIdx} maxReached={maxReachedStep}
+                  onStepClick={i => { const target = STEP_SCREEN[flowKey]?.[i]; if (target) navigateTo(target) }}
+                />
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: T.space["2"], flexShrink: 0 }}>
+                <span style={{ fontSize: T.fontSize.sm, color: T.color.textMuted }}>Estimate</span>
+                <span style={{ fontSize: T.fontSize.xl, fontWeight: T.fontWeight.bold, color: T.color.textPrimary }}>${estimatedTotal}</span>
+                {variations.length > 1 && (
+                  <span style={{ fontSize: T.fontSize.xs, color: T.color.textMuted, background: T.color.surfaceAlt, border: `1px solid ${T.color.border}`, borderRadius: T.radius.full, padding: `2px ${T.space["3"]}` }}>
+                    +${(variations.length - 1) * 25} extras
+                  </span>
+                )}
+              </div>
+              {nextLabel && (
+                <Button onClick={() => submitRef.current?.()} disabled={nextDisabled} size="lg"
+                  icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
+                  {nextLabel}
+                </Button>
               )}
             </div>
-            {nextLabel && (
-              <Button onClick={() => submitRef.current?.()} disabled={nextDisabled} size="lg"
-                icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
-                {nextLabel}
-              </Button>
-            )}
-          </div>
-
+          )}
         </div>
       )}
     </div>
