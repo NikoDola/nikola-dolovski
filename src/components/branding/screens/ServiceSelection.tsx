@@ -13,7 +13,7 @@ export default function ServiceSelection({ onSelect, submitRef, setNextDisabled 
   const [selected, setSelected] = useState<"design" | "redesign" | null>(null)
 
   useEffect(() => {
-    submitRef && (submitRef.current = selected ? () => onSelect(selected) : null)
+    if (submitRef) submitRef.current = selected ? () => onSelect(selected) : null
     setNextDisabled?.(!selected)
   })
 
