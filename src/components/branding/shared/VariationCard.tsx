@@ -23,7 +23,7 @@ export default function VariationCard({ title, description, selected, onClick, c
       <div className="variation-card__preview">
         {children}
       </div>
-      <div>
+      <div className="variation-card__text">
         <div className="variation-card__title">{title}</div>
         <div className="variation-card__description">{description}</div>
       </div>

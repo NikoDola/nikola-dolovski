@@ -11,6 +11,7 @@
   flex-direction: column;
   gap: var(--space-5);
   height: 100%;
+  min-height: 180px;
   box-sizing: border-box;
 }
 
@@ -61,4 +62,31 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   line-height: var(--line-height-normal);
+}
+
+@media (max-width: 1000px) {
+  .variation-card {
+    flex-direction: row;
+    align-items: center;
+    min-height: auto;
+    padding: var(--space-4);
+    gap: var(--space-4);
+  }
+
+  .variation-card__preview {
+    width: 200px;
+    min-height: 76px;
+    flex-shrink: 0;
+    padding: var(--space-2);
+  }
+
+  .variation-card__text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .variation-card__check {
+    top: var(--space-3);
+    right: var(--space-3);
+  }
 }

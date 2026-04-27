@@ -436,7 +436,7 @@
 }
 
 /* Mobile-first optimizations */
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
   .imageWrapper {
     width: 100%;
     max-width: 440px;

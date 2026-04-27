@@ -414,7 +414,7 @@
 }
 
 /* Mobile */
-@media (max-width: 600px) {
+@media (max-width: 1000px) {
   .orderModal {
     max-height: 95vh;
     border-radius: 6px;

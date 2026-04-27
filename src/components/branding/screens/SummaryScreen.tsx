@@ -56,8 +56,7 @@ function BrandGuidelinesAddon({ numVariations, selected, onToggle }: { numVariat
             </div>
           </div>
         </div>
-        {selected && (
-          <div className="brand-addon__services">
+        <div className="brand-addon__services">
             <div className="brand-addon__services-grid">
               {BRAND_SERVICES.map(svc => (
                 <div key={svc.id} className="brand-addon__service-row">
@@ -76,9 +75,8 @@ function BrandGuidelinesAddon({ numVariations, selected, onToggle }: { numVariat
               Subtotal: <strong className="brand-addon__subtotal-amount">${price}</strong>
             </div>
           </div>
-        )}
+        </div>
       </div>
-    </div>
   )
 }
 
@@ -175,8 +173,8 @@ export default function SummaryScreen({ order, onBack }: { order: Order; onBack:
 
       <div className="summary__info-notice">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" className="summary__info-notice-icon">
-          <circle cx="9" cy="9" r="8" stroke="var(--color-accent)" strokeWidth="1.5"/>
-          <path d="M9 8v5M9 6v.5" stroke="var(--color-accent)" strokeWidth="1.8" strokeLinecap="round"/>
+          <circle cx="9" cy="9" r="8" stroke="var(--color-text-muted)" strokeWidth="1.5"/>
+          <path d="M9 8v5M9 6v.5" stroke="var(--color-text-muted)" strokeWidth="1.8" strokeLinecap="round"/>
         </svg>
         <p className="summary__info-notice-text">We accept all major cards and bank transfers. Work begins once payment is confirmed.</p>
       </div>
