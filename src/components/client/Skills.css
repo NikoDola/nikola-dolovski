@@ -421,7 +421,7 @@
    Media Queries
    (Responsive adjustments)
    ========================================================================== */
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
   .skillIcon.active {
     transform: scale(1.8); /* Slightly smaller scale for active icon on smaller screens */
   }
@@ -436,7 +436,7 @@
 }
 
 /* Mobile-first optimizations */
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
   .imageWrapper {
     width: 100%;
     max-width: 440px;

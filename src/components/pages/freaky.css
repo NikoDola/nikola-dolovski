@@ -79,7 +79,7 @@ figcaption {
   color: #777;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
   .frkHeadline {
     font-size: 2.2rem;
   }

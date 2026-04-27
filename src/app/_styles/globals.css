@@ -132,7 +132,7 @@ input:focus::placeholder{
 
 
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
   body{
     font-size: 1rem;
   }

@@ -177,7 +177,7 @@ background-color: rgb(60, 59, 59);
   background-image: url('/branding/logo/logo_lips.svg');
 }
 
-@media (max-width: 1000px){
+@media (max-width: 768px){
   .logoWrapper{
     width: 100%;
   }

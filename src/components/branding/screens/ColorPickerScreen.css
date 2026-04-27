@@ -78,7 +78,7 @@
   margin-bottom: var(--space-6);
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
   .color-picker__grid {
     grid-template-columns: repeat(2, 1fr);
   }

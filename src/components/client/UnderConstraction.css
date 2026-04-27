@@ -19,7 +19,7 @@
   font-size: 3em;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
   .underWrapper h1{
   text-align: center;
   line-height: 130%;

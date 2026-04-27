@@ -70,7 +70,7 @@
   padding: var(--space-12) var(--space-6) var(--space-24);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .lc-main {
     padding-bottom: 140px;
   }

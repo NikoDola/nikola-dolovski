@@ -175,7 +175,7 @@
 }
 
 /* Responsive Adjustments */
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
   .calculator {
     padding: 1rem;
     padding-bottom: 180px;

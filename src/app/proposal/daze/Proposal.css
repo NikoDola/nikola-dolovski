@@ -37,7 +37,7 @@
 .servicesWrapper{
 }
 
-@media (max-width: 1000px){
+@media (max-width: 768px){
   .offersWrapper{
      grid-template-columns: repeat(1,1fr);
        width: 95%;

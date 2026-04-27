@@ -64,7 +64,7 @@
   line-height: var(--line-height-normal);
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
   .variation-card {
     flex-direction: row;
     align-items: center;
