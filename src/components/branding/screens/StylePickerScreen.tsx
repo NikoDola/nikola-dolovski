@@ -3,11 +3,10 @@ import { useState, useEffect, useRef } from "react"
 import { T } from "../tokens"
 import StyleCard from "../shared/StyleCard"
 import BackButton from "../shared/BackButton"
-import Button from "../shared/Button"
 import { STYLE_PRESETS } from "../data"
 
 interface StyleInfo { styles: string[]; inspirationFile: File | null }
-interface Props { onBack: () => void; onNext: (info: StyleInfo) => void; nextLabel?: string }
+interface Props { onBack: () => void; onNext: (info: StyleInfo) => void; submitRef?: { current: (() => void) | null } }
 
 const MAX_SELECT = 6
 const BATCH_SIZE = 9
@@ -20,13 +19,17 @@ function Spinner() {
   )
 }
 
-export default function StylePickerScreen({ onBack, onNext, nextLabel = "Next" }: Props) {
+export default function StylePickerScreen({ onBack, onNext, submitRef }: Props) {
   const [selected, setSelected]        = useState<string[]>([])
   const [inspirationFile, setInspFile] = useState<File | null>(null)
   const [loadingFirst, setLoadingFirst] = useState(true)
   const [loadingMore, setLoadingMore]  = useState(false)
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE)
   const fileRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (submitRef) submitRef.current = () => onNext({ styles: selected, inspirationFile })
+  })
 
   useEffect(() => {
     const t = setTimeout(() => setLoadingFirst(false), 900)
@@ -102,15 +105,10 @@ export default function StylePickerScreen({ onBack, onNext, nextLabel = "Next" }
         </div>
       )}
 
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: T.space["4"], borderTop: `1px solid ${T.color.border}` }}>
+      <div style={{ paddingTop: T.space["4"], borderTop: `1px solid ${T.color.border}` }}>
         <span style={{ fontSize: T.fontSize.sm, color: T.color.textMuted }}>
           {selected.length === 0 && !inspirationFile ? "Choose styles or upload inspiration" : `${selected.length} style${selected.length !== 1 ? "s" : ""} selected`}
         </span>
-        <Button onClick={() => (selected.length > 0 || inspirationFile) && onNext({ styles: selected, inspirationFile })}
-          disabled={selected.length === 0 && !inspirationFile} size="lg"
-          icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
-          {nextLabel}
-        </Button>
       </div>
     </div>
   )

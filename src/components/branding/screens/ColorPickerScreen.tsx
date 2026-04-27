@@ -2,13 +2,12 @@
 import { useState, useRef, useEffect } from "react"
 import { T } from "../tokens"
 import BackButton from "../shared/BackButton"
-import Button from "../shared/Button"
 import { COLOR_FAMILIES } from "../data"
 import { hsvToHex, hexToHsv } from "../utils"
 import type { ServiceType } from "../types"
 
 interface ColorInfo { colorFamilies: string[]; customColors: string[]; useSameColors: boolean }
-interface Props { onBack: () => void; onNext: (info: ColorInfo) => void; serviceType: ServiceType }
+interface Props { onBack: () => void; onNext: (info: ColorInfo) => void; serviceType: ServiceType; submitRef?: { current: (() => void) | null } }
 
 function ColorPickerModal({ onAdd, onClose }: { onAdd: (hex: string) => void; onClose: () => void }) {
   const [hue, setHue] = useState(210)
@@ -22,7 +21,7 @@ function ColorPickerModal({ onAdd, onClose }: { onAdd: (hex: string) => void; on
   const dragging  = useRef<string | null>(null)
   const currentHex = hsvToHex(hue, sat, val)
 
-  useEffect(() => { setHexIn(currentHex.slice(1)) }, [hue, sat, val])
+  useEffect(() => { setHexIn(hsvToHex(hue, sat, val).slice(1)) }, [hue, sat, val])
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
     const onOut = (e: MouseEvent) => { if (popupRef.current && !popupRef.current.contains(e.target as Node)) onClose() }
@@ -75,7 +74,7 @@ function ColorPickerModal({ onAdd, onClose }: { onAdd: (hex: string) => void; on
   )
 }
 
-export default function ColorPickerScreen({ onBack, onNext, serviceType }: Props) {
+export default function ColorPickerScreen({ onBack, onNext, serviceType, submitRef }: Props) {
   const MAX_COLORS = 5
   const [selected, setSelected]     = useState<string[]>([])
   const [useSameColors, setUseSame] = useState(false)
@@ -83,9 +82,11 @@ export default function ColorPickerScreen({ onBack, onNext, serviceType }: Props
   const [showPicker, setShowPicker] = useState(false)
 
   const toggle = (id: string) => setSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : prev.length >= MAX_COLORS ? prev : [...prev, id])
-  const canProceed = useSameColors || selected.length > 0 || customColors.length > 0
 
-  return (
+  useEffect(() => {
+    if (submitRef) submitRef.current = () => onNext({ colorFamilies: selected, customColors, useSameColors })
+  })
+return (
     <div className="screen-enter">
       <BackButton onClick={onBack} />
       <div style={{ marginBottom: T.space["8"] }}>
@@ -104,13 +105,13 @@ export default function ColorPickerScreen({ onBack, onNext, serviceType }: Props
           </div>
           <div>
             <div style={{ fontSize: T.fontSize.base, fontWeight: T.fontWeight.semibold, color: useSameColors ? T.color.accent : T.color.textPrimary }}>Keep my current brand colors</div>
-            <div style={{ fontSize: T.fontSize.xs, color: T.color.textMuted, marginTop: "2px" }}>We'll carry over your existing palette into the refreshed logo</div>
+            <div style={{ fontSize: T.fontSize.xs, color: T.color.textMuted, marginTop: "2px" }}>We&apos;ll carry over your existing palette into the refreshed logo</div>
           </div>
         </div>
       )}
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: T.space["4"], marginBottom: T.space["6"] }}>
-        {COLOR_FAMILIES.map((family, i) => {
+        {COLOR_FAMILIES.map((family) => {
           const sel = selected.includes(family.id)
           const dimmed = selected.length >= MAX_COLORS && !sel
           return (
@@ -137,12 +138,6 @@ export default function ColorPickerScreen({ onBack, onNext, serviceType }: Props
         {showPicker && <ColorPickerModal onAdd={hex => { setCustom(c => [...c, hex]); setShowPicker(false) }} onClose={() => setShowPicker(false)} />}
       </div>
 
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button onClick={() => canProceed && onNext({ colorFamilies: selected, customColors, useSameColors })} disabled={!canProceed} size="lg"
-          icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
-          Next — Review
-        </Button>
-      </div>
     </div>
   )
 }

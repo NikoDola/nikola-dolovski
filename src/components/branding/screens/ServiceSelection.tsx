@@ -1,13 +1,21 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { T } from "../tokens"
 import ServiceCard from "../shared/ServiceCard"
-import Button from "../shared/Button"
 
-interface Props { onSelect: (type: "design" | "redesign") => void }
+interface Props {
+  onSelect: (type: "design" | "redesign") => void
+  submitRef?: { current: (() => void) | null }
+  setNextDisabled?: (v: boolean) => void
+}
 
-export default function ServiceSelection({ onSelect }: Props) {
+export default function ServiceSelection({ onSelect, submitRef, setNextDisabled }: Props) {
   const [selected, setSelected] = useState<"design" | "redesign" | null>(null)
+
+  useEffect(() => {
+    submitRef && (submitRef.current = selected ? () => onSelect(selected) : null)
+    setNextDisabled?.(!selected)
+  })
 
   return (
     <div className="screen-enter">
@@ -20,7 +28,7 @@ export default function ServiceSelection({ onSelect }: Props) {
           What can we help you with?
         </h1>
         <p style={{ fontSize: T.fontSize.md, color: T.color.textSecondary, lineHeight: T.lineHeight.normal, maxWidth: "480px" }}>
-          Choose how you'd like to approach your logo project. Both options include the same care and attention.
+          Choose how you&apos;d like to approach your logo project. Both options include the same care and attention.
         </p>
       </div>
 
@@ -44,12 +52,6 @@ export default function ServiceSelection({ onSelect }: Props) {
         />
       </div>
 
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button onClick={() => selected && onSelect(selected)} disabled={!selected} size="lg"
-          icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
-          Continue
-        </Button>
-      </div>
     </div>
   )
 }

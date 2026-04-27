@@ -1,24 +1,21 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { T } from "../tokens"
 import TextInput from "../shared/TextInput"
 import BackButton from "../shared/BackButton"
-import Button from "../shared/Button"
 
 interface BrandInfo { companyName: string; tagline: string; estYear: string; description: string }
-interface Props { onBack: () => void; onNext: (info: BrandInfo) => void }
+interface Props { onBack: () => void; onNext: (info: BrandInfo) => void; submitRef?: { current: (() => void) | null } }
 
-export default function BrandInfoScreen({ onBack, onNext }: Props) {
+export default function BrandInfoScreen({ onBack, onNext, submitRef }: Props) {
   const [companyName, setCompany] = useState("")
   const [tagline, setTagline]     = useState("")
   const [estYear, setEstYear]     = useState("")
   const [description, setDesc]    = useState("")
-  const [errors, setErrors]       = useState<Record<string, string>>({})
 
-  const handleNext = () => {
-    if (!companyName.trim()) { setErrors({ companyName: "Company name is required" }); return }
-    onNext({ companyName, tagline, estYear, description })
-  }
+  useEffect(() => {
+    if (submitRef) submitRef.current = () => onNext({ companyName, tagline, estYear, description })
+  })
 
   return (
     <div className="screen-enter">
@@ -34,7 +31,7 @@ export default function BrandInfoScreen({ onBack, onNext }: Props) {
 
       <div style={{ display: "flex", flexDirection: "column", gap: T.space["6"], maxWidth: "560px", marginBottom: T.space["6"] }}>
         <TextInput label="Company Name" placeholder="e.g. Apex Studio" value={companyName}
-          onChange={v => { setCompany(v); setErrors({}) }} required error={errors.companyName} />
+          onChange={setCompany} />
         <TextInput label="Tagline" placeholder="e.g. Crafting tomorrow's brands" value={tagline} onChange={setTagline} hint="Optional" />
         <TextInput label="Established Year" placeholder="e.g. 2019" value={estYear} onChange={setEstYear} hint="Optional"
           note="This will only appear in your logo if you'd like it to — leave it blank to keep things clean." />
@@ -54,12 +51,6 @@ export default function BrandInfoScreen({ onBack, onNext }: Props) {
         />
       </div>
 
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button onClick={handleNext} size="lg"
-          icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
-          Next — Variations
-        </Button>
-      </div>
     </div>
   )
 }

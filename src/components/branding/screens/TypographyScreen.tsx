@@ -3,12 +3,11 @@ import { useState, useRef, useEffect } from "react"
 import { T } from "../tokens"
 import TextInput from "../shared/TextInput"
 import BackButton from "../shared/BackButton"
-import Button from "../shared/Button"
 import { FONT_CATEGORIES } from "../data"
 import type { FontDef, ServiceType } from "../types"
 
 interface TypoInfo { typographyType: "custom"|"free"|null; customPrice: number; selectedFonts: string[]; sameBrandFont: boolean; uploadedFont: File|null; fontName: string }
-interface Props { onBack: () => void; onNext: (info: TypoInfo) => void; serviceType: ServiceType; selectedVariations: string[] }
+interface Props { onBack: () => void; onNext: (info: TypoInfo) => void; serviceType: ServiceType; selectedVariations: string[]; submitRef?: { current: (() => void) | null } }
 
 function FontCard({ font, selected, onClick, index, dimmed }: { font: FontDef; selected: boolean; onClick: () => void; index: number; dimmed?: boolean }) {
   const [visible, setVisible] = useState(false)
@@ -24,7 +23,7 @@ function FontCard({ font, selected, onClick, index, dimmed }: { font: FontDef; s
   )
 }
 
-export default function TypographyScreen({ onBack, onNext, serviceType, selectedVariations }: Props) {
+export default function TypographyScreen({ onBack, onNext, serviceType, selectedVariations, submitRef }: Props) {
   const MAX_FONTS = 10
   const BATCH = 9
   const [sameBrandFont, setSameBrand]   = useState(false)
@@ -40,20 +39,17 @@ export default function TypographyScreen({ onBack, onNext, serviceType, selected
   const isWordmark  = selectedVariations.includes("wordmark") && selectedVariations.length === 1
   const isRedesign  = serviceType === "redesign"
   const customPrice = isWordmark ? 0 : 100
-  const canProceed  = typographyType !== null || sameBrandFont
-
-  const currentFonts = FONT_CATEGORIES[activeCategory].fonts
+const currentFonts = FONT_CATEGORIES[activeCategory].fonts
   const visibleFonts = currentFonts.slice(0, visibleCount)
   const hasMore = visibleCount < currentFonts.length
 
   useEffect(() => { setVisible(BATCH) }, [activeCategory])
 
-  const toggleFont = (id: string) => setSelectedFonts(prev => prev.includes(id) ? prev.filter(x => x !== id) : prev.length >= MAX_FONTS ? prev : [...prev, id])
+  useEffect(() => {
+    if (submitRef) submitRef.current = () => onNext({ typographyType, customPrice, selectedFonts, sameBrandFont, uploadedFont, fontName })
+  })
 
-  const handleNext = () => {
-    if (!canProceed) return
-    onNext({ typographyType, customPrice, selectedFonts, sameBrandFont, uploadedFont, fontName })
-  }
+  const toggleFont = (id: string) => setSelectedFonts(prev => prev.includes(id) ? prev.filter(x => x !== id) : prev.length >= MAX_FONTS ? prev : [...prev, id])
 
   return (
     <div className="screen-enter">
@@ -71,7 +67,7 @@ export default function TypographyScreen({ onBack, onNext, serviceType, selected
             </div>
             <div>
               <div style={{ fontSize: T.fontSize.base, fontWeight: T.fontWeight.semibold, color: sameBrandFont ? T.color.accent : T.color.textPrimary }}>Use the same font as my current brand</div>
-              <div style={{ fontSize: T.fontSize.xs, color: T.color.textMuted, marginTop: "2px" }}>We'll carry over your existing typeface into the refreshed logo</div>
+              <div style={{ fontSize: T.fontSize.xs, color: T.color.textMuted, marginTop: "2px" }}>We&apos;ll carry over your existing typeface into the refreshed logo</div>
             </div>
           </div>
           {sameBrandFont && (
@@ -135,12 +131,6 @@ export default function TypographyScreen({ onBack, onNext, serviceType, selected
         )}
       </div>
 
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button onClick={handleNext} disabled={!canProceed} size="lg"
-          icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
-          Next — Colors
-        </Button>
-      </div>
     </div>
   )
 }

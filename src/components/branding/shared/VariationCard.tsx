@@ -24,6 +24,7 @@ export default function VariationCard({ title, description, selected, onClick, c
         transition: `all ${T.duration.normal} ${T.easing.smooth}`,
         boxShadow: T.shadow.xs, position: "relative",
         display: "flex", flexDirection: "column", gap: T.space["5"],
+        height: "100%", boxSizing: "border-box",
       }}
     >
       {selected && (

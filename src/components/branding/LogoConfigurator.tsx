@@ -1,8 +1,9 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import "./LogoConfigurator.css"
 import { T } from "./tokens"
 import ProgressBar from "./shared/ProgressBar"
+import Button from "./shared/Button"
 import ServiceSelection from "./screens/ServiceSelection"
 import BrandInfoScreen from "./screens/BrandInfoScreen"
 import UploadScreen from "./screens/UploadScreen"
@@ -32,6 +33,25 @@ const SCREEN_STEP: Record<string, Record<string, number>> = {
   summary:      { design_icon: 5, design_other: 6, redesign: 6, default: 5 },
 }
 
+const STEP_SCREEN: Record<string, Screen[]> = {
+  design_icon:  ["service", "brand-info", "variations", "style-icon", "colors",      "summary"],
+  design_other: ["service", "brand-info", "variations", "style-icon", "typography",  "colors", "summary"],
+  redesign:     ["service", "upload",     "style-red",  "variations", "typography",  "colors", "summary"],
+  default:      ["service", "brand-info", "variations", "style-icon", "colors",      "summary"],
+}
+
+const NEXT_LABEL: Partial<Record<Screen, string>> = {
+  "service":    "Continue",
+  "brand-info": "Next — Variations",
+  "upload":     "Next — Variations",
+  "style-red":  "Next — Variations",
+  "variations": "Next — Style",
+  "typography": "Next — Colors",
+  "colors":     "Next — Review",
+}
+
+export type SubmitRef = { current: (() => void) | null }
+
 export default function LogoConfigurator() {
   const [screen, setScreen]           = useState<Screen>("service")
   const [serviceType, setServiceType] = useState<ServiceType>(null)
@@ -41,6 +61,34 @@ export default function LogoConfigurator() {
   const [uploadInfo, setUploadInfo]   = useState({})
   const [colorInfo, setColorInfo]     = useState({})
   const [typographyInfo, setTypoInfo] = useState({})
+
+  const submitRef = useRef<(() => void) | null>(null)
+  const [nextDisabled, setNextDisabled] = useState(true)
+
+  useEffect(() => { window.scrollTo({ top: 0, behavior: "instant" }) }, [screen])
+
+  // Reset state when screen changes
+  useEffect(() => {
+    submitRef.current = null
+    setNextDisabled(screen === "service")
+  }, [screen])
+
+  // Sync browser back button with wizard screens
+  useEffect(() => {
+    window.history.replaceState({ ...window.history.state, screen: "service" }, "")
+
+    const handlePop = (e: PopStateEvent) => {
+      if (e.state?.screen) setScreen(e.state.screen as Screen)
+    }
+
+    window.addEventListener("popstate", handlePop)
+    return () => window.removeEventListener("popstate", handlePop)
+  }, [])
+
+  const navigateTo = (next: Screen) => {
+    window.history.pushState({ screen: next }, "")
+    setScreen(next)
+  }
 
   // Load Google Fonts for the typography screen
   useEffect(() => {
@@ -53,7 +101,7 @@ export default function LogoConfigurator() {
     document.head.appendChild(link)
   }, [])
 
-  const iconOnly  = variations.length > 0 && variations.every(v => v === "icon")
+  const iconOnly   = variations.length > 0 && variations.every(v => v === "icon")
   const hasNonIcon = variations.some(v => v !== "icon")
 
   let flowKey = "default"
@@ -65,99 +113,96 @@ export default function LogoConfigurator() {
   const stepMap = SCREEN_STEP[screen] || {}
   const stepIdx = stepMap[flowKey] ?? stepMap["default"] ?? 0
 
+  const nextLabel = screen === "style-icon"
+    ? (variations.every(v => v === "icon") ? "Next — Colors" : "Next — Typography")
+    : NEXT_LABEL[screen]
+
   const order: Order = { serviceType, variations, ...companyInfo, ...styleInfo, ...uploadInfo, ...colorInfo, ...typographyInfo }
 
-  const estimatedTotal = 150 + Math.max(0, variations.length - 1) * 25 + ((typographyInfo as any).typographyType === "custom" && (typographyInfo as any).customPrice > 0 ? (typographyInfo as any).customPrice : 0)
+  const typoInfo = typographyInfo as Partial<Order>
+  const estimatedTotal = 150 + Math.max(0, variations.length - 1) * 25 + (typoInfo.typographyType === "custom" && (typoInfo.customPrice ?? 0) > 0 ? (typoInfo.customPrice ?? 0) : 0)
 
   return (
     <div className="lc-root" style={{ minHeight: "100vh", background: T.color.bg, display: "flex", flexDirection: "column", fontFamily: T.font.sans }}>
-
-      {/* Header */}
-      <header style={{ borderBottom: `1px solid ${T.color.border}`, background: T.color.surface, padding: `${T.space["5"]} ${T.space["8"]}`, display: "flex", alignItems: "center" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: T.space["3"] }}>
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-            <rect width="28" height="28" rx="7" fill={T.color.accent}/>
-            <path d="M7 20L14 8L21 20" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M9.5 16h9" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
-          </svg>
-          <span style={{ fontSize: T.fontSize.md, fontWeight: T.fontWeight.bold, color: T.color.textPrimary, letterSpacing: "-0.02em" }}>Logo Services</span>
-        </div>
-      </header>
-
-      {/* Progress */}
-      <div style={{ borderBottom: `1px solid ${T.color.border}`, background: T.color.surface, padding: `${T.space["5"]} ${T.space["8"]}` }}>
-        <div style={{ maxWidth: "560px" }}>
-          <ProgressBar steps={steps} current={stepIdx} />
-        </div>
-      </div>
 
       {/* Main content */}
       <main style={{ flex: 1, display: "flex", justifyContent: "center", padding: `${T.space["12"]} ${T.space["8"]} ${T.space["24"]}` }}>
         <div style={{ width: "100%", maxWidth: "880px" }}>
 
           {screen === "service" && (
-            <ServiceSelection onSelect={type => { setServiceType(type); setScreen(type === "design" ? "brand-info" : "upload") }} />
+            <ServiceSelection submitRef={submitRef} setNextDisabled={setNextDisabled}
+              onSelect={type => { setServiceType(type); navigateTo(type === "design" ? "brand-info" : "upload") }} />
           )}
 
           {screen === "brand-info" && (
-            <BrandInfoScreen onBack={() => setScreen("service")} onNext={info => { setCompanyInfo(info); setScreen("variations") }} />
+            <BrandInfoScreen submitRef={submitRef} onBack={() => window.history.back()} onNext={info => { setCompanyInfo(info); navigateTo("variations") }} />
           )}
 
           {screen === "upload" && (
-            <UploadScreen onBack={() => setScreen("service")} onNext={info => { setUploadInfo(info); setScreen("style-red") }} />
+            <UploadScreen submitRef={submitRef} onBack={() => window.history.back()} onNext={info => { setUploadInfo(info); navigateTo("style-red") }} />
           )}
 
           {screen === "style-red" && (
-            <StylePickerScreen onBack={() => setScreen("upload")} onNext={info => { setStyleInfo(info); setScreen("variations") }} />
+            <StylePickerScreen submitRef={submitRef} onBack={() => window.history.back()} onNext={info => { setStyleInfo(info); navigateTo("variations") }} />
           )}
 
           {screen === "variations" && (
-            <VariationsScreen onBack={() => setScreen(serviceType === "redesign" ? "style-red" : "brand-info")} onNext={vars => { setVariations(vars); setScreen("style-icon") }} />
+            <VariationsScreen submitRef={submitRef} onBack={() => window.history.back()} onNext={vars => { setVariations(vars); navigateTo("style-icon") }} />
           )}
 
           {screen === "style-icon" && (
-            <StylePickerScreen
-              nextLabel={variations.every(v => v === "icon") ? "Next — Colors" : "Next — Typography"}
-              onBack={() => setScreen("variations")}
-              onNext={info => { setStyleInfo(info); setScreen(variations.every(v => v === "icon") ? "colors" : "typography") }}
+            <StylePickerScreen submitRef={submitRef}
+              onBack={() => window.history.back()}
+              onNext={info => { setStyleInfo(info); navigateTo(variations.every(v => v === "icon") ? "colors" : "typography") }}
             />
           )}
 
           {screen === "typography" && (
-            <TypographyScreen serviceType={serviceType} selectedVariations={variations}
-              onBack={() => setScreen(serviceType === "redesign" ? "variations" : "style-icon")}
-              onNext={info => { setTypoInfo(info); setScreen("colors") }}
+            <TypographyScreen submitRef={submitRef} serviceType={serviceType} selectedVariations={variations}
+              onBack={() => window.history.back()}
+              onNext={info => { setTypoInfo(info); navigateTo("colors") }}
             />
           )}
 
           {screen === "colors" && (
-            <ColorPickerScreen serviceType={serviceType}
-              onBack={() => setScreen(variations.every(v => v === "icon") ? "style-icon" : "typography")}
-              onNext={info => { setColorInfo(info); setScreen("summary") }}
+            <ColorPickerScreen submitRef={submitRef} serviceType={serviceType}
+              onBack={() => window.history.back()}
+              onNext={info => { setColorInfo(info); navigateTo("summary") }}
             />
           )}
 
           {screen === "summary" && (
-            <SummaryScreen order={order} onBack={() => setScreen(serviceType === "redesign" ? "colors" : variations.every(v => v === "icon") ? "colors" : "colors")} />
+            <SummaryScreen order={order} onBack={() => window.history.back()} />
           )}
         </div>
       </main>
 
-      {/* Sticky price footer */}
+      {/* Sticky footer: progress + price + next */}
       {screen !== "summary" && (
-        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: T.color.surface, borderTop: `1px solid ${T.color.border}`, padding: `${T.space["4"]} ${T.space["8"]}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: T.space["3"] }}>
-            <span style={{ fontSize: T.fontSize.sm, color: T.color.textMuted }}>Estimated total</span>
-            {variations.length > 1 && (
-              <span style={{ fontSize: T.fontSize.xs, color: T.color.textMuted, background: T.color.surfaceAlt, border: `1px solid ${T.color.border}`, borderRadius: T.radius.full, padding: `2px ${T.space["3"]}` }}>
-                {variations.length - 1} extra variation{variations.length > 2 ? "s" : ""} +${(variations.length - 1) * 25}
-              </span>
+        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: T.color.surface, borderTop: `1px solid ${T.color.border}`, padding: `${T.space["3"]} ${T.space["8"]}` }}>
+          <div style={{ display: "flex", alignItems: "center", gap: T.space["12"] }}>
+            <div style={{ flex: 1 }}>
+              <ProgressBar steps={steps} current={stepIdx}
+                onStepClick={i => { const target = STEP_SCREEN[flowKey]?.[i]; if (target) navigateTo(target) }}
+              />
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: T.space["2"], flexShrink: 0 }}>
+              <span style={{ fontSize: T.fontSize.sm, color: T.color.textMuted }}>Estimate</span>
+              <span style={{ fontSize: T.fontSize.xl, fontWeight: T.fontWeight.bold, color: T.color.textPrimary }}>${estimatedTotal}</span>
+              {variations.length > 1 && (
+                <span style={{ fontSize: T.fontSize.xs, color: T.color.textMuted, background: T.color.surfaceAlt, border: `1px solid ${T.color.border}`, borderRadius: T.radius.full, padding: `2px ${T.space["3"]}` }}>
+                  +${(variations.length - 1) * 25} extras
+                </span>
+              )}
+            </div>
+            {nextLabel && (
+              <Button onClick={() => submitRef.current?.()} disabled={nextDisabled} size="lg"
+                icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
+                {nextLabel}
+              </Button>
             )}
           </div>
-          <div style={{ display: "flex", alignItems: "baseline", gap: T.space["1"] }}>
-            <span style={{ fontSize: T.fontSize["2xl"], fontWeight: T.fontWeight.bold, color: T.color.textPrimary }}>${estimatedTotal}</span>
-            <span style={{ fontSize: T.fontSize.sm, color: T.color.textMuted }}>total</span>
-          </div>
+
         </div>
       )}
     </div>

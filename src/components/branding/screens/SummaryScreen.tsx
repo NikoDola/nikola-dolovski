@@ -118,7 +118,7 @@ export default function SummaryScreen({ order, onBack }: { order: Order; onBack:
         </div>
         <h2 style={{ fontSize: T.fontSize.xl, fontWeight: T.fontWeight.bold, color: T.color.textPrimary, marginBottom: T.space["3"] }}>Order received!</h2>
         <p style={{ fontSize: T.fontSize.base, color: T.color.textSecondary, lineHeight: T.lineHeight.normal, maxWidth: "380px", margin: "0 auto" }}>
-          We'll be in touch within 24 hours to confirm your project details and get started.
+          We&apos;ll be in touch within 24 hours to confirm your project details and get started.
         </p>
       </div>
     )
@@ -146,7 +146,7 @@ export default function SummaryScreen({ order, onBack }: { order: Order; onBack:
       <BackButton onClick={onBack} />
       <div style={{ marginBottom: T.space["8"] }}>
         <h1 style={{ fontSize: T.fontSize["2xl"], fontWeight: T.fontWeight.bold, color: T.color.textPrimary, letterSpacing: T.letterSpacing.tight, lineHeight: T.lineHeight.tight, marginBottom: T.space["3"] }}>Review your order</h1>
-        <p style={{ fontSize: T.fontSize.base, color: T.color.textSecondary }}>Everything looks good? Choose how you'd like to pay.</p>
+        <p style={{ fontSize: T.fontSize.base, color: T.color.textSecondary }}>Everything looks good? Choose how you&apos;d like to pay.</p>
       </div>
 
       <div style={{ background: T.color.surface, border: `1px solid ${T.color.border}`, borderRadius: T.radius.xl, padding: T.space["8"], marginBottom: T.space["6"] }}>

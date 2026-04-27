@@ -22,13 +22,23 @@ interface OrderModalProps {
 
 type FileCategory = "logos" | "fonts" | "inspiration"
 
+declare global {
+  interface Window {
+    grecaptcha?: {
+      render: (el: HTMLElement, opts: Record<string, unknown>) => number
+      reset?: (widgetId?: number) => void
+    }
+    __recaptchaOnLoad?: () => void
+  }
+}
+
 const FILE_LIMITS = {
   logos: { maxSize: 2 * 1024 * 1024, label: "2 MB", accept: "image/*", desc: "Your existing logo or brand files (PNG, SVG, JPG)" },
   inspiration: { maxSize: 5 * 1024 * 1024, label: "5 MB", accept: "image/*", desc: "Mood board or reference images you like" },
   fonts: { maxSize: 1 * 1024 * 1024, label: "1 MB", accept: ".ttf,.otf,.woff,.woff2", desc: "Preferred fonts if you have them" },
 }
 
-export default function OrderModal({ isOpen, onClose, selectedServices, totalHours, totalDiscount, grandTotal }: OrderModalProps) {
+export default function OrderModal({ onClose, selectedServices, totalHours, totalDiscount, grandTotal }: OrderModalProps) {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [notes, setNotes] = useState("")
@@ -54,18 +64,18 @@ export default function OrderModal({ isOpen, onClose, selectedServices, totalHou
     if (!SITE_KEY) return
 
     const render = () => {
-      if (!captchaRef.current || widgetIdRef.current !== null) return
-      widgetIdRef.current = (window as any).grecaptcha.render(captchaRef.current, {
+      if (!captchaRef.current || widgetIdRef.current !== null || !window.grecaptcha) return
+      widgetIdRef.current = window.grecaptcha.render(captchaRef.current, {
         sitekey: SITE_KEY,
         callback: (token: string) => setCaptchaToken(token),
         "expired-callback": () => setCaptchaToken(""),
       })
     }
 
-    if ((window as any).grecaptcha?.render) {
+    if (window.grecaptcha?.render) {
       render()
     } else {
-      (window as any).__recaptchaOnLoad = render
+      window.__recaptchaOnLoad = render
       if (!document.querySelector("script[data-recaptcha]")) {
         const script = document.createElement("script")
         script.src = "https://www.google.com/recaptcha/api.js?onload=__recaptchaOnLoad&render=explicit"

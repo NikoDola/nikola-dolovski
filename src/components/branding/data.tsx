@@ -101,6 +101,7 @@ export const FONT_CATEGORIES: Record<string, { label: string; fonts: FontDef[] }
   },
 }
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export const STYLE_PRESETS = [
   {
     id: "minimalist", label: "Minimalist", sublabel: "Clean, lots of space",
@@ -201,3 +202,4 @@ export const STYLE_PRESETS = [
     ),
   },
 ]
+/* eslint-enable @typescript-eslint/no-unused-vars */
