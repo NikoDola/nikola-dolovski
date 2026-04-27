@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect, useRef } from "react"
+import "./tokens.css"
 import "./LogoConfigurator.css"
-import { T } from "./tokens"
 import ProgressBar from "./shared/ProgressBar"
 import Button from "./shared/Button"
 import ServiceSelection from "./screens/ServiceSelection"
@@ -138,11 +138,11 @@ export default function LogoConfigurator() {
   const estimatedTotal = 150 + Math.max(0, variations.length - 1) * 25 + (typoInfo.typographyType === "custom" && (typoInfo.customPrice ?? 0) > 0 ? (typoInfo.customPrice ?? 0) : 0)
 
   return (
-    <div className="lc-root" style={{ minHeight: "100vh", background: T.color.bg, display: "flex", flexDirection: "column", fontFamily: T.font.sans }}>
+    <div className="lc-root">
 
       {/* Main content */}
-      <main style={{ flex: 1, display: "flex", justifyContent: "center", padding: `${T.space["12"]} ${T.space["8"]} ${T.space["24"]}` }}>
-        <div style={{ width: "100%", maxWidth: "880px" }}>
+      <main className="lc-main">
+        <div className="lc-main__inner">
 
           {screen === "service" && (
             <ServiceSelection submitRef={submitRef} setNextDisabled={setNextDisabled}
@@ -193,57 +193,55 @@ export default function LogoConfigurator() {
       </main>
 
       {/* Sticky footer: progress + price + next */}
-      {screen !== "summary" && (
-        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: T.color.surface, borderTop: `1px solid ${T.color.border}`, padding: isMobile ? `${T.space["3"]} ${T.space["4"]}` : `${T.space["3"]} ${T.space["8"]}` }}>
-          {isMobile ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: T.space["3"] }}>
-              <ProgressBar steps={steps} current={stepIdx} maxReached={maxReachedStep}
-                onStepClick={i => { const target = STEP_SCREEN[flowKey]?.[i]; if (target) navigateTo(target) }}
-              />
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: T.space["3"] }}>
-                <div style={{ display: "flex", alignItems: "center", gap: T.space["2"] }}>
-                  <span style={{ fontSize: T.fontSize.sm, color: T.color.textMuted }}>Estimate</span>
-                  <span style={{ fontSize: T.fontSize.xl, fontWeight: T.fontWeight.bold, color: T.color.textPrimary }}>${estimatedTotal}</span>
-                  {variations.length > 1 && (
-                    <span style={{ fontSize: T.fontSize.xs, color: T.color.textMuted, background: T.color.surfaceAlt, border: `1px solid ${T.color.border}`, borderRadius: T.radius.full, padding: `2px ${T.space["2"]}` }}>
-                      +${(variations.length - 1) * 25}
-                    </span>
-                  )}
-                </div>
-                {nextLabel && (
-                  <Button onClick={() => submitRef.current?.()} disabled={nextDisabled} size="md"
-                    icon={<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
-                    {nextLabel}
-                  </Button>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div style={{ display: "flex", alignItems: "center", gap: T.space["12"] }}>
-              <div style={{ flex: 1 }}>
-                <ProgressBar steps={steps} current={stepIdx} maxReached={maxReachedStep}
-                  onStepClick={i => { const target = STEP_SCREEN[flowKey]?.[i]; if (target) navigateTo(target) }}
-                />
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: T.space["2"], flexShrink: 0 }}>
-                <span style={{ fontSize: T.fontSize.sm, color: T.color.textMuted }}>Estimate</span>
-                <span style={{ fontSize: T.fontSize.xl, fontWeight: T.fontWeight.bold, color: T.color.textPrimary }}>${estimatedTotal}</span>
+      <div className={`lc-footer${isMobile ? " lc-footer--mobile" : ""}`}>
+        {isMobile ? (
+          <div className="lc-footer__mobile-col">
+            <ProgressBar steps={steps} current={stepIdx} maxReached={maxReachedStep}
+              onStepClick={i => { const target = STEP_SCREEN[flowKey]?.[i]; if (target) navigateTo(target) }}
+            />
+            <div className="lc-footer__actions-row">
+              <div className="lc-price">
+                <span className="lc-price__label">Estimate</span>
+                <span className="lc-price__amount">${estimatedTotal}</span>
                 {variations.length > 1 && (
-                  <span style={{ fontSize: T.fontSize.xs, color: T.color.textMuted, background: T.color.surfaceAlt, border: `1px solid ${T.color.border}`, borderRadius: T.radius.full, padding: `2px ${T.space["3"]}` }}>
-                    +${(variations.length - 1) * 25} extras
+                  <span className="lc-price__extras">
+                    +${(variations.length - 1) * 25}
                   </span>
                 )}
               </div>
               {nextLabel && (
-                <Button onClick={() => submitRef.current?.()} disabled={nextDisabled} size="lg"
-                  icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
+                <Button onClick={() => submitRef.current?.()} disabled={nextDisabled} size="md"
+                  icon={<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
                   {nextLabel}
                 </Button>
               )}
             </div>
-          )}
-        </div>
-      )}
+          </div>
+        ) : (
+          <div className="lc-footer__desktop-row">
+            <div className="lc-footer__progress-wrap">
+              <ProgressBar steps={steps} current={stepIdx} maxReached={maxReachedStep}
+                onStepClick={i => { const target = STEP_SCREEN[flowKey]?.[i]; if (target) navigateTo(target) }}
+              />
+            </div>
+            <div className="lc-price">
+              <span className="lc-price__label">Estimate</span>
+              <span className="lc-price__amount">${estimatedTotal}</span>
+              {variations.length > 1 && (
+                <span className="lc-price__extras lc-price__extras--desktop">
+                  +${(variations.length - 1) * 25} extras
+                </span>
+              )}
+            </div>
+            {nextLabel && (
+              <Button onClick={() => submitRef.current?.()} disabled={nextDisabled} size="lg"
+                icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
+                {nextLabel}
+              </Button>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

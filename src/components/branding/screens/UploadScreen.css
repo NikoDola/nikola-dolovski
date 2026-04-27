@@ -1,0 +1,68 @@
+/* ─── Header ─────────────────────────────────────────────── */
+.upload__header {
+  margin-bottom: var(--space-8);
+}
+
+.upload__title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-tight);
+  margin-bottom: var(--space-3);
+}
+
+.upload__subtitle {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+/* ─── Fields grid ────────────────────────────────────────── */
+.upload__fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+/* ─── Upload zone ────────────────────────────────────────── */
+.upload__zone-block {
+  margin-bottom: var(--space-2);
+}
+
+.upload__zone-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-3);
+}
+
+/* ─── Format tips ────────────────────────────────────────── */
+.upload__tips {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-10);
+  margin-top: var(--space-4);
+}
+
+.upload__tip {
+  flex: 1;
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) 0;
+}
+
+.upload__tip-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-accent);
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+  margin-bottom: var(--space-2);
+}
+
+.upload__tip-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+}

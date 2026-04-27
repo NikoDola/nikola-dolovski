@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react"
 import { T } from "../tokens"
 import ServiceCard from "../shared/ServiceCard"
+import "./ServiceSelection.css"
 
 interface Props {
   onSelect: (type: "design" | "redesign") => void
@@ -19,20 +20,20 @@ export default function ServiceSelection({ onSelect, submitRef, setNextDisabled 
 
   return (
     <div className="screen-enter">
-      <div style={{ marginBottom: T.space["10"] }}>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: T.space["2"], background: T.color.accentLight, border: `1px solid ${T.color.accentMuted}`, borderRadius: T.radius.full, padding: `${T.space["1"]} ${T.space["4"]}`, marginBottom: T.space["5"] }}>
-          <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: T.color.accent }} />
-          <span style={{ fontSize: T.fontSize.xs, fontWeight: T.fontWeight.semibold, color: T.color.accent, letterSpacing: T.letterSpacing.wider, textTransform: "uppercase" }}>Logo Services</span>
+      <div className="service-sel__header">
+        <div className="service-sel__badge">
+          <div className="service-sel__badge-dot" />
+          <span className="service-sel__badge-label">Logo Services</span>
         </div>
-        <h1 style={{ fontSize: T.fontSize["2xl"], fontWeight: T.fontWeight.bold, color: T.color.textPrimary, letterSpacing: T.letterSpacing.tight, lineHeight: T.lineHeight.tight, marginBottom: T.space["3"] }}>
+        <h1 className="service-sel__title">
           What can we help you with?
         </h1>
-        <p style={{ fontSize: T.fontSize.md, color: T.color.textSecondary, lineHeight: T.lineHeight.normal, maxWidth: "480px" }}>
+        <p className="service-sel__subtitle">
           Choose how you&apos;d like to approach your logo project. Both options include the same care and attention.
         </p>
       </div>
 
-      <div style={{ display: "flex", gap: T.space["5"], marginBottom: T.space["10"] }}>
+      <div className="service-sel__cards">
         <ServiceCard
           title="Logo Design"
           description="Start fresh. We'll craft a completely new logo identity tailored to your brand vision from the ground up."

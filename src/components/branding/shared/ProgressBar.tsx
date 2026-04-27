@@ -1,5 +1,6 @@
 "use client"
 import { Fragment, useState, useEffect } from "react"
+import "./ProgressBar.css"
 import { T } from "../tokens"
 
 interface ProgressBarProps {
@@ -17,37 +18,42 @@ function StepDot({ index, current, highWater, hovered, onStepClick, onHover, lab
   const active    = index === current
   const clickable = done && !!onStepClick
 
+  const circleClass = [
+    "progress-step__circle",
+    done    ? "progress-step__circle--done"    : "",
+    active  ? "progress-step__circle--active"  : "",
+    hovered === index ? "progress-step__circle--hovered" : "",
+  ].filter(Boolean).join(" ")
+
+  const numberClass = [
+    "progress-step__number",
+    done   ? "progress-step__number--done"   : "",
+    active ? "progress-step__number--active" : "",
+  ].filter(Boolean).join(" ")
+
+  const labelClass = [
+    "progress-step__label",
+    active ? "progress-step__label--active" : "",
+    done   ? "progress-step__label--done"   : "",
+  ].filter(Boolean).join(" ")
+
   return (
     <div
+      className={`progress-step${clickable ? " progress-step--clickable" : ""}`}
       onClick={clickable ? () => onStepClick!(index) : undefined}
       onMouseEnter={() => clickable && onHover(index)}
       onMouseLeave={() => onHover(null)}
-      style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: T.space["1"], cursor: clickable ? "pointer" : "default" }}
     >
-      <div style={{
-        width: "28px", height: "28px", borderRadius: T.radius.full,
-        background: done ? T.color.accent : active ? T.color.accentLight : T.color.surfaceAlt,
-        border: `2px solid ${done || active ? T.color.accent : T.color.border}`,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        transition: `all ${T.duration.normal} ${T.easing.smooth}`,
-        transform: hovered === index ? "scale(1.15)" : "scale(1)",
-        boxShadow: hovered === index ? `0 0 0 3px ${T.color.accentMuted}` : "none",
-      }}>
-        <span style={{ fontSize: T.fontSize.xs, fontWeight: T.fontWeight.semibold, color: done ? T.color.textInverse : active ? T.color.accent : T.color.textMuted }}>{index + 1}</span>
+      <div className={circleClass}>
+        <span className={numberClass}>{index + 1}</span>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: "3px" }}>
+      <div className="progress-step__label-row">
         {done && (
-          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0 }}>
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" className="progress-step__check">
             <path d="M2 6l3 3 5-5" stroke={T.color.accent} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         )}
-        <span style={{
-          fontSize: T.fontSize.xs,
-          fontWeight: active ? T.fontWeight.semibold : T.fontWeight.regular,
-          color: active ? T.color.textPrimary : done ? T.color.accent : T.color.textMuted,
-          whiteSpace: "nowrap",
-          transition: `color ${T.duration.normal} ${T.easing.smooth}`,
-        }}>{label}</span>
+        <span className={labelClass}>{label}</span>
       </div>
     </div>
   )
@@ -77,52 +83,41 @@ export default function ProgressBar({ steps, current, maxReached, onStepClick }:
     visible.push(current)
     if (hasNext) visible.push(nextIdx)
 
-    const navText = (label: string, show: boolean, active: boolean, onClick: () => void) => (
-      <span
-        onClick={show && active ? onClick : undefined}
-        style={{
-          fontSize: T.fontSize.xs,
-          fontWeight: T.fontWeight.semibold,
-          color: T.color.textMuted,
-          cursor: show && active ? "pointer" : "default",
-          opacity: !show ? 0 : active ? 1 : 0.3,
-          flexShrink: 0,
-          userSelect: "none",
-          marginTop: "6px",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {label}
-      </span>
-    )
+    const navArrowClass = (show: boolean, active: boolean) => [
+      "progress-nav-arrow",
+      show && active ? "progress-nav-arrow--clickable" : "",
+      !show          ? "progress-nav-arrow--hidden"    : "",
+      show && !active? "progress-nav-arrow--disabled"  : "",
+    ].filter(Boolean).join(" ")
 
     return (
-      <div style={{ display: "flex", alignItems: "flex-start", gap: T.space["3"], width: "100%" }}>
-        {navText("<", hasPrev, true, () => onStepClick?.(prevIdx))}
+      <div className="progress-bar--mobile">
+        <span
+          className={navArrowClass(hasPrev, true)}
+          onClick={hasPrev ? () => onStepClick?.(prevIdx) : undefined}
+        >&lt;</span>
 
-        <div style={{ flex: 1, display: "flex", alignItems: "flex-start" }}>
+        <div className="progress-bar__steps">
           {visible.map((i, vi) => (
             <Fragment key={i}>
               {vi > 0 && (
-                <div style={{
-                  flex: 1, height: "2px", marginTop: "13px",
-                  background: visible[vi - 1] < highWater ? T.color.accent : T.color.border,
-                  borderRadius: "1px",
-                  transition: `background ${T.duration.slow} ${T.easing.smooth}`,
-                }} />
+                <div className={`progress-connector${visible[vi - 1] < highWater ? " progress-connector--done" : ""}`} />
               )}
               <StepDot index={i} current={current} highWater={highWater} hovered={hovered} onStepClick={onStepClick} onHover={setHovered} label={steps[i]} />
             </Fragment>
           ))}
         </div>
 
-        {navText(">", hasNext, nextReady, () => onStepClick?.(nextIdx))}
+        <span
+          className={navArrowClass(hasNext, nextReady)}
+          onClick={hasNext && nextReady ? () => onStepClick?.(nextIdx) : undefined}
+        >&gt;</span>
       </div>
     )
   }
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: T.space["3"], width: "100%" }}>
+    <div className="progress-bar">
       {steps.map((label, i) => {
         const done      = i !== current && (i < current || i <= highWater)
         const active    = i === current
@@ -131,42 +126,38 @@ export default function ProgressBar({ steps, current, maxReached, onStepClick }:
         return (
           <Fragment key={i}>
             <div
+              className={`progress-step${clickable ? " progress-step--clickable" : ""}`}
               onClick={clickable ? () => onStepClick(i) : undefined}
               onMouseEnter={() => clickable && setHovered(i)}
               onMouseLeave={() => setHovered(null)}
-              style={{
-                display: "flex", flexDirection: "column", alignItems: "center", gap: T.space["1"],
-                cursor: clickable ? "pointer" : "default",
-              }}
             >
-              <div style={{
-                width: "28px", height: "28px", borderRadius: T.radius.full,
-                background: done ? T.color.accent : active ? T.color.accentLight : T.color.surfaceAlt,
-                border: `2px solid ${done || active ? T.color.accent : T.color.border}`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                transition: `all ${T.duration.normal} ${T.easing.smooth}`,
-                transform: hovered === i ? "scale(1.15)" : "scale(1)",
-                boxShadow: hovered === i ? `0 0 0 3px ${T.color.accentMuted}` : "none",
-              }}>
-                <span style={{ fontSize: T.fontSize.xs, fontWeight: T.fontWeight.semibold, color: done ? T.color.textInverse : active ? T.color.accent : T.color.textMuted }}>{i + 1}</span>
+              <div className={[
+                "progress-step__circle",
+                done   ? "progress-step__circle--done"    : "",
+                active ? "progress-step__circle--active"  : "",
+                hovered === i ? "progress-step__circle--hovered" : "",
+              ].filter(Boolean).join(" ")}>
+                <span className={[
+                  "progress-step__number",
+                  done   ? "progress-step__number--done"   : "",
+                  active ? "progress-step__number--active" : "",
+                ].filter(Boolean).join(" ")}>{i + 1}</span>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "3px" }}>
+              <div className="progress-step__label-row">
                 {done && (
-                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0 }}>
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" className="progress-step__check">
                     <path d="M2 6l3 3 5-5" stroke={T.color.accent} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 )}
-                <span style={{
-                  fontSize: T.fontSize.xs,
-                  fontWeight: active ? T.fontWeight.semibold : T.fontWeight.regular,
-                  color: active ? T.color.textPrimary : done ? T.color.accent : T.color.textMuted,
-                  whiteSpace: "nowrap",
-                  transition: `color ${T.duration.normal} ${T.easing.smooth}`,
-                }}>{label}</span>
+                <span className={[
+                  "progress-step__label",
+                  active ? "progress-step__label--active" : "",
+                  done   ? "progress-step__label--done"   : "",
+                ].filter(Boolean).join(" ")}>{label}</span>
               </div>
             </div>
             {i < steps.length - 1 && (
-              <div style={{ flex: 1, height: "2px", background: i < highWater ? T.color.accent : T.color.border, borderRadius: "1px", marginBottom: "18px", transition: `background ${T.duration.slow} ${T.easing.smooth}` }} />
+              <div className={`progress-connector progress-connector--desktop${i < highWater ? " progress-connector--done" : ""}`} />
             )}
           </Fragment>
         )
