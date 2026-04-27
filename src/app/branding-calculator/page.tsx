@@ -1,9 +1,5 @@
-import BrandingCalculator from "@/components/client/BrandingCalculator"
+import LogoConfigurator from "@/components/branding/LogoConfigurator"
 
-export default function brandingCalculator(){
-  return(
-<section className="section-regular">
-  <BrandingCalculator />
-</section>
-  )
+export default function BrandingCalculatorPage() {
+  return <LogoConfigurator />
 }

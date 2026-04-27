@@ -102,6 +102,47 @@
   }
 }
 
+.ctaSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  gap: 1rem;
+  width: 100%;
+}
+
+.ctaText {
+  font-family: 'Inter', sans-serif;
+  font-size: var(--text-m);
+  color: #6b6b5c;
+  text-align: center;
+  max-width: 480px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.ctaButton {
+  font-family: 'Oswald', sans-serif;
+  font-size: var(--text-lg);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  background: transparent;
+  border: 2px solid var(--foreground);
+  padding: 0.65rem 1.75rem;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.ctaButton:hover {
+  background: var(--foreground);
+  color: var(--tan-color);
+}
+
 @media (max-width: 600px) {
   .email {
     font-size: var(--text-2xl);

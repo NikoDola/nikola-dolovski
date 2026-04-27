@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import "./BrandingCalculator.css"
+import OrderModal from "./OrderModal"
 
 interface ServiceOption {
   name: string
@@ -22,6 +23,7 @@ interface Service {
 export default function BrandingCalculator() {
   const [services, setServices] = useState<Service[]>([])
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({})
+  const [showOrder, setShowOrder] = useState(false)
   const hourlyRate = 32
 
   useEffect(() => {
@@ -122,6 +124,16 @@ export default function BrandingCalculator() {
   const totalDiscount = Object.values(categoryDiscounts).reduce((sum, discount) => sum + discount, 0)
   const grandTotal = (totalHours * hourlyRate) - totalDiscount
 
+  const selectedServicesSummary = services
+    .filter(s => s.status)
+    .map(s => ({
+      name: s.name,
+      category: s.category,
+      hours: s.options ? s.options[s.selectedOption || 0].hours : s.hours || 0,
+      option: s.options ? s.options[s.selectedOption || 0].name : undefined,
+      price: (s.options ? s.options[s.selectedOption || 0].hours : s.hours || 0) * hourlyRate,
+    }))
+
   return (
     <div className="calculator">
       <div className="header">
@@ -218,10 +230,25 @@ export default function BrandingCalculator() {
           <span>&#128181; Estimated Total:</span>
           <span>${grandTotal}</span>
         </div>
-        <button disabled className={!totalHours ? "summaryItem toggleButton off" : "summaryItem toggleButton on"}>
+        <button
+          onClick={() => setShowOrder(true)}
+          disabled={!totalHours}
+          className={!totalHours ? "summaryItem toggleButton off" : "summaryItem toggleButton on"}
+        >
           Order
         </button>
       </div>
+
+      {showOrder && (
+        <OrderModal
+          isOpen={showOrder}
+          onClose={() => setShowOrder(false)}
+          selectedServices={selectedServicesSummary}
+          totalHours={totalHours}
+          totalDiscount={totalDiscount}
+          grandTotal={grandTotal}
+        />
+      )}
     </div>
   )
 }
