@@ -86,19 +86,6 @@ export const FONT_CATEGORIES: Record<string, { label: string; fonts: FontDef[] }
       { id: "lobster",    name: "Lobster",         family: "'Lobster', cursive",        weight: 400, sample: "Fun & Retro" },
     ],
   },
-  designer: {
-    label: "Designer's Choice",
-    fonts: [
-      { id: "d-editorial", name: "Editorial Pairing", family: "'Playfair Display', serif",   weight: 700, sample: "Playfair + Raleway",    sublabel: "Serif headline · Sans body" },
-      { id: "d-modern",    name: "Modern Minimal",    family: "'Josefin Sans', sans-serif",  weight: 700, sample: "Josefin + Nunito",      sublabel: "Geometric · Rounded body" },
-      { id: "d-warm",      name: "Warm & Friendly",   family: "'Lora', serif",               weight: 600, sample: "Lora + Jakarta",        sublabel: "Serif warmth · Clean body" },
-      { id: "d-bold",      name: "Bold Impact",       family: "'Outfit', sans-serif",        weight: 700, sample: "Outfit + EB Garamond",  sublabel: "Strong sans · Classic serif" },
-      { id: "d-script",    name: "Crafted & Script",  family: "'Dancing Script', cursive",   weight: 700, sample: "Dancing + Outfit",      sublabel: "Script accent · Modern body" },
-      { id: "d-luxury",    name: "Luxury Brand",      family: "'Cormorant Garamond', serif", weight: 300, sample: "Cormorant + Montserrat",sublabel: "Ultra-thin serif · Geometric" },
-      { id: "d-tech",      name: "Tech Forward",      family: "'Manrope', sans-serif",       weight: 700, sample: "Manrope + Jost",        sublabel: "Technical · Futuristic body" },
-      { id: "d-craft",     name: "Artisan Craft",     family: "'Caveat', cursive",           weight: 700, sample: "Caveat + Lora",         sublabel: "Handmade accent · Warm serif" },
-    ],
-  },
 }
 
 /* eslint-disable @typescript-eslint/no-unused-vars */

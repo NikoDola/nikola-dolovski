@@ -3,10 +3,42 @@ import { useState } from "react"
 import SummaryRow from "../shared/SummaryRow"
 import BackButton from "../shared/BackButton"
 import Button from "../shared/Button"
+import TextInput from "../shared/TextInput"
 import { BRAND_SERVICES, VARIATION_LABELS, COLOR_FAMILIES, FONT_CATEGORIES } from "../data"
 import { calcTotal, calcDeposit, calcBrandGuidelinesPrice } from "../utils"
 import type { Order } from "../types"
 import "./SummaryScreen.css"
+
+function openDB(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open("BrandingCalculator", 1)
+    req.onupgradeneeded = () => {
+      const db = req.result
+      if (!db.objectStoreNames.contains("orders")) {
+        db.createObjectStore("orders", { keyPath: "id" })
+      }
+    }
+    req.onsuccess = () => resolve(req.result)
+    req.onerror = () => reject(req.error)
+  })
+}
+
+function saveOrderData(data: any): Promise<string> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const db = await openDB()
+      const tx = db.transaction(["orders"], "readwrite")
+      const store = tx.objectStore("orders")
+      const orderId = Date.now().toString()
+
+      const req = store.put({ id: orderId, ...data })
+      req.onsuccess = () => resolve(orderId)
+      req.onerror = () => reject(req.error)
+    } catch (err) {
+      reject(err)
+    }
+  })
+}
 
 function InfoTip({ text }: { text: string }) {
   const [show, setShow] = useState(false)
@@ -67,7 +99,6 @@ function BrandGuidelinesAddon({ numVariations, selected, onToggle }: { numVariat
                     <span className="brand-addon__service-label">{svc.label}</span>
                     <InfoTip text={svc.tooltip} />
                   </div>
-                  <span className="brand-addon__service-price">${svc.perVariation ? 25 * numVariations : 25}</span>
                 </div>
               ))}
             </div>
@@ -82,10 +113,7 @@ function BrandGuidelinesAddon({ numVariations, selected, onToggle }: { numVariat
 
 function PaymentOption({ label, sublabel, amount, recommended, selected, onClick }: { label: string; sublabel: string; amount: number; recommended?: boolean; selected: boolean; onClick: () => void }) {
   return (
-    <div
-      onClick={onClick}
-      className={`payment-option${selected ? " payment-option--selected" : ""}`}
-    >
+    <div onClick={onClick} className={`payment-option${selected ? " payment-option--selected" : ""}`}>
       {recommended && <div className="payment-option__badge">RECOMMENDED</div>}
       <div className="payment-option__body">
         <div>
@@ -101,10 +129,15 @@ function PaymentOption({ label, sublabel, amount, recommended, selected, onClick
   )
 }
 
-export default function SummaryScreen({ order, onBack }: { order: Order; onBack: () => void }) {
-  const [submitted, setSubmitted]     = useState(false)
-  const [payOption, setPayOption]     = useState<"deposit"|"full">("deposit")
+export default function SummaryScreen({ order, onBack, files }: { order: Order; onBack: () => void; files?: { logo: File | null; inspiration: File | null } }) {
+  const [processing, setProcessing] = useState(false)
+  const [payError, setPayError] = useState("")
+  const [payOption, setPayOption] = useState<"deposit"|"full">("deposit")
   const [addBrandGuide, setBrandGuide] = useState(false)
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [nameErr, setNameErr] = useState("")
+  const [emailErr, setEmailErr] = useState("")
 
   const numVariations   = order.variations?.length || 1
   const brandGuidePrice = addBrandGuide ? calcBrandGuidelinesPrice(numVariations) : 0
@@ -112,24 +145,6 @@ export default function SummaryScreen({ order, onBack }: { order: Order; onBack:
   const deposit         = calcDeposit(total)
   const dueNow          = payOption === "deposit" ? deposit : total
   const dueLater        = payOption === "deposit" ? total - deposit : 0
-
-  if (submitted) {
-    return (
-      <div className="screen-enter summary__success">
-        <div className="summary__success-icon">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M6 16l8 8 12-12" stroke="var(--color-accent)" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        </div>
-        <h2 className="summary__success-title">Order received!</h2>
-        <p className="summary__success-text">
-          We&apos;ll be in touch within 24 hours to confirm your project details and get started.
-        </p>
-        <a href="/" className="summary__success-link">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          Go back to home page
-        </a>
-      </div>
-    )
-  }
 
   const allFonts = Object.values(FONT_CATEGORIES).flatMap(c => c.fonts)
   const rows: [string, string][] = [
@@ -143,17 +158,58 @@ export default function SummaryScreen({ order, onBack }: { order: Order; onBack:
     ...(order.colorFamilies?.length ? [["Color palettes", order.colorFamilies.map(id => COLOR_FAMILIES.find(f => f.id === id)?.label).join(", ")] as [string,string]] : []),
     ...(order.customColors?.length ? [["Custom colors", order.customColors.join("  ")] as [string,string]] : []),
     ...(order.useSameColors ? [["Logo colors", "Using colors from uploaded logo"] as [string,string]] : []),
-    ...(order.inspirationFile ? [["Inspiration file", order.inspirationFile.name] as [string,string]] : []),
     ["Delivery", "SVG + PNG + PDF"],
     ["Revisions", "2 rounds included"],
   ]
+
+  const handlePayment = async () => {
+    let valid = true
+    if (!name.trim()) { setNameErr("Name is required"); valid = false } else setNameErr("")
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setEmailErr("Valid email is required"); valid = false } else setEmailErr("")
+    if (!valid) return
+
+    setProcessing(true)
+    setPayError("")
+
+    try {
+      const res = await fetch("/api/create-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: dueNow }),
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || "Checkout failed")
+      }
+
+      const { url } = await res.json()
+
+      const orderId = await saveOrderData({
+        order,
+        name,
+        email,
+        payOption,
+        addBrandGuide,
+        totalAmount: total,
+        logoFile: files?.logo || null,
+        inspirationFile: files?.inspiration || null,
+      })
+
+      sessionStorage.setItem("pendingOrderId", orderId)
+      window.location.href = url
+    } catch (error) {
+      setPayError(error instanceof Error ? error.message : "Payment initiation failed")
+      setProcessing(false)
+    }
+  }
 
   return (
     <div className="screen-enter">
       <BackButton onClick={onBack} />
       <div className="summary__header">
         <h1 className="summary__title">Review your order</h1>
-        <p className="summary__subtitle">Everything looks good? Choose how you&apos;d like to pay.</p>
+        <p className="summary__subtitle">Everything looks good? Choose how you'd like to pay.</p>
       </div>
 
       <div className="summary__rows">
@@ -171,6 +227,14 @@ export default function SummaryScreen({ order, onBack }: { order: Order; onBack:
         </div>
       </div>
 
+      <div className="summary__contact">
+        <div className="summary__contact-label">Your contact info</div>
+        <div className="summary__contact-grid">
+          <TextInput label="Name" placeholder="Your name" value={name} onChange={v => { setName(v); setNameErr("") }} required error={nameErr} />
+          <TextInput label="Email" placeholder="your@email.com" value={email} onChange={v => { setEmail(v); setEmailErr("") }} required error={emailErr} />
+        </div>
+      </div>
+
       <div className="summary__info-notice">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" className="summary__info-notice-icon">
           <circle cx="9" cy="9" r="8" stroke="var(--color-text-muted)" strokeWidth="1.5"/>
@@ -179,10 +243,15 @@ export default function SummaryScreen({ order, onBack }: { order: Order; onBack:
         <p className="summary__info-notice-text">We accept all major cards and bank transfers. Work begins once payment is confirmed.</p>
       </div>
 
+      {payError && <p className="summary__send-error">{payError}</p>}
+
       <div className="summary__submit-row">
-        <Button onClick={() => setSubmitted(true)} size="lg"
-          icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
-          Pay ${dueNow} Now
+        <Button onClick={handlePayment} size="lg" disabled={processing}
+          icon={processing
+            ? <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ animation: "spin 0.8s linear infinite" }}><circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.8" strokeDasharray="20 14" opacity="0.7"/></svg>
+            : <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          }>
+          {processing ? "Processing..." : `Pay $${dueNow} Now`}
         </Button>
       </div>
     </div>

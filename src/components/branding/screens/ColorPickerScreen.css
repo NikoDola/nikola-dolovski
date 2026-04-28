@@ -167,12 +167,68 @@
   align-items: center;
 }
 
+.color-picker__swatch-wrap {
+  position: relative;
+}
+
 .color-picker__custom-swatch {
   width: 36px;
   height: 36px;
   border-radius: var(--radius-md);
   border: 2px solid var(--color-border);
   cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.color-picker__custom-swatch:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.color-picker__swatch-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 300;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-1);
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.color-picker__swatch-menu-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  text-align: left;
+  transition: background 120ms ease;
+}
+
+.color-picker__swatch-menu-btn:hover {
+  background: var(--color-surface-alt);
+}
+
+.color-picker__swatch-menu-btn--delete {
+  color: var(--color-error, #d94f4f);
+}
+
+.color-picker__swatch-menu-btn--delete:hover {
+  background: #fff1f1;
 }
 
 .color-picker__custom-add {

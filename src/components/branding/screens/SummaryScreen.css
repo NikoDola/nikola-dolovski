@@ -69,6 +69,37 @@
   line-height: var(--line-height-normal);
 }
 
+/* Contact info section */
+.summary__contact {
+  margin-bottom: var(--space-6);
+}
+
+.summary__contact-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-4);
+}
+
+.summary__contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+@media (max-width: 600px) {
+  .summary__contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.summary__send-error {
+  font-size: var(--font-size-sm);
+  color: var(--color-error, #d94f4f);
+  margin-bottom: var(--space-4);
+  text-align: right;
+}
+
 .summary__submit-row {
   display: flex;
   justify-content: flex-end;
@@ -424,4 +455,12 @@
 .payment-option__radio--selected {
   border-color: var(--color-accent);
   background: var(--color-accent);
+}
+@media (max-width: 1000px){
+  .summary__payment-options{
+    flex-direction: column;
+  }
+  .brand-addon__services-grid{
+    flex-direction: column;
+  }
 }

@@ -10,10 +10,16 @@ import "./ColorPickerScreen.css"
 interface ColorInfo { colorFamilies: string[]; customColors: string[]; useSameColors: boolean }
 interface Props { onBack: () => void; onNext: (info: ColorInfo) => void; serviceType: ServiceType; submitRef?: { current: (() => void) | null } }
 
-function ColorPickerModal({ onAdd, onClose }: { onAdd: (hex: string) => void; onClose: () => void }) {
-  const [hue, setHue] = useState(210)
-  const [sat, setSat] = useState(80)
-  const [val, setVal] = useState(90)
+function ColorPickerModal({ onAdd, onClose, initialHex, mode = "add" }: {
+  onAdd: (hex: string) => void
+  onClose: () => void
+  initialHex?: string
+  mode?: "add" | "edit"
+}) {
+  const initHsv = initialHex ? (hexToHsv(initialHex) ?? { h: 210, s: 80, v: 90 }) : { h: 210, s: 80, v: 90 }
+  const [hue, setHue] = useState(initHsv.h)
+  const [sat, setSat] = useState(initHsv.s)
+  const [val, setVal] = useState(initHsv.v)
   const [hexIn, setHexIn] = useState("")
   const [hexErr, setHexErr] = useState("")
   const squareRef = useRef<HTMLDivElement>(null)
@@ -46,7 +52,7 @@ function ColorPickerModal({ onAdd, onClose }: { onAdd: (hex: string) => void; on
   return (
     <div ref={popupRef} className="color-picker__modal">
       <div className="color-picker__modal-header">
-        <span className="color-picker__modal-title">Select a color</span>
+        <span className="color-picker__modal-title">{mode === "edit" ? "Edit color" : "Select a color"}</span>
         <button onClick={onClose} className="color-picker__modal-close">
           <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1 1l7 7M8 1L1 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
         </button>
@@ -104,9 +110,34 @@ function ColorPickerModal({ onAdd, onClose }: { onAdd: (hex: string) => void; on
             className="color-picker__hex-input"
           />
         </div>
-        <Button onClick={handleAdd} size="sm">Add</Button>
+        <Button onClick={handleAdd} size="sm">{mode === "edit" ? "Save" : "Add"}</Button>
       </div>
       {hexErr && <div className="color-picker__hex-error">{hexErr}</div>}
+    </div>
+  )
+}
+
+function SwatchMenu({ onEdit, onDelete, onClose }: { onEdit: () => void; onDelete: () => void; onClose: () => void }) {
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const onOut = (e: MouseEvent) => { if (menuRef.current && !menuRef.current.contains(e.target as Node)) onClose() }
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
+    document.addEventListener("mousedown", onOut)
+    window.addEventListener("keydown", onKey)
+    return () => { document.removeEventListener("mousedown", onOut); window.removeEventListener("keydown", onKey) }
+  }, [onClose])
+
+  return (
+    <div ref={menuRef} className="color-picker__swatch-menu">
+      <button onClick={onEdit} className="color-picker__swatch-menu-btn">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M9.5 1.5a1.5 1.5 0 0 1 2.12 2.12L4.5 10.75l-3 .75.75-3L9.5 1.5Z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        Edit color
+      </button>
+      <button onClick={onDelete} className="color-picker__swatch-menu-btn color-picker__swatch-menu-btn--delete">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 3.5h9M5 3.5V2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1M10 3.5l-.7 7a.5.5 0 0 1-.5.5H4.2a.5.5 0 0 1-.5-.5L3 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        Delete
+      </button>
     </div>
   )
 }
@@ -117,12 +148,43 @@ export default function ColorPickerScreen({ onBack, onNext, serviceType, submitR
   const [useSameColors, setUseSame] = useState(false)
   const [customColors, setCustom]   = useState<string[]>([])
   const [showPicker, setShowPicker] = useState(false)
+  const [swatchMenu, setSwatchMenu] = useState<number | null>(null)
+  const [editingIndex, setEditingIndex] = useState<number | null>(null)
+
+  const pickerScrolledRef = useRef(false)
 
   const toggle = (id: string) => setSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : prev.length >= MAX_COLORS ? prev : [...prev, id])
 
   useEffect(() => {
     if (submitRef) submitRef.current = () => onNext({ colorFamilies: selected, customColors, useSameColors })
   })
+
+  useEffect(() => {
+    if (showPicker && window.innerWidth < 1000) {
+      window.scrollBy({ top: 100, behavior: "smooth" })
+      pickerScrolledRef.current = true
+    } else if (!showPicker) {
+      pickerScrolledRef.current = false
+    }
+  }, [showPicker])
+
+  const handleColorAdded = (hex: string) => {
+    if (pickerScrolledRef.current && window.innerWidth < 1000) {
+      window.scrollBy({ top: -100, behavior: "smooth" })
+    }
+    if (editingIndex !== null) {
+      setCustom(c => c.map((col, i) => i === editingIndex ? hex : col))
+      setEditingIndex(null)
+    } else {
+      setCustom(c => [...c, hex])
+    }
+    setShowPicker(false)
+  }
+
+  const handlePickerClose = () => {
+    setEditingIndex(null)
+    setShowPicker(false)
+  }
 
   return (
     <div className="screen-enter">
@@ -151,6 +213,37 @@ export default function ColorPickerScreen({ onBack, onNext, serviceType, submitR
         </div>
       )}
 
+      <div className="color-picker__custom">
+        <div className="color-picker__custom-label">Custom colors</div>
+        <div className="color-picker__custom-row">
+          {customColors.map((hex, i) => (
+            <div key={i} className="color-picker__swatch-wrap">
+              <div
+                className="color-picker__custom-swatch"
+                style={{ background: hex }}
+                onClick={() => { setSwatchMenu(swatchMenu === i ? null : i); setShowPicker(false); setEditingIndex(null) }}
+              />
+              {swatchMenu === i && (
+                <SwatchMenu
+                  onEdit={() => { setSwatchMenu(null); setEditingIndex(i); setShowPicker(true) }}
+                  onDelete={() => { setSwatchMenu(null); setCustom(c => c.filter((_, j) => j !== i)) }}
+                  onClose={() => setSwatchMenu(null)}
+                />
+              )}
+            </div>
+          ))}
+          <button onClick={() => { setShowPicker(v => !v); setSwatchMenu(null); setEditingIndex(null) }} className="color-picker__custom-add">+</button>
+        </div>
+        {showPicker && (
+          <ColorPickerModal
+            onAdd={handleColorAdded}
+            onClose={handlePickerClose}
+            initialHex={editingIndex !== null ? customColors[editingIndex] : undefined}
+            mode={editingIndex !== null ? "edit" : "add"}
+          />
+        )}
+      </div>
+
       <div className="color-picker__grid">
         {COLOR_FAMILIES.map((family) => {
           const sel = selected.includes(family.id)
@@ -178,23 +271,6 @@ export default function ColorPickerScreen({ onBack, onNext, serviceType, submitR
             </div>
           )
         })}
-      </div>
-
-      <div className="color-picker__custom">
-        <div className="color-picker__custom-label">Custom colors</div>
-        <div className="color-picker__custom-row">
-          {customColors.map((hex, i) => (
-            <div
-              key={i}
-              className="color-picker__custom-swatch"
-              style={{ background: hex }}
-              onClick={() => setCustom(c => c.filter((_, j) => j !== i))}
-              title="Click to remove"
-            />
-          ))}
-          <button onClick={() => setShowPicker(v => !v)} className="color-picker__custom-add">+</button>
-        </div>
-        {showPicker && <ColorPickerModal onAdd={hex => { setCustom(c => [...c, hex]); setShowPicker(false) }} onClose={() => setShowPicker(false)} />}
       </div>
 
     </div>

@@ -9,16 +9,13 @@ export interface Order {
   variations:     string[]
   companyName?:   string
   tagline?:       string
-  estYear?:       string
   description?:   string
-  file?:          File | null
   styles?:        string[]
-  inspirationFile?: File | null
+  pinterestUrl?:  string
   typographyType?:  "custom" | "free" | null
   customPrice?:     number
   selectedFonts?:   string[]
-  uploadedFont?:    File | null
-  fontName?:        string
+  fontLinks?:       string[]
   sameBrandFont?:   boolean
   colorFamilies?:   string[]
   customColors?:    string[]

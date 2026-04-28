@@ -52,6 +52,18 @@ const NEXT_LABEL: Partial<Record<Screen, string>> = {
 
 export type SubmitRef = { current: (() => void) | null }
 
+async function testFirebase() {
+  try {
+    const res = await fetch("/api/test-firebase")
+    const data = await res.json()
+    console.log("Firebase Test Result:", data)
+    alert(JSON.stringify(data, null, 2))
+  } catch (err) {
+    console.error("Firebase test failed:", err)
+    alert("Firebase test failed: " + (err instanceof Error ? err.message : String(err)))
+  }
+}
+
 export default function LogoConfigurator() {
   const [screen, setScreen]           = useState<Screen>("service")
   const [serviceType, setServiceType] = useState<ServiceType>(null)
@@ -61,6 +73,7 @@ export default function LogoConfigurator() {
   const [uploadInfo, setUploadInfo]   = useState({})
   const [colorInfo, setColorInfo]     = useState({})
   const [typographyInfo, setTypoInfo] = useState({})
+  const [files, setFiles]             = useState<{ logo: File | null; inspiration: File | null }>({ logo: null, inspiration: null })
 
   const submitRef = useRef<(() => void) | null>(null)
   const [nextDisabled, setNextDisabled] = useState(true)
@@ -68,7 +81,7 @@ export default function LogoConfigurator() {
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 640)
+    const check = () => setIsMobile(window.innerWidth < 1000)
     check()
     window.addEventListener("resize", check)
     return () => window.removeEventListener("resize", check)
@@ -140,6 +153,24 @@ export default function LogoConfigurator() {
   return (
     <div className="lc-root">
 
+      {/* Test Firebase Button (for debugging) */}
+      <div style={{ position: "fixed", top: "10px", right: "10px", zIndex: 9999 }}>
+        <button
+          onClick={testFirebase}
+          style={{
+            padding: "8px 12px",
+            fontSize: "12px",
+            background: "#ff6b6b",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          🧪 Test Firebase
+        </button>
+      </div>
+
       {/* Main content */}
       <main className="lc-main">
         <div className="lc-main__inner">
@@ -154,7 +185,7 @@ export default function LogoConfigurator() {
           )}
 
           {screen === "upload" && (
-            <UploadScreen submitRef={submitRef} onBack={() => window.history.back()} onNext={info => { setUploadInfo(info); navigateTo("style-red") }} />
+            <UploadScreen submitRef={submitRef} onBack={() => window.history.back()} onNext={info => { setUploadInfo(info); setFiles(prev => ({ ...prev, logo: info.file || null })); navigateTo("style-red") }} />
           )}
 
           {screen === "style-red" && (
@@ -187,7 +218,7 @@ export default function LogoConfigurator() {
           )}
 
           {screen === "summary" && (
-            <SummaryScreen order={order} onBack={() => window.history.back()} />
+            <SummaryScreen order={order} onBack={() => window.history.back()} files={files} />
           )}
         </div>
       </main>

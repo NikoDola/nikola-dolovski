@@ -11,19 +11,19 @@
   width: 100%;
 }
 
-/* Mobile wrapper stacks progress above the nav arrows */
+/* Mobile: all steps in a row, only active label shown */
 .progress-bar--mobile {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-3);
   width: 100%;
 }
 
-/* Inner flex row that holds the visible steps + connectors */
-.progress-bar__steps {
-  flex: 1;
-  display: flex;
-  align-items: flex-start;
+/* Reserve space under each circle so active label doesn't shift layout */
+.progress-step__label-row--mobile {
+  height: 16px;
+  min-width: 0;
+  overflow: visible;
+  white-space: nowrap;
 }
 
 /* --- Step item --- */
@@ -139,27 +139,3 @@
   background: var(--color-accent);
 }
 
-/* --- Mobile nav arrows (< >) --- */
-
-.progress-nav-arrow {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-muted);
-  cursor: default;
-  flex-shrink: 0;
-  user-select: none;
-  margin-top: 6px;
-  white-space: nowrap;
-}
-
-.progress-nav-arrow--clickable {
-  cursor: pointer;
-}
-
-.progress-nav-arrow--hidden {
-  opacity: 0;
-}
-
-.progress-nav-arrow--disabled {
-  opacity: 0.3;
-}

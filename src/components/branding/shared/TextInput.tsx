@@ -42,12 +42,7 @@ export default function TextInput({ label, placeholder, value, onChange, require
             className={fieldClassName} />
       }
       {error && <span className="text-input__error">{error}</span>}
-      {note && (
-        <div className="text-input__note">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="text-input__note-icon"><circle cx="7" cy="7" r="6" stroke={T.color.accent} strokeWidth="1.4"/><path d="M7 6v4M7 4.5v.5" stroke={T.color.accent} strokeWidth="1.4" strokeLinecap="round"/></svg>
-          <span className="text-input__note-text">{note}</span>
-        </div>
-      )}
+
     </div>
   )
 }

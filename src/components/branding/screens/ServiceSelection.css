@@ -51,3 +51,9 @@
   gap: var(--space-5);
   margin-bottom: var(--space-10);
 }
+
+@media (max-width: 760px) {
+  .service-sel__cards {
+    flex-direction: column;
+  }
+}

@@ -5,17 +5,17 @@ import UploadZone from "../shared/UploadZone"
 import BackButton from "../shared/BackButton"
 import "./UploadScreen.css"
 
-interface UploadInfo { companyName: string; tagline: string; estYear: string; description: string; file: File | null }
+interface UploadInfo { companyName: string; tagline: string; description: string; file: File | null }
 interface Props { onBack: () => void; onNext: (info: UploadInfo) => void; submitRef?: { current: (() => void) | null } }
 
 export default function UploadScreen({ onBack, onNext, submitRef }: Props) {
-  const [file, setFile]           = useState<File | null>(null)
   const [companyName, setCompany] = useState("")
   const [tagline, setTagline]     = useState("")
-  const [estYear, setEstYear]     = useState("")
+  const [description, setDesc]    = useState("")
+  const [file, setFile]           = useState<File | null>(null)
 
   useEffect(() => {
-    if (submitRef) submitRef.current = () => onNext({ companyName, tagline, estYear, description: "", file })
+    if (submitRef) submitRef.current = () => onNext({ companyName, tagline, description, file })
   })
 
   return (
@@ -26,27 +26,42 @@ export default function UploadScreen({ onBack, onNext, submitRef }: Props) {
           Tell us about your brand
         </h1>
         <p className="upload__subtitle">
-          Share your current logo and some basic details so we know what we&apos;re working with.
+          Share a few details about your company so we understand what we&apos;re working with before we begin.
         </p>
       </div>
 
       <div className="upload__fields">
-        <TextInput label="Company Name" placeholder="e.g. Apex Studio" value={companyName}
-          onChange={setCompany} />
+        <TextInput label="Company Name" placeholder="e.g. Apex Studio" value={companyName} onChange={setCompany} />
         <TextInput label="Tagline" placeholder="e.g. Crafting tomorrow's brands" value={tagline} onChange={setTagline} hint="Optional" />
-        <TextInput label="Established Year" placeholder="e.g. 2019" value={estYear} onChange={setEstYear} hint="Optional"
-          note="This will only appear in your logo if you choose to include it." />
+      </div>
+
+      <div className="upload__desc-block">
+        <label className="upload__desc-label">
+          About your company
+          <span className="upload__desc-label-badge">Recommended</span>
+        </label>
+        <p className="upload__desc-hint">
+          Tell us what you do, who your audience is, your values, and the feeling you want your logo to convey.
+        </p>
+        <textarea
+          value={description}
+          onChange={e => setDesc(e.target.value)}
+          rows={5}
+          placeholder="e.g. We're a boutique creative studio focused on sustainable brands..."
+          className="upload__textarea"
+        />
       </div>
 
       <div className="upload__zone-block">
-        <div className="upload__zone-label">
-          Current Logo
-        </div>
+        <div className="upload__zone-label">Current Logo</div>
         <UploadZone file={file} onFile={setFile} />
       </div>
 
       <div className="upload__tips">
-        {[["Preferred", "SVG, AI, EPS, PDF — vector formats give the best results"], ["Accepted", "JPG, PNG — raster files work too; higher resolution is better"]].map(([label, tip]) => (
+        {[
+          ["Preferred", "SVG, AI, EPS, PDF — vector formats give the best results"],
+          ["Accepted",  "JPG, PNG — raster files work too; higher resolution is better"],
+        ].map(([label, tip]) => (
           <div key={label} className="upload__tip">
             <div className="upload__tip-label">✦ {label}</div>
             <div className="upload__tip-text">{tip}</div>

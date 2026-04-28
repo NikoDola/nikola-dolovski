@@ -4,17 +4,16 @@ import TextInput from "../shared/TextInput"
 import BackButton from "../shared/BackButton"
 import "./BrandInfoScreen.css"
 
-interface BrandInfo { companyName: string; tagline: string; estYear: string; description: string }
+interface BrandInfo { companyName: string; tagline: string; description: string }
 interface Props { onBack: () => void; onNext: (info: BrandInfo) => void; submitRef?: { current: (() => void) | null } }
 
 export default function BrandInfoScreen({ onBack, onNext, submitRef }: Props) {
   const [companyName, setCompany] = useState("")
   const [tagline, setTagline]     = useState("")
-  const [estYear, setEstYear]     = useState("")
   const [description, setDesc]    = useState("")
 
   useEffect(() => {
-    if (submitRef) submitRef.current = () => onNext({ companyName, tagline, estYear, description })
+    if (submitRef) submitRef.current = () => onNext({ companyName, tagline, description })
   })
 
   return (
@@ -33,8 +32,6 @@ export default function BrandInfoScreen({ onBack, onNext, submitRef }: Props) {
         <TextInput label="Company Name" placeholder="e.g. Apex Studio" value={companyName}
           onChange={setCompany} />
         <TextInput label="Tagline" placeholder="e.g. Crafting tomorrow's brands" value={tagline} onChange={setTagline} hint="Optional" />
-        <TextInput label="Established Year" placeholder="e.g. 2019" value={estYear} onChange={setEstYear} hint="Optional"
-          note="This will only appear in your logo if you'd like it to — leave it blank to keep things clean." />
       </div>
 
       <div className="brand-info__desc-block">

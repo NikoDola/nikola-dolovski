@@ -17,58 +17,87 @@
   line-height: var(--line-height-normal);
 }
 
-.style-picker__upload {
+/* ─── Inspiration section ───────────────────────────────── */
+.style-picker__inspiration {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  margin-bottom: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.style-picker__inspiration-pinterest {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
-  background: var(--color-surface);
-  border: 1.5px dashed var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
-  cursor: pointer;
-  margin-bottom: var(--space-6);
-  transition: all 180ms ease;
+  gap: var(--space-3);
 }
 
-.style-picker__upload--active {
-  background: var(--color-accent-light);
-  border-color: var(--color-accent);
-}
-
-.style-picker__upload-icon {
-  width: 40px;
-  height: 40px;
+.style-picker__inspiration-pinterest-icon {
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-md);
-  background: var(--color-surface-alt);
-  border: 1px solid var(--color-border);
+  background: #fff0f0;
+  border: 1px solid #ffd0d0;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 
-.style-picker__upload-icon--active {
-  background: var(--color-accent);
-}
-
-.style-picker__upload-body {
-  flex: 1;
-}
-
-.style-picker__upload-title {
-  font-size: var(--font-size-base);
+.style-picker__inspiration-pinterest-label {
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
 }
 
-.style-picker__upload-title--active {
-  color: var(--color-accent);
-}
-
-.style-picker__upload-hint {
+.style-picker__inspiration-pinterest-hint {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
   margin-top: 2px;
+  line-height: var(--line-height-normal);
+}
+
+.style-picker__inspiration-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.style-picker__inspiration-divider::before,
+.style-picker__inspiration-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.style-picker__inspiration-email {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-normal);
+}
+
+.style-picker__inspiration-email svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.style-picker__inspiration-email-link {
+  color: var(--color-accent);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+}
+
+.style-picker__inspiration-email-link:hover {
+  text-decoration: underline;
 }
 
 .style-picker__selection-bar {
