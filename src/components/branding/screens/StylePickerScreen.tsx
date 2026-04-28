@@ -65,8 +65,9 @@ function LogoStyleCard({ logo, selected, onClick, dimmed }: { logo: LogoAsset; s
   )
 }
 
-const MAX_SELECT = 6
-const BATCH_SIZE = 6
+const MAX_SELECT  = 6
+const BATCH_SIZE  = 6
+const LOGO_BATCH  = 9
 
 const ALL_PRESETS = [
   ...STYLE_PRESETS,
@@ -92,6 +93,7 @@ export default function StylePickerScreen({ onBack, onNext, submitRef }: Props) 
   const [visibleCount, setVisibleCount]       = useState(BATCH_SIZE)
   const [logoAssets, setLogoAssets]           = useState<LogoAsset[]>([])
   const fileInputRef                          = useRef<HTMLInputElement>(null)
+  const logoAssetsRef                         = useRef<LogoAsset[]>([])
 
   useEffect(() => {
     if (submitRef) submitRef.current = () => onNext({ styles: selected, pinterestUrl, inspirationFile })
@@ -100,7 +102,12 @@ export default function StylePickerScreen({ onBack, onNext, submitRef }: Props) 
   useEffect(() => {
     fetch("/company-assets/logos.json")
       .then(r => r.json())
-      .then((data: LogoAsset[]) => setLogoAssets((data || []).filter(l => l.displayInStyleScreen)))
+      .then((data: LogoAsset[]) => {
+        const visible = (data || []).filter(l => l.displayInStyleScreen)
+        logoAssetsRef.current = visible
+        if (visible.length > 0) setVisibleCount(LOGO_BATCH)
+        setLogoAssets(visible)
+      })
       .catch(() => {})
   }, [])
 
@@ -118,9 +125,9 @@ export default function StylePickerScreen({ onBack, onNext, submitRef }: Props) 
   }
 
   const useLogos = logoAssets.length > 0
-  const displayItems = useLogos ? logoAssets : ALL_PRESETS
-  const visiblePresets = useLogos ? logoAssets : ALL_PRESETS.slice(0, visibleCount)
-  const hasMore = !useLogos && visibleCount < displayItems.length
+  const sourceItems = useLogos ? logoAssets : ALL_PRESETS
+  const visiblePresets = sourceItems.slice(0, visibleCount)
+  const hasMore = visibleCount < sourceItems.length
 
   return (
     <div className="screen-enter">
@@ -237,7 +244,10 @@ export default function StylePickerScreen({ onBack, onNext, submitRef }: Props) 
               if (loadingMore) return
               setLoadingMore(true)
               setTimeout(() => {
-                setVisibleCount(c => Math.min(c + BATCH_SIZE, ALL_PRESETS.length))
+                const logos = logoAssetsRef.current
+                const batch = logos.length > 0 ? LOGO_BATCH : BATCH_SIZE
+                const total = logos.length > 0 ? logos.length : ALL_PRESETS.length
+                setVisibleCount(c => Math.min(c + batch, total))
                 setLoadingMore(false)
               }, 800)
             }}
