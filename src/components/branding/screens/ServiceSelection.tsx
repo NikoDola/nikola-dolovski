@@ -54,11 +54,12 @@ export default function ServiceSelection({ onSelect, submitRef, setNextDisabled 
       </div>
 
       <div className="hiw">
-        <div className="hiw__eyebrow">Simple process. No risk. Clear pricing</div>
+        
         <h2 className="hiw__title">How it Works</h2>
+        <div className="hiw__eyebrow">Simple process. No risk. Clear pricing</div>
         <div className="hiw__grid">
           {[
-            { n: 1, heading: "Fill out the order form",    body: "Tell us about your brand, pick your style direction, color palette, and variations. The whole thing takes about 3 minutes." },
+            { n: 1, heading: "Fill out the order form",    body: "Choose logo design or redesign, and tell us about your brand, pick your style direction, color palette, and variations. The whole thing takes about 3 minutes." },
             { n: 2, heading: "Pay a 35% deposit",          body: "You only pay 35% upfront to get started. The remaining balance is due when your logo is ready for delivery." },
             { n: 3, heading: "We get to work",             body: "Your brief lands in our studio and we start designing. We study your brand, competitors, and target audience before touching the pen." },
             { n: 4, heading: "First draft delivery",       body: "You receive your first logo concept within 5 business days, delivered as a clean presentation with full context and reasoning." },

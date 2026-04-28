@@ -3,6 +3,8 @@ import { useSearchParams } from "next/navigation"
 import { useEffect, useState, useCallback, Suspense } from "react"
 import Link from "next/link"
 import type { Order } from "@/components/branding/types"
+import "@/components/branding/tokens.css"
+import "./page.css"
 
 interface PendingOrderData {
   order: Order
@@ -69,17 +71,12 @@ function PaymentSuccessContent() {
   const submitOrder = useCallback(async () => {
     try {
       const pendingOrderId = sessionStorage.getItem("pendingOrderId")
-      if (!pendingOrderId) {
-        throw new Error("Order data not found")
-      }
+      if (!pendingOrderId) throw new Error("Order data not found")
 
       const orderData = await getOrderData(pendingOrderId)
-      if (!orderData) {
-        throw new Error("Order data not found in storage")
-      }
+      if (!orderData) throw new Error("Order data not found in storage")
 
       const formData = new FormData()
-
       formData.append("sessionId", sessionId!)
       formData.append("companyName", orderData.order.companyName || "")
       formData.append("tagline", orderData.order.tagline || "")
@@ -98,30 +95,16 @@ function PaymentSuccessContent() {
       formData.append("pinterestUrl", orderData.order.pinterestUrl || "")
       formData.append("totalAmount", String(orderData.totalAmount || 0))
 
-      if (orderData.logoFile instanceof File) {
-        formData.append("logoFile", orderData.logoFile)
-      }
+      if (orderData.logoFile instanceof File) formData.append("logoFile", orderData.logoFile)
+      if (orderData.inspirationFile instanceof File) formData.append("inspirationFile", orderData.inspirationFile)
 
-      if (orderData.inspirationFile instanceof File) {
-        formData.append("inspirationFile", orderData.inspirationFile)
-      }
-
-      const res = await fetch("/api/submit-order", {
-        method: "POST",
-        body: formData,
-      })
-
+      const res = await fetch("/api/submit-order", { method: "POST", body: formData })
       const result = await res.json()
-
-      if (!res.ok) {
-        throw new Error(result.error || "Failed to submit order")
-      }
+      if (!res.ok) throw new Error(result.error || "Failed to submit order")
 
       setOrderId(result.orderId)
-
       sessionStorage.removeItem("pendingOrderId")
       await deleteOrderData(pendingOrderId)
-
       setIsSubmitting(false)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Order submission failed")
@@ -130,61 +113,88 @@ function PaymentSuccessContent() {
   }, [sessionId])
 
   useEffect(() => {
-    if (!sessionId) {
-      setError("Invalid session")
-      setIsSubmitting(false)
-      return
-    }
-
+    if (!sessionId) { setError("Invalid session"); setIsSubmitting(false); return }
     submitOrder()
   }, [sessionId, submitOrder])
 
+  if (isSubmitting) {
+    return (
+      <div className="ps-page">
+        <div className="ps-card">
+          <div className="ps-icon ps-icon--loading">
+            <svg className="ps-spinner" width="28" height="28" viewBox="0 0 28 28" fill="none">
+              <circle cx="14" cy="14" r="11" stroke="var(--color-border)" strokeWidth="2.5"/>
+              <path d="M14 3a11 11 0 0 1 11 11" stroke="var(--color-accent)" strokeWidth="2.5" strokeLinecap="round"/>
+            </svg>
+          </div>
+          <p className="ps-loading-text">Confirming your payment and saving your order...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="ps-page">
+        <div className="ps-card">
+          <div className="ps-icon ps-icon--error">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+              <path d="M7 7l14 14M21 7L7 21" stroke="#C0392B" strokeWidth="2.2" strokeLinecap="round"/>
+            </svg>
+          </div>
+          <h1 className="ps-title">Something went wrong</h1>
+          <div className="ps-error-msg">{error}</div>
+          <Link href="/branding-calculator" className="ps-btn ps-btn--primary">
+            Try again
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
-        {isSubmitting ? (
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-full bg-gray-100">
-              <svg className="w-6 h-6 text-gray-600 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-              </svg>
-            </div>
-            <p className="text-gray-600">Processing your order...</p>
-          </div>
-        ) : error ? (
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-full bg-red-100">
-              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Oops!</h1>
-            <p className="text-gray-600 mb-6">{error}</p>
-            <Link href="/branding-calculator" className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-              Try Again
-            </Link>
-          </div>
-        ) : (
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-full bg-green-100">
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Payment Successful!</h1>
-            <p className="text-gray-600 mb-2">Your order has been received.</p>
-            <p className="text-sm text-gray-500 mb-6">
-              Order ID: <span className="font-mono font-semibold">{orderId}</span>
-            </p>
-            <p className="text-gray-600 mb-6">
-              We&apos;ll contact you shortly to confirm project details and get started.
-            </p>
-            <Link href="/" className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-              Return Home
-            </Link>
+    <div className="ps-page">
+      <div className="ps-card">
+        <div className="ps-icon ps-icon--success">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M6 14l6 6 10-10" stroke="var(--color-success)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+
+        <div className="ps-badge">
+          <div className="ps-badge-dot" />
+          <span className="ps-badge-label">Order Confirmed</span>
+        </div>
+
+        <h1 className="ps-title">Payment successful</h1>
+        <p className="ps-subtitle">Your order is in. We&apos;ll take it from here.</p>
+
+        {orderId && (
+          <div className="ps-order-id">
+            Order ID: <span className="ps-order-id-value">{orderId}</span>
           </div>
         )}
+
+        <div className="ps-steps">
+          <div className="ps-step">
+            <div className="ps-step-num">1</div>
+            <span>Check your inbox for a confirmation email with your order details.</span>
+          </div>
+          <div className="ps-step">
+            <div className="ps-step-num">2</div>
+            <span>We&apos;ll review your brief and reach out within 1 business day to align on any details.</span>
+          </div>
+          <div className="ps-step">
+            <div className="ps-step-num">3</div>
+            <span>Your first logo concept will be delivered within 5 business days.</span>
+          </div>
+        </div>
+
+        <Link href="/" className="ps-btn ps-btn--primary">
+          Back to homepage
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </Link>
       </div>
     </div>
   )
@@ -192,7 +202,13 @@ function PaymentSuccessContent() {
 
 export default function PaymentSuccess() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><p className="text-gray-600">Loading...</p></div>}>
+    <Suspense fallback={
+      <div className="ps-page">
+        <div className="ps-card">
+          <p className="ps-loading-text">Loading...</p>
+        </div>
+      </div>
+    }>
       <PaymentSuccessContent />
     </Suspense>
   )

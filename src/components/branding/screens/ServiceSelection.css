@@ -70,7 +70,7 @@
   color: var(--color-accent);
   letter-spacing: var(--letter-spacing-wider);
   text-transform: uppercase;
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-8);
 }
 
 .hiw__title {
@@ -95,11 +95,7 @@
   }
 }
 
-@media (max-width: 560px) {
-  .hiw__grid {
-    grid-template-columns: 1fr;
-  }
-}
+
 
 .hiw__step {
   display: flex;

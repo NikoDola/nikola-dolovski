@@ -9,6 +9,62 @@ import "./StylePickerScreen.css"
 interface StyleInfo { styles: string[]; pinterestUrl: string; inspirationFile: File | null }
 interface Props { onBack: () => void; onNext: (info: StyleInfo) => void; submitRef?: { current: (() => void) | null } }
 
+interface LogoAsset {
+  id: string; url: string; title: string; designer: string; displayInStyleScreen: boolean
+  age: string; materialism: string; formStyle: string; obviousAbstract: string
+  negativeSpace: string; era: string; gender: string; colorCount: string; logoType: string; complexity: string
+}
+
+function deriveTags(logo: LogoAsset): string[] {
+  const t: string[] = []
+  if (logo.logoType && logo.logoType !== "Logo") t.push(logo.logoType)
+  if (logo.age === "youthful")             t.push("Youthful")
+  if (logo.age === "mature")               t.push("Mature")
+  if (logo.materialism === "luxury")       t.push("Luxury")
+  if (logo.materialism === "economical")   t.push("Budget-friendly")
+  if (logo.formStyle === "geometric")      t.push("Geometric")
+  if (logo.formStyle === "organic")        t.push("Organic")
+  if (logo.obviousAbstract === "obvious")  t.push("Obvious")
+  if (logo.obviousAbstract === "abstract") t.push("Abstract")
+  if (logo.negativeSpace === "yes")        t.push("Neg. Space")
+  if (logo.era === "vintage")              t.push("Vintage")
+  if (logo.gender === "manly")             t.push("Masculine")
+  if (logo.gender === "feminine")          t.push("Feminine")
+  if (logo.colorCount === "1 color")       t.push("Mono")
+  if (logo.colorCount === "4+ colors")     t.push("Colorful")
+  if (logo.complexity === "minimal")       t.push("Minimal")
+  if (logo.complexity === "complex")       t.push("Complex")
+  return t
+}
+
+function LogoStyleCard({ logo, selected, onClick, dimmed }: { logo: LogoAsset; selected: boolean; onClick: () => void; dimmed: boolean }) {
+  const tags = deriveTags(logo)
+  return (
+    <div
+      onClick={onClick}
+      className={`logo-style-card${selected ? " logo-style-card--selected" : ""}${dimmed ? " logo-style-card--dimmed" : ""}`}
+    >
+      {selected && (
+        <div className="logo-style-card__check">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </div>
+      )}
+      <div className="logo-style-card__img-wrap">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={logo.url} alt={logo.title} className="logo-style-card__img" />
+      </div>
+      <div className="logo-style-card__body">
+        {logo.title && <div className="logo-style-card__title">{logo.title}</div>}
+        {tags.length > 0 && (
+          <div className="logo-style-card__tags">
+            {tags.map(tag => <span key={tag} className="logo-style-card__tag">{tag}</span>)}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 const MAX_SELECT = 6
 const BATCH_SIZE = 6
 
@@ -34,11 +90,19 @@ export default function StylePickerScreen({ onBack, onNext, submitRef }: Props) 
   const [loadingFirst, setLoadingFirst]       = useState(true)
   const [loadingMore, setLoadingMore]         = useState(false)
   const [visibleCount, setVisibleCount]       = useState(BATCH_SIZE)
+  const [logoAssets, setLogoAssets]           = useState<LogoAsset[]>([])
   const fileInputRef                          = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (submitRef) submitRef.current = () => onNext({ styles: selected, pinterestUrl, inspirationFile })
   })
+
+  useEffect(() => {
+    fetch("/company-assets/logos.json")
+      .then(r => r.json())
+      .then((data: LogoAsset[]) => setLogoAssets((data || []).filter(l => l.displayInStyleScreen)))
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     const t = setTimeout(() => setLoadingFirst(false), 900)
@@ -53,8 +117,10 @@ export default function StylePickerScreen({ onBack, onNext, submitRef }: Props) 
     })
   }
 
-  const visiblePresets = ALL_PRESETS.slice(0, visibleCount)
-  const hasMore = visibleCount < ALL_PRESETS.length
+  const useLogos = logoAssets.length > 0
+  const displayItems = useLogos ? logoAssets : ALL_PRESETS
+  const visiblePresets = useLogos ? logoAssets : ALL_PRESETS.slice(0, visibleCount)
+  const hasMore = !useLogos && visibleCount < displayItems.length
 
   return (
     <div className="screen-enter">
@@ -143,12 +209,23 @@ export default function StylePickerScreen({ onBack, onNext, submitRef }: Props) 
       <div className="style-picker__grid">
         {loadingFirst
           ? [...Array(BATCH_SIZE)].map((_, i) => <div key={i} className="skeleton" style={{ aspectRatio: "4/3", borderRadius: "12px" }} />)
-          : visiblePresets.map((s, i) => (
-              <StyleCard key={s.id} label={s.label} sublabel={s.sublabel} selected={selected.includes(s.id)}
-                onClick={() => toggleSelect(s.id)} index={i} dimmed={selected.length >= MAX_SELECT && !selected.includes(s.id)}>
-                {s.preview("var(--color-accent)")}
-              </StyleCard>
-            ))
+          : useLogos
+            ? visiblePresets.map(s => {
+                const logo = s as LogoAsset
+                return (
+                  <LogoStyleCard key={logo.id} logo={logo} selected={selected.includes(logo.id)}
+                    onClick={() => toggleSelect(logo.id)} dimmed={selected.length >= MAX_SELECT && !selected.includes(logo.id)} />
+                )
+              })
+            : visiblePresets.map((s, i) => {
+                const preset = s as typeof ALL_PRESETS[number]
+                return (
+                  <StyleCard key={preset.id} label={preset.label} sublabel={preset.sublabel} selected={selected.includes(preset.id)}
+                    onClick={() => toggleSelect(preset.id)} index={i} dimmed={selected.length >= MAX_SELECT && !selected.includes(preset.id)}>
+                    {preset.preview("var(--color-accent)")}
+                  </StyleCard>
+                )
+              })
         }
         {loadingMore && [...Array(BATCH_SIZE)].map((_, i) => <div key={"m"+i} className="skeleton" style={{ aspectRatio: "4/3", borderRadius: "12px" }} />)}
       </div>

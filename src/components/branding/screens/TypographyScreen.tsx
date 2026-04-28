@@ -6,6 +6,8 @@ import { FONT_CATEGORIES } from "../data"
 import type { FontDef, ServiceType } from "../types"
 import "./TypographyScreen.css"
 
+interface FontAsset extends FontDef { category: string; embedParam: string }
+
 interface TypoInfo { typographyType: "custom"|"free"|null; customPrice: number; selectedFonts: string[]; sameBrandFont: boolean; fontLinks: string[] }
 interface Props { onBack: () => void; onNext: (info: TypoInfo) => void; onChange?: (typographyType: "custom" | "free", customPrice: number) => void; serviceType: ServiceType; selectedVariations: string[]; submitRef?: { current: (() => void) | null } }
 
@@ -39,13 +41,43 @@ export default function TypographyScreen({ onBack, onNext, onChange, serviceType
   const [activeCategory, setActiveCategory] = useState("serif")
   const [visibleCount, setVisible]          = useState(BATCH)
   const [loadingMore, setLoadingMore]       = useState(false)
+  const [fontAssets, setFontAssets]         = useState<FontAsset[]>([])
 
   const isWordmark  = selectedVariations.includes("wordmark") && selectedVariations.length === 1
   const isRedesign  = serviceType === "redesign"
   const customPrice = isWordmark ? 0 : 100
-  const currentFonts = FONT_CATEGORIES[activeCategory].fonts
+
+  const assetCategories: Record<string, { label: string; fonts: FontDef[] }> = fontAssets.length > 0
+    ? fontAssets.reduce<Record<string, { label: string; fonts: FontDef[] }>>((acc, f) => {
+        const cat = f.category || "sans"
+        if (!acc[cat]) acc[cat] = { label: cat === "serif" ? "Serif" : cat === "handwriting" ? "Handwriting" : "Sans-Serif", fonts: [] }
+        acc[cat].fonts.push(f)
+        return acc
+      }, {})
+    : FONT_CATEGORIES
+
+  const currentFonts = activeCategory !== "designer" ? (assetCategories[activeCategory]?.fonts ?? []) : []
   const visibleFonts = currentFonts.slice(0, visibleCount)
   const hasMore = visibleCount < currentFonts.length
+
+  useEffect(() => {
+    fetch("/company-assets/fonts.json")
+      .then(r => r.json())
+      .then((data: FontAsset[]) => {
+        if (!data || data.length === 0) return
+        setFontAssets(data)
+        const url = "https://fonts.googleapis.com/css2?" + data.map(f => `family=${f.embedParam}`).join("&") + "&display=swap"
+        const existing = document.getElementById("typo-gfonts")
+        if (!existing) {
+          const link = document.createElement("link")
+          link.id = "typo-gfonts"
+          link.rel = "stylesheet"
+          link.href = url
+          document.head.appendChild(link)
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   useEffect(() => { setVisible(BATCH) }, [activeCategory])
 
@@ -65,7 +97,7 @@ export default function TypographyScreen({ onBack, onNext, onChange, serviceType
   ]
 
   const FONT_TABS = [
-    ...Object.entries(FONT_CATEGORIES).map(([key, cat]) => ({ key, label: cat.label })),
+    ...Object.entries(assetCategories).map(([key, cat]) => ({ key, label: cat.label })),
     { key: "designer", label: "Designer's Choice" },
   ]
 

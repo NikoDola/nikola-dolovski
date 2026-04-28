@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(npx next *)",
-      "Bash(grep -v \"^$\")"
+      "Bash(grep -v \"^$\")",
+      "Bash(mkdir -p \"c:/Users/Dolov/Junk code/nikola-dolovski/src/app/api/company-assets/logos/[id]\")",
+      "Bash(mkdir -p \"c:/Users/Dolov/Junk code/nikola-dolovski/src/app/api/company-assets/fonts/[id]\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\Dolov\\Junk code\\nikola-dolovski\\src\\app\\admin\\orders",
+      "c:\\Users\\Dolov\\Junk code\\nikola-dolovski\\src\\app\\admin\\company-assets\\logos"
     ]
   }
 }

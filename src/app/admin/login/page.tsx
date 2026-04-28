@@ -3,12 +3,10 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { auth } from "@/lib/firebase"
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth"
-import "@/components/branding/tokens.css"
-import "../admin/admin.css"
 
 const ALLOWED_EMAIL = "nikodola@gmail.com"
 
-export default function AuthPage() {
+export default function AdminLogin() {
   const [loading, setLoading] = useState(false)
   const [error, setError]   = useState("")
   const router = useRouter()

@@ -1,14 +1,8 @@
-// app/admin/layout.tsx
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
+import "@/components/branding/tokens.css"
+import "./admin.css"
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies()
-  const session = cookieStore.get('admin_session')?.value
+export const metadata = { title: "Admin — Nikola Dolovski" }
 
-  if (!session) {
-    redirect('/auth')
-  }
-
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }

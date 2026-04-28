@@ -63,6 +63,7 @@ Typography step is skipped for icon-only variations.
 |-------|--------|-------------|
 | `/api/create-checkout` | POST | Creates Stripe Checkout session, returns `{ sessionId, url }` |
 | `/api/submit-order` | POST | Verifies Stripe payment, uploads files to Firebase Storage, saves order to Firestore |
+| `/api/admin-auth` | POST / DELETE | Sets / clears `admin_session` cookie after Firebase token verification |
 
 ### Firebase Firestore schema
 
@@ -77,6 +78,40 @@ Typography step is skipped for icon-only variations.
 ### Tokens
 
 All design tokens live in `tokens.css` and the `T` object in `tokens.ts`.
+
+## Admin Panel (`src/app/admin/`)
+
+Protected admin area for Nikola only. Uses Firebase Google Auth + cookie session.
+
+### Auth flow
+
+1. `/admin/login` — Google sign-in popup (Firebase Auth)
+2. Client verifies email === `nikodola@gmail.com`, gets ID token
+3. POST `/api/admin-auth` — Firebase Admin verifies token, sets `admin_session` cookie (HttpOnly, 7-day TTL)
+4. Middleware (`src/middleware.ts`) protects all `/admin/*` routes except `/admin/login`
+5. Logout: DELETE `/api/admin-auth` clears cookie + Firebase `signOut()`
+
+### Pages
+
+| Route | File | Description |
+|-------|------|-------------|
+| `/admin/login` | `admin/login/page.tsx` | Google sign-in page |
+| `/admin` | `admin/page.tsx` | Dashboard with section cards |
+| `/admin/orders` | `admin/orders/page.tsx` | Order cards grid, delete with confirm modal |
+| `/admin/orders/[id]` | `admin/orders/[id]/page.tsx` | Full order detail — fonts rendered in their font family, color swatches, file preview/download |
+| `/admin/logo-inspiration/*` | existing pages | Left unchanged |
+
+### Key files
+
+- `src/middleware.ts` — cookie-based route protection
+- `src/lib/firebase/admin.ts` — shared Firebase Admin SDK initialization helper
+- `src/app/admin/AdminNav.tsx` — sticky nav with back link + logout button
+- `src/app/admin/admin.css` — full admin design system (imports DM Sans, uses branding tokens)
+- `src/lib/actions/adminOrders.ts` — `deleteOrder(id)` server action using Firebase Admin
+
+### Design
+
+Admin UI uses the same design tokens as the branding calculator (`tokens.css`). All admin pages share `admin.css` via the admin layout. Order detail shows fields in wizard order: Service → Brand Info → Style → Variations → Typography (fonts rendered in actual font families) → Colors (swatches) → Payment.
 
 ## Environment variables
 

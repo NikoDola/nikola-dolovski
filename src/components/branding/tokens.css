@@ -1,6 +1,6 @@
 :root {
   /* Colors */
-  --color-bg:             #FAF9F6;
+ --color-bg:             #FAF9F6;
   --color-surface:        #FFFFFF;
   --color-surface-alt:    #F5F3EE;
   --color-overlay:        rgba(26,23,20,0.35);
@@ -14,9 +14,30 @@
   --color-accent-hover:   #C4633F;
   --color-accent-light:   #FBF0EB;
   --color-accent-muted:   #F0DDD4;
+  --color-designer-bg:    #F1F9EA;
+  --color-designer-border:#D4EDBA;
   --color-success:        #4A7C59;
   --color-error:          #C0392B;
-  --color-warning:        #B07A2A;
+  --color-warning:        #B07A2A; 
+  /* --color-bg:             #FAF9F6;
+  --color-surface:        #FFFFFF;
+  --color-surface-alt:    #E1E5DA;
+  --color-overlay:        rgba(26,23,20,0.35);
+  --color-border:         #E8E2DA;
+  --color-border-focus:   #5AD1D1;
+  --color-text-primary:   #141619;
+  --color-text-secondary: #545768;
+  --color-text-muted:     #8E9BA5;
+  --color-text-inverse:   #FFFFFF;
+  --color-accent:         #5AD1D1;
+  --color-accent-hover:   #469BB2;
+  --color-accent-light:   #FBF0EB;
+  --color-accent-muted:   #F0DDD4;
+  --color-designer-bg:    #F1F9EA;
+  --color-designer-border:#D4EDBA;
+  --color-success:        #4A7C59;
+  --color-error:          #C0392B;
+  --color-warning:        #B07A2A; */
 
   /* Fonts */
   --font-sans: 'DM Sans', system-ui, sans-serif;
