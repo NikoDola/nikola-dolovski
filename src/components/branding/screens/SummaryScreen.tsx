@@ -9,6 +9,17 @@ import { calcTotal, calcDeposit, calcBrandGuidelinesPrice } from "../utils"
 import type { Order } from "../types"
 import "./SummaryScreen.css"
 
+interface PendingOrderData {
+  order: Order
+  name: string
+  email: string
+  payOption: "deposit" | "full"
+  addBrandGuide: boolean
+  totalAmount: number
+  logoFile: File | null
+  inspirationFile: File | null
+}
+
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open("BrandingCalculator", 1)
@@ -23,7 +34,7 @@ function openDB(): Promise<IDBDatabase> {
   })
 }
 
-function saveOrderData(data: any): Promise<string> {
+function saveOrderData(data: Omit<PendingOrderData, "id">): Promise<string> {
   return new Promise(async (resolve, reject) => {
     try {
       const db = await openDB()
@@ -209,7 +220,7 @@ export default function SummaryScreen({ order, onBack, files }: { order: Order; 
       <BackButton onClick={onBack} />
       <div className="summary__header">
         <h1 className="summary__title">Review your order</h1>
-        <p className="summary__subtitle">Everything looks good? Choose how you'd like to pay.</p>
+        <p className="summary__subtitle">Everything looks good? Choose how you&apos;d like to pay.</p>
       </div>
 
       <div className="summary__rows">

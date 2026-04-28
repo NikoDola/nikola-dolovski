@@ -52,17 +52,6 @@ const NEXT_LABEL: Partial<Record<Screen, string>> = {
 
 export type SubmitRef = { current: (() => void) | null }
 
-async function testFirebase() {
-  try {
-    const res = await fetch("/api/test-firebase")
-    const data = await res.json()
-    console.log("Firebase Test Result:", data)
-    alert(JSON.stringify(data, null, 2))
-  } catch (err) {
-    console.error("Firebase test failed:", err)
-    alert("Firebase test failed: " + (err instanceof Error ? err.message : String(err)))
-  }
-}
 
 export default function LogoConfigurator() {
   const [screen, setScreen]           = useState<Screen>("service")
@@ -153,24 +142,6 @@ export default function LogoConfigurator() {
   return (
     <div className="lc-root">
 
-      {/* Test Firebase Button (for debugging) */}
-      <div style={{ position: "fixed", top: "10px", right: "10px", zIndex: 9999 }}>
-        <button
-          onClick={testFirebase}
-          style={{
-            padding: "8px 12px",
-            fontSize: "12px",
-            background: "#ff6b6b",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          🧪 Test Firebase
-        </button>
-      </div>
-
       {/* Main content */}
       <main className="lc-main">
         <div className="lc-main__inner">
@@ -193,7 +164,14 @@ export default function LogoConfigurator() {
           )}
 
           {screen === "variations" && (
-            <VariationsScreen submitRef={submitRef} onBack={() => window.history.back()} onNext={vars => { setVariations(vars); navigateTo("style-icon") }} />
+            <VariationsScreen submitRef={submitRef} onBack={() => window.history.back()} onNext={vars => {
+              setVariations(vars)
+              if (serviceType === "redesign") {
+                navigateTo(vars.every(v => v === "icon") ? "colors" : "typography")
+              } else {
+                navigateTo("style-icon")
+              }
+            }} />
           )}
 
           {screen === "style-icon" && (

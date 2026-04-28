@@ -1,24 +1,19 @@
 "use client"
-import { useState } from "react"
-import { T } from "../tokens"
 import "./TextInput.css"
 
 interface TextInputProps {
-  label:       string
+  label:        string
   placeholder?: string
   value:        string
   onChange:     (v: string) => void
   required?:    boolean
   hint?:        string
   error?:       string
-  note?:        string
   multiline?:   boolean
   rows?:        number
 }
 
-export default function TextInput({ label, placeholder, value, onChange, required, hint, error, note, multiline, rows = 5 }: TextInputProps) {
-  const [focused, setFocused] = useState(false)
-
+export default function TextInput({ label, placeholder, value, onChange, required, hint, error, multiline, rows = 5 }: TextInputProps) {
   const fieldClassName = [
     "text-input__field",
     multiline ? "text-input__field--multiline" : "",
@@ -34,15 +29,10 @@ export default function TextInput({ label, placeholder, value, onChange, require
         {hint && <span className="text-input__hint">{hint}</span>}
       </div>
       {multiline
-        ? <textarea rows={rows} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
-            onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
-            className={fieldClassName} />
-        : <input type="text" value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
-            onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
-            className={fieldClassName} />
+        ? <textarea rows={rows} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} className={fieldClassName} />
+        : <input type="text" value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} className={fieldClassName} />
       }
       {error && <span className="text-input__error">{error}</span>}
-
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
-import { initializeApp, getApps, cert } from "firebase-admin/app"
+import { initializeApp, getApps, cert, ServiceAccount } from "firebase-admin/app"
 import { getFirestore } from "firebase-admin/firestore"
 import { getStorage } from "firebase-admin/storage"
 
@@ -21,7 +21,7 @@ const firebaseConfig = {
 
 if (!getApps().length) {
   initializeApp({
-    credential: cert(firebaseConfig as any),
+    credential: cert(firebaseConfig as ServiceAccount),
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
   })
 }
@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
     let session
     try {
       session = await stripe.checkout.sessions.retrieve(sessionId)
-    } catch (err) {
+    } catch {
       return NextResponse.json(
         { error: "Invalid session ID" },
         { status: 400 }

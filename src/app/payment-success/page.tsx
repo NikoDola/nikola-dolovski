@@ -1,7 +1,19 @@
 "use client"
 import { useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback, Suspense } from "react"
 import Link from "next/link"
+import type { Order } from "@/components/branding/types"
+
+interface PendingOrderData {
+  order: Order
+  name: string
+  email: string
+  payOption: "deposit" | "full"
+  addBrandGuide: boolean
+  totalAmount: number
+  logoFile: File | null
+  inspirationFile: File | null
+}
 
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -17,14 +29,14 @@ function openDB(): Promise<IDBDatabase> {
   })
 }
 
-function getOrderData(orderId: string): Promise<any> {
+function getOrderData(orderId: string): Promise<PendingOrderData | undefined> {
   return new Promise(async (resolve, reject) => {
     try {
       const db = await openDB()
       const tx = db.transaction(["orders"], "readonly")
       const store = tx.objectStore("orders")
       const req = store.get(orderId)
-      req.onsuccess = () => resolve(req.result)
+      req.onsuccess = () => resolve(req.result as PendingOrderData | undefined)
       req.onerror = () => reject(req.error)
     } catch (err) {
       reject(err)
@@ -47,24 +59,14 @@ function deleteOrderData(orderId: string): Promise<void> {
   })
 }
 
-export default function PaymentSuccess() {
+function PaymentSuccessContent() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get("session_id")
   const [isSubmitting, setIsSubmitting] = useState(true)
   const [error, setError] = useState("")
   const [orderId, setOrderId] = useState("")
 
-  useEffect(() => {
-    if (!sessionId) {
-      setError("Invalid session")
-      setIsSubmitting(false)
-      return
-    }
-
-    submitOrder()
-  }, [sessionId])
-
-  const submitOrder = async () => {
+  const submitOrder = useCallback(async () => {
     try {
       const pendingOrderId = sessionStorage.getItem("pendingOrderId")
       if (!pendingOrderId) {
@@ -96,11 +98,11 @@ export default function PaymentSuccess() {
       formData.append("pinterestUrl", orderData.order.pinterestUrl || "")
       formData.append("totalAmount", String(orderData.totalAmount || 0))
 
-      if (orderData.logoFile && orderData.logoFile instanceof File) {
+      if (orderData.logoFile instanceof File) {
         formData.append("logoFile", orderData.logoFile)
       }
 
-      if (orderData.inspirationFile && orderData.inspirationFile instanceof File) {
+      if (orderData.inspirationFile instanceof File) {
         formData.append("inspirationFile", orderData.inspirationFile)
       }
 
@@ -125,7 +127,17 @@ export default function PaymentSuccess() {
       setError(err instanceof Error ? err.message : "Order submission failed")
       setIsSubmitting(false)
     }
-  }
+  }, [sessionId])
+
+  useEffect(() => {
+    if (!sessionId) {
+      setError("Invalid session")
+      setIsSubmitting(false)
+      return
+    }
+
+    submitOrder()
+  }, [sessionId, submitOrder])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -133,25 +145,9 @@ export default function PaymentSuccess() {
         {isSubmitting ? (
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-full bg-gray-100">
-              <svg
-                className="w-6 h-6 text-gray-600 animate-spin"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
+              <svg className="w-6 h-6 text-gray-600 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
             </div>
             <p className="text-gray-600">Processing your order...</p>
@@ -159,65 +155,45 @@ export default function PaymentSuccess() {
         ) : error ? (
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-full bg-red-100">
-              <svg
-                className="w-6 h-6 text-red-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
+              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Oops!</h1>
             <p className="text-gray-600 mb-6">{error}</p>
-            <Link
-              href="/branding-calculator"
-              className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-            >
+            <Link href="/branding-calculator" className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
               Try Again
             </Link>
           </div>
         ) : (
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-full bg-green-100">
-              <svg
-                className="w-6 h-6 text-green-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
+              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              Payment Successful!
-            </h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Payment Successful!</h1>
             <p className="text-gray-600 mb-2">Your order has been received.</p>
             <p className="text-sm text-gray-500 mb-6">
               Order ID: <span className="font-mono font-semibold">{orderId}</span>
             </p>
             <p className="text-gray-600 mb-6">
-              We'll contact you shortly to confirm project details and get started.
+              We&apos;ll contact you shortly to confirm project details and get started.
             </p>
-            <Link
-              href="/"
-              className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-            >
+            <Link href="/" className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
               Return Home
             </Link>
           </div>
         )}
       </div>
     </div>
+  )
+}
+
+export default function PaymentSuccess() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><p className="text-gray-600">Loading...</p></div>}>
+      <PaymentSuccessContent />
+    </Suspense>
   )
 }
