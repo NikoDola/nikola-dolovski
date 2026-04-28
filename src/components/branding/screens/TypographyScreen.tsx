@@ -7,7 +7,7 @@ import type { FontDef, ServiceType } from "../types"
 import "./TypographyScreen.css"
 
 interface TypoInfo { typographyType: "custom"|"free"|null; customPrice: number; selectedFonts: string[]; sameBrandFont: boolean; fontLinks: string[] }
-interface Props { onBack: () => void; onNext: (info: TypoInfo) => void; serviceType: ServiceType; selectedVariations: string[]; submitRef?: { current: (() => void) | null } }
+interface Props { onBack: () => void; onNext: (info: TypoInfo) => void; onChange?: (typographyType: "custom" | "free", customPrice: number) => void; serviceType: ServiceType; selectedVariations: string[]; submitRef?: { current: (() => void) | null } }
 
 function FontCard({ font, selected, onClick, index, dimmed }: { font: FontDef; selected: boolean; onClick: () => void; index: number; dimmed?: boolean }) {
   const [visible, setVisible] = useState(false)
@@ -29,7 +29,7 @@ function FontCard({ font, selected, onClick, index, dimmed }: { font: FontDef; s
   )
 }
 
-export default function TypographyScreen({ onBack, onNext, serviceType, selectedVariations, submitRef }: Props) {
+export default function TypographyScreen({ onBack, onNext, onChange, serviceType, selectedVariations, submitRef }: Props) {
   const MAX_FONTS = 10
   const BATCH = 9
   const [sameBrandFont, setSameBrand]       = useState(false)
@@ -102,7 +102,7 @@ export default function TypographyScreen({ onBack, onNext, serviceType, selected
             return (
               <div
                 key={opt.id}
-                onClick={() => setTypoType(opt.id)}
+                onClick={() => { setTypoType(opt.id); onChange?.(opt.id, customPrice) }}
                 className={`typography__type-option${sel ? " typography__type-option--selected" : ""}`}
               >
                 {opt.id === "custom" && customPrice === 0 && (

@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import SummaryRow from "../shared/SummaryRow"
 import BackButton from "../shared/BackButton"
 import Button from "../shared/Button"
@@ -68,6 +68,7 @@ function InfoTip({ text }: { text: string }) {
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function BrandGuidelinesAddon({ numVariations, selected, onToggle }: { numVariations: number; selected: boolean; onToggle: () => void }) {
   const price = calcBrandGuidelinesPrice(numVariations)
   const perVarCount = BRAND_SERVICES.filter(s => s.perVariation).length
@@ -140,11 +141,11 @@ function PaymentOption({ label, sublabel, amount, recommended, selected, onClick
   )
 }
 
-export default function SummaryScreen({ order, onBack, files }: { order: Order; onBack: () => void; files?: { logo: File | null; inspiration: File | null } }) {
+export default function SummaryScreen({ order, onBack, files, onPriceChange }: { order: Order; onBack: () => void; files?: { logo: File | null; inspiration: File | null }; onPriceChange?: (total: number) => void }) {
   const [processing, setProcessing] = useState(false)
   const [payError, setPayError] = useState("")
   const [payOption, setPayOption] = useState<"deposit"|"full">("deposit")
-  const [addBrandGuide, setBrandGuide] = useState(false)
+  const [addBrandGuide, setBrandGuide] = useState(false) // eslint-disable-line @typescript-eslint/no-unused-vars
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [nameErr, setNameErr] = useState("")
@@ -156,6 +157,8 @@ export default function SummaryScreen({ order, onBack, files }: { order: Order; 
   const deposit         = calcDeposit(total)
   const dueNow          = payOption === "deposit" ? deposit : total
   const dueLater        = payOption === "deposit" ? total - deposit : 0
+
+  useEffect(() => { onPriceChange?.(total) }, [total])
 
   const allFonts = Object.values(FONT_CATEGORIES).flatMap(c => c.fonts)
   const rows: [string, string][] = [
@@ -228,7 +231,9 @@ export default function SummaryScreen({ order, onBack, files }: { order: Order; 
         <div className="summary__rows-total"><SummaryRow label="Total" value={`$${total}`} highlight /></div>
       </div>
 
+      {/* BrandGuidelinesAddon hidden for now — re-enable when ready
       <BrandGuidelinesAddon numVariations={numVariations} selected={addBrandGuide} onToggle={() => setBrandGuide(v => !v)} />
+      */}
 
       <div className="summary__payment">
         <div className="summary__payment-label">How would you like to pay?</div>

@@ -76,28 +76,89 @@
   background: var(--color-border);
 }
 
-.style-picker__inspiration-email {
+.style-picker__dropzone {
   display: flex;
-  align-items: flex-start;
-  gap: var(--space-2);
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1.5px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all 160ms ease;
+  background: var(--color-surface-alt);
+  position: relative;
+}
+
+.style-picker__dropzone:hover {
+  border-color: var(--color-accent-muted);
+  background: var(--color-accent-light);
+}
+
+.style-picker__dropzone--dragging {
+  border-color: var(--color-accent);
+  background: var(--color-accent-light);
+}
+
+.style-picker__dropzone--filled {
+  border-style: solid;
+  border-color: var(--color-accent);
+  background: var(--color-accent-light);
+}
+
+.style-picker__dropzone--filled svg:first-child {
+  color: var(--color-accent);
+}
+
+.style-picker__dropzone--filled svg path,
+.style-picker__dropzone--filled svg rect {
+  stroke: var(--color-accent);
+  fill: none;
+}
+
+.style-picker__dropzone-heading {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.style-picker__dropzone-formats {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
-  line-height: var(--line-height-normal);
 }
 
-.style-picker__inspiration-email svg {
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-.style-picker__inspiration-email-link {
-  color: var(--color-accent);
+.style-picker__dropzone-filename {
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
-  text-decoration: none;
+  color: var(--color-accent);
 }
 
-.style-picker__inspiration-email-link:hover {
-  text-decoration: underline;
+.style-picker__dropzone-replace {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.style-picker__dropzone-remove {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: all 140ms ease;
+}
+
+.style-picker__dropzone-remove:hover {
+  border-color: #d94f4f;
+  color: #d94f4f;
+  background: #fff1f1;
 }
 
 .style-picker__selection-bar {

@@ -63,6 +63,9 @@ export default function LogoConfigurator() {
   const [colorInfo, setColorInfo]     = useState({})
   const [typographyInfo, setTypoInfo] = useState({})
   const [files, setFiles]             = useState<{ logo: File | null; inspiration: File | null }>({ logo: null, inspiration: null })
+  const [liveVariations, setLiveVariations] = useState<string[]>(variations)
+  const [liveTypoPrice, setLiveTypoPrice]   = useState(0)
+  const [liveSummaryTotal, setLiveSummaryTotal] = useState<number | null>(null)
 
   const submitRef = useRef<(() => void) | null>(null)
   const [nextDisabled, setNextDisabled] = useState(true)
@@ -136,8 +139,7 @@ export default function LogoConfigurator() {
 
   const order: Order = { serviceType, variations, ...companyInfo, ...styleInfo, ...uploadInfo, ...colorInfo, ...typographyInfo }
 
-  const typoInfo = typographyInfo as Partial<Order>
-  const estimatedTotal = 150 + Math.max(0, variations.length - 1) * 25 + (typoInfo.typographyType === "custom" && (typoInfo.customPrice ?? 0) > 0 ? (typoInfo.customPrice ?? 0) : 0)
+  const estimatedTotal = liveSummaryTotal ?? (150 + Math.max(0, liveVariations.length - 1) * 25 + liveTypoPrice)
 
   return (
     <div className="lc-root">
@@ -160,31 +162,35 @@ export default function LogoConfigurator() {
           )}
 
           {screen === "style-red" && (
-            <StylePickerScreen submitRef={submitRef} onBack={() => window.history.back()} onNext={info => { setStyleInfo(info); navigateTo("variations") }} />
+            <StylePickerScreen submitRef={submitRef} onBack={() => window.history.back()} onNext={info => { setStyleInfo(info); setFiles(prev => ({ ...prev, inspiration: info.inspirationFile })); navigateTo("variations") }} />
           )}
 
           {screen === "variations" && (
-            <VariationsScreen submitRef={submitRef} onBack={() => window.history.back()} onNext={vars => {
-              setVariations(vars)
-              if (serviceType === "redesign") {
-                navigateTo(vars.every(v => v === "icon") ? "colors" : "typography")
-              } else {
-                navigateTo("style-icon")
-              }
-            }} />
+            <VariationsScreen submitRef={submitRef} onBack={() => window.history.back()}
+              onChange={vars => setLiveVariations(vars)}
+              onNext={vars => {
+                setVariations(vars)
+                setLiveVariations(vars)
+                if (serviceType === "redesign") {
+                  navigateTo(vars.every(v => v === "icon") ? "colors" : "typography")
+                } else {
+                  navigateTo("style-icon")
+                }
+              }} />
           )}
 
           {screen === "style-icon" && (
             <StylePickerScreen submitRef={submitRef}
               onBack={() => window.history.back()}
-              onNext={info => { setStyleInfo(info); navigateTo(variations.every(v => v === "icon") ? "colors" : "typography") }}
+              onNext={info => { setStyleInfo(info); setFiles(prev => ({ ...prev, inspiration: info.inspirationFile })); navigateTo(variations.every(v => v === "icon") ? "colors" : "typography") }}
             />
           )}
 
           {screen === "typography" && (
             <TypographyScreen submitRef={submitRef} serviceType={serviceType} selectedVariations={variations}
               onBack={() => window.history.back()}
-              onNext={info => { setTypoInfo(info); navigateTo("colors") }}
+              onChange={(type, price) => setLiveTypoPrice(type === "custom" ? price : 0)}
+              onNext={info => { setTypoInfo(info); setLiveTypoPrice(info.typographyType === "custom" ? (info.customPrice ?? 0) : 0); navigateTo("colors") }}
             />
           )}
 
@@ -196,7 +202,7 @@ export default function LogoConfigurator() {
           )}
 
           {screen === "summary" && (
-            <SummaryScreen order={order} onBack={() => window.history.back()} files={files} />
+            <SummaryScreen order={order} onBack={() => window.history.back()} files={files} onPriceChange={setLiveSummaryTotal} />
           )}
         </div>
       </main>

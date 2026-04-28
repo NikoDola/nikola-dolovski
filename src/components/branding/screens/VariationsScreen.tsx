@@ -5,7 +5,7 @@ import BackButton from "../shared/BackButton"
 import { VerticalLogoDemo, HorizontalLogoDemo, BadgeLogoDemo, IconOnlyDemo, WordmarkDemo } from "../demos/LogoDemos"
 import "./VariationsScreen.css"
 
-interface Props { onBack: () => void; onNext: (vars: string[]) => void; submitRef?: { current: (() => void) | null } }
+interface Props { onBack: () => void; onNext: (vars: string[]) => void; onChange?: (vars: string[]) => void; submitRef?: { current: (() => void) | null } }
 
 const VARIATIONS = [
   { id: "vertical",   title: "Vertical",     slug: "vertical-logo",     description: "Icon stacked above the brand name. Ideal for social profiles and square formats.",      demo: <VerticalLogoDemo /> },
@@ -15,15 +15,18 @@ const VARIATIONS = [
   { id: "wordmark",   title: "Wordmark",     slug: "wordmark-logo",     description: "Typography-only logo. The brand name itself becomes the visual identity.",               demo: <WordmarkDemo /> },
 ]
 
-export default function VariationsScreen({ onBack, onNext, submitRef }: Props) {
+export default function VariationsScreen({ onBack, onNext, onChange, submitRef }: Props) {
   const [selected, setSelected] = useState<string[]>([])
 
   useEffect(() => {
     if (submitRef) submitRef.current = () => onNext(selected)
   })
 
-  const toggle = (id: string) =>
-    setSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
+  const toggle = (id: string) => {
+    const next = selected.includes(id) ? selected.filter(x => x !== id) : [...selected, id]
+    setSelected(next)
+    onChange?.(next)
+  }
 
   const extraCount  = Math.max(0, selected.length - 1)
   const extrasTotal = extraCount * 25

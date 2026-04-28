@@ -1,12 +1,12 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import StyleCard from "../shared/StyleCard"
 import BackButton from "../shared/BackButton"
 import TextInput from "../shared/TextInput"
 import { STYLE_PRESETS } from "../data"
 import "./StylePickerScreen.css"
 
-interface StyleInfo { styles: string[]; pinterestUrl: string }
+interface StyleInfo { styles: string[]; pinterestUrl: string; inspirationFile: File | null }
 interface Props { onBack: () => void; onNext: (info: StyleInfo) => void; submitRef?: { current: (() => void) | null } }
 
 const MAX_SELECT = 6
@@ -27,14 +27,17 @@ function Spinner() {
 }
 
 export default function StylePickerScreen({ onBack, onNext, submitRef }: Props) {
-  const [selected, setSelected]         = useState<string[]>([])
-  const [pinterestUrl, setPinterestUrl] = useState("")
-  const [loadingFirst, setLoadingFirst] = useState(true)
-  const [loadingMore, setLoadingMore]   = useState(false)
-  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE)
+  const [selected, setSelected]               = useState<string[]>([])
+  const [pinterestUrl, setPinterestUrl]       = useState("")
+  const [inspirationFile, setInspirationFile] = useState<File | null>(null)
+  const [dragging, setDragging]               = useState(false)
+  const [loadingFirst, setLoadingFirst]       = useState(true)
+  const [loadingMore, setLoadingMore]         = useState(false)
+  const [visibleCount, setVisibleCount]       = useState(BATCH_SIZE)
+  const fileInputRef                          = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if (submitRef) submitRef.current = () => onNext({ styles: selected, pinterestUrl })
+    if (submitRef) submitRef.current = () => onNext({ styles: selected, pinterestUrl, inspirationFile })
   })
 
   useEffect(() => {
@@ -85,18 +88,46 @@ export default function StylePickerScreen({ onBack, onNext, submitRef }: Props) 
           hint="Optional"
         />
         <div className="style-picker__inspiration-divider">
-          <span>or</span>
+          <span>or upload inspiration files</span>
         </div>
-        <div className="style-picker__inspiration-email">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <rect x="1.5" y="3.5" width="13" height="9" rx="1.5" stroke="var(--color-text-muted)" strokeWidth="1.3"/>
-            <path d="M1.5 6l6.5 4 6.5-4" stroke="var(--color-text-muted)" strokeWidth="1.3" strokeLinecap="round"/>
-          </svg>
-          <span>
-            You can also email logo or image references to{" "}
-            <a href="mailto:nikodola@gmail.com" className="style-picker__inspiration-email-link">nikodola@gmail.com</a>
-            {" "}— file uploads are disabled on this form for security reasons.
-          </span>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".jpg,.jpeg,.png,.gif,.webp,.pdf"
+          style={{ display: "none" }}
+          onChange={e => e.target.files?.[0] && setInspirationFile(e.target.files[0])}
+        />
+        <div
+          className={`style-picker__dropzone${dragging ? " style-picker__dropzone--dragging" : ""}${inspirationFile ? " style-picker__dropzone--filled" : ""}`}
+          onClick={() => fileInputRef.current?.click()}
+          onDragOver={e => { e.preventDefault(); setDragging(true) }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={e => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files[0]; if (f) setInspirationFile(f) }}
+        >
+          {inspirationFile ? (
+            <>
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2v10M5 8l4 4 4-4" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/><rect x="2" y="14" width="14" height="2" rx="1" fill="#fff"/></svg>
+              <div>
+                <div className="style-picker__dropzone-filename">{inspirationFile.name}</div>
+                <div className="style-picker__dropzone-replace">Click to replace</div>
+              </div>
+              <button
+                className="style-picker__dropzone-remove"
+                onClick={e => { e.stopPropagation(); setInspirationFile(null) }}
+                aria-label="Remove file"
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+              </button>
+            </>
+          ) : (
+            <>
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 12V2M5 6l4-4 4 4" stroke="var(--color-text-muted)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/><rect x="2" y="14" width="14" height="2" rx="1" fill="var(--color-border)"/></svg>
+              <div>
+                <span className="style-picker__dropzone-heading">Drop a file or click to browse</span>
+                <span className="style-picker__dropzone-formats"> · JPG, PNG, PDF</span>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -142,7 +173,7 @@ export default function StylePickerScreen({ onBack, onNext, submitRef }: Props) 
 
       <div className="style-picker__footer">
         <span className="style-picker__footer-label">
-          {selected.length === 0 && !pinterestUrl ? "Choose styles or share your inspiration" : `${selected.length} style${selected.length !== 1 ? "s" : ""} selected`}
+          {selected.length === 0 && !pinterestUrl && !inspirationFile ? "Choose styles or share your inspiration" : `${selected.length} style${selected.length !== 1 ? "s" : ""} selected${inspirationFile ? " · 1 file" : ""}${pinterestUrl ? " · Pinterest added" : ""}`}
         </span>
       </div>
     </div>
