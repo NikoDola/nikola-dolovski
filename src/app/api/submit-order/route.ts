@@ -4,7 +4,7 @@ import { initializeApp, getApps, cert, ServiceAccount } from "firebase-admin/app
 import { getFirestore } from "firebase-admin/firestore"
 import { getStorage } from "firebase-admin/storage"
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+export const dynamic = "force-dynamic"
 
 const firebaseConfig = {
   type: "service_account",
@@ -60,6 +60,7 @@ async function uploadFile(
 }
 
 export async function POST(req: NextRequest) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
   try {
     const formData = await req.formData()
     const sessionId = formData.get("sessionId") as string
