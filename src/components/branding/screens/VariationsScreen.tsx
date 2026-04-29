@@ -37,10 +37,10 @@ export default function VariationsScreen({ onBack, onNext, onChange, submitRef }
   const extrasTotal = extraCount * 25
 
   const getPriceLabel = (id: string) => {
-    if (selected.length === 0) return null
-    if (selected[0] === id)    return "Included"
+    if (selected.length === 0) return "1 variation included"
+    if (selected[0] === id) return "1 variation included"
     if (selected.includes(id)) return "+$25"
-    return "+$25 ea."
+    return "+$25"
   }
 
   return (
