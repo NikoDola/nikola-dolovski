@@ -6,39 +6,25 @@ import { getStorage } from "firebase-admin/storage"
 
 export const dynamic = "force-dynamic"
 
-const firebaseConfig = {
-  type: "service_account",
-  project_id: process.env.FIREBASE_PROJECT_ID,
-  private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
-  private_key: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-  client_email: process.env.FIREBASE_CLIENT_EMAIL,
-  client_id: process.env.FIREBASE_CLIENT_ID,
-  auth_uri: "https://accounts.google.com/o/oauth2/auth",
-  token_uri: "https://oauth2.googleapis.com/token",
-  auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-  client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL,
-}
-
-if (!getApps().length) {
-  initializeApp({
-    credential: cert(firebaseConfig as ServiceAccount),
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  })
-}
-
-const db = getFirestore()
-const storage = getStorage()
-
-async function isSessionUsed(sessionId: string): Promise<boolean> {
-  const doc = await db.collection("used_sessions").doc(sessionId).get()
-  return doc.exists
-}
-
-async function markSessionUsed(sessionId: string): Promise<void> {
-  await db.collection("used_sessions").doc(sessionId).set({
-    usedAt: new Date(),
-    sessionId,
-  })
+function getFirebase() {
+  if (!getApps().length) {
+    initializeApp({
+      credential: cert({
+        type: "service_account",
+        project_id: process.env.FIREBASE_PROJECT_ID,
+        private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
+        private_key: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+        client_email: process.env.FIREBASE_CLIENT_EMAIL,
+        client_id: process.env.FIREBASE_CLIENT_ID,
+        auth_uri: "https://accounts.google.com/o/oauth2/auth",
+        token_uri: "https://oauth2.googleapis.com/token",
+        auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+        client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL,
+      } as ServiceAccount),
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    })
+  }
+  return { db: getFirestore(), storage: getStorage() }
 }
 
 async function uploadFile(
@@ -47,6 +33,7 @@ async function uploadFile(
   orderId: string,
   fileType: "logo" | "inspiration"
 ): Promise<string> {
+  const { storage } = getFirebase()
   const bucket = storage.bucket()
   const timestamp = Date.now()
   const sanitizedName = fileName.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 120)
@@ -61,6 +48,8 @@ async function uploadFile(
 
 export async function POST(req: NextRequest) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+  const { db } = getFirebase()
+
   try {
     const formData = await req.formData()
     const sessionId = formData.get("sessionId") as string
@@ -85,30 +74,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing session ID" }, { status: 400 })
     }
 
-    // 1. Verify payment status with Stripe
+    // 1. Verify payment with Stripe
     let session
     try {
       session = await stripe.checkout.sessions.retrieve(sessionId)
     } catch {
-      return NextResponse.json(
-        { error: "Invalid session ID" },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: "Invalid session ID" }, { status: 400 })
     }
 
     if (session.payment_status !== "paid") {
-      return NextResponse.json(
-        { error: "Payment not completed" },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: "Payment not completed" }, { status: 400 })
     }
 
-    // 2. Check if session was already used (prevent duplicate submissions)
-    if (await isSessionUsed(sessionId)) {
-      return NextResponse.json(
-        { error: "Session already used" },
-        { status: 400 }
-      )
+    // 2. Prevent duplicate submissions
+    const usedDoc = await db.collection("used_sessions").doc(sessionId).get()
+    if (usedDoc.exists) {
+      return NextResponse.json({ error: "Session already used" }, { status: 400 })
     }
 
     // 3. Create order ID
@@ -122,18 +103,11 @@ export async function POST(req: NextRequest) {
     const inspirationFile = formData.get("inspirationFile") as File | null
 
     if (logoFile && logoFile.size > 0) {
-      const buffer = Buffer.from(await logoFile.arrayBuffer())
-      logoUrl = await uploadFile(buffer, logoFile.name, orderId, "logo")
+      logoUrl = await uploadFile(Buffer.from(await logoFile.arrayBuffer()), logoFile.name, orderId, "logo")
     }
 
     if (inspirationFile && inspirationFile.size > 0) {
-      const buffer = Buffer.from(await inspirationFile.arrayBuffer())
-      inspirationUrl = await uploadFile(
-        buffer,
-        inspirationFile.name,
-        orderId,
-        "inspiration"
-      )
+      inspirationUrl = await uploadFile(Buffer.from(await inspirationFile.arrayBuffer()), inspirationFile.name, orderId, "inspiration")
     }
 
     // 5. Save order to Firestore
@@ -163,21 +137,14 @@ export async function POST(req: NextRequest) {
       status: "pending",
     })
 
-    // 6. Mark session as used (prevent double submission)
-    await markSessionUsed(sessionId)
+    // 6. Mark session used
+    await db.collection("used_sessions").doc(sessionId).set({ usedAt: new Date(), sessionId })
 
-    return NextResponse.json({
-      success: true,
-      orderId,
-      message: "Order submitted successfully",
-    })
+    return NextResponse.json({ success: true, orderId, message: "Order submitted successfully" })
   } catch (error) {
     console.error("Order submission error:", error)
     return NextResponse.json(
-      {
-        error:
-          error instanceof Error ? error.message : "Failed to submit order",
-      },
+      { error: error instanceof Error ? error.message : "Failed to submit order" },
       { status: 500 }
     )
   }
