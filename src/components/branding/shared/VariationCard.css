@@ -66,23 +66,16 @@
 
 @media (max-width: 768px) {
   .variation-card {
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
     min-height: auto;
     padding: var(--space-4);
-    gap: var(--space-4);
+    gap: var(--space-3);
   }
 
   .variation-card__preview {
-    width: 200px;
-    min-height: 76px;
-    flex-shrink: 0;
-    padding: var(--space-2);
-  }
-
-  .variation-card__text {
-    flex: 1;
-    min-width: 0;
+    width: 100%;
+    min-height: 110px;
+    padding: var(--space-3);
   }
 
   .variation-card__check {

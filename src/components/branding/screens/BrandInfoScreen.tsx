@@ -11,9 +11,13 @@ export default function BrandInfoScreen({ onBack, onNext, submitRef }: Props) {
   const [companyName, setCompany] = useState("")
   const [tagline, setTagline]     = useState("")
   const [description, setDesc]    = useState("")
+  const [error, setError]         = useState(false)
 
   useEffect(() => {
-    if (submitRef) submitRef.current = () => onNext({ companyName, tagline, description })
+    if (submitRef) submitRef.current = () => {
+      if (!companyName.trim()) { setError(true); return }
+      onNext({ companyName, tagline, description })
+    }
   })
 
   return (
@@ -30,7 +34,12 @@ export default function BrandInfoScreen({ onBack, onNext, submitRef }: Props) {
 
       <div className="brand-info__fields">
         <TextInput label="Company Name" placeholder="e.g. Apex Studio" value={companyName}
-          onChange={setCompany} />
+          onChange={v => { setCompany(v); if (v.trim()) setError(false) }} />
+        {error && (
+          <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-error)", marginTop: "calc(var(--space-1) * -1)" }}>
+            Please enter your company name to continue.
+          </p>
+        )}
         <TextInput label="Tagline" placeholder="e.g. Crafting tomorrow's brands" value={tagline} onChange={setTagline} hint="Optional" />
       </div>
 

@@ -17,22 +17,27 @@ const VARIATIONS = [
 
 export default function VariationsScreen({ onBack, onNext, onChange, submitRef }: Props) {
   const [selected, setSelected] = useState<string[]>([])
+  const [error, setError]       = useState(false)
 
   useEffect(() => {
-    if (submitRef) submitRef.current = () => onNext(selected)
+    if (submitRef) submitRef.current = () => {
+      if (selected.length === 0) { setError(true); return }
+      onNext(selected)
+    }
   })
 
   const toggle = (id: string) => {
     const next = selected.includes(id) ? selected.filter(x => x !== id) : [...selected, id]
     setSelected(next)
     onChange?.(next)
+    if (next.length > 0) setError(false)
   }
 
   const extraCount  = Math.max(0, selected.length - 1)
   const extrasTotal = extraCount * 25
 
   const getPriceLabel = (id: string) => {
-    if (selected.length === 0) return "Free"
+    if (selected.length === 0) return null
     if (selected[0] === id)    return "Included"
     if (selected.includes(id)) return "+$25"
     return "+$25 ea."
@@ -53,10 +58,10 @@ export default function VariationsScreen({ onBack, onNext, onChange, submitRef }
       <div className="variations__grid">
         {VARIATIONS.map(v => {
           const label  = getPriceLabel(v.id)
-          const isFree = label === "Free" || label === "Included"
+          const isFree = label === "Included"
           return (
             <div key={v.id} className="variations__card-wrap">
-              <div className={`variations__price-badge${isFree ? " variations__price-badge--free" : ""}`}>{label}</div>
+              {label && <div className={`variations__price-badge${isFree ? " variations__price-badge--free" : ""}`}>{label}</div>}
               <div className="variations__card-body">
                 <VariationCard title={v.title} description={v.description} selected={selected.includes(v.id)} onClick={() => toggle(v.id)}>
                   {v.demo}
@@ -70,6 +75,12 @@ export default function VariationsScreen({ onBack, onNext, onChange, submitRef }
           )
         })}
       </div>
+
+      {error && (
+        <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-error)", marginTop: "calc(var(--space-2) * -1)", marginBottom: "var(--space-4)" }}>
+          Please select at least one logo variation to continue.
+        </p>
+      )}
 
       {selected.length > 1 && (
         <div className="variations__extras">

@@ -346,6 +346,12 @@
   margin-bottom: var(--space-4);
 }
 
+@media (max-width: 760px) {
+  .typography__font-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 /* FontCard */
 .font-card {
   background: var(--color-surface);

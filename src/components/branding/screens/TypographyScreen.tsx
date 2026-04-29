@@ -38,7 +38,7 @@ export default function TypographyScreen({ onBack, onNext, onChange, serviceType
   const [fontLinks, setFontLinks]           = useState<string[]>([""])
   const [typographyType, setTypoType]       = useState<"custom"|"free">("free")
   const [selectedFonts, setSelectedFonts]   = useState<string[]>([])
-  const [activeCategory, setActiveCategory] = useState("serif")
+  const [activeCategory, setActiveCategory] = useState("designer")
   const [visibleCount, setVisible]          = useState(BATCH)
   const [loadingMore, setLoadingMore]       = useState(false)
   const [fontAssets, setFontAssets]         = useState<FontAsset[]>([])
@@ -93,7 +93,7 @@ export default function TypographyScreen({ onBack, onNext, onChange, serviceType
 
   const TYPE_OPTIONS = [
     { id: "custom" as const, label: "Custom Typography", sublabel: isWordmark ? "Included with your Wordmark logo" : "Professional custom lettering", price: customPrice },
-    { id: "free"   as const, label: "Free Font",         sublabel: "Browse and pick from our curated font library",                                   price: 0 },
+    ...(!isWordmark ? [{ id: "free" as const, label: "Free Font", sublabel: "Browse and pick from our curated font library", price: 0 }] : []),
   ]
 
   const FONT_TABS = [
@@ -142,7 +142,9 @@ export default function TypographyScreen({ onBack, onNext, onChange, serviceType
                 )}
                 <div className="typography__type-option-header">
                   <div className={`typography__type-option-name${sel ? " typography__type-option-name--selected" : ""}`}>{opt.label}</div>
-                  <div className={`typography__type-option-price${sel ? " typography__type-option-price--selected" : ""}`}>{opt.price === 0 ? "Free" : `+$${opt.price}`}</div>
+                  <div className={`typography__type-option-price${sel ? " typography__type-option-price--selected" : ""}`}>
+                    {opt.id === "custom" && opt.price === 0 ? "" : opt.id === "free" ? "Included" : `+$${opt.price}`}
+                  </div>
                 </div>
                 <div className="typography__type-option-sublabel">{opt.sublabel}</div>
               </div>
@@ -183,7 +185,7 @@ export default function TypographyScreen({ onBack, onNext, onChange, serviceType
 
       <div className="typography__browse-section">
         <div className="typography__browse-label">
-          Browse type styles <span className="typography__browse-label-opt">Optional</span>
+          Browse type styles <span className="typography__browse-label-opt">Optional — skip if you&apos;d like us to choose</span>
         </div>
         <div className="typography__tabs">
           {FONT_TABS.map(tab => (

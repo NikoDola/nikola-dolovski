@@ -137,7 +137,7 @@ export default function StylePickerScreen({ onBack, onNext, submitRef }: Props) 
           Choose a design style
         </h1>
         <p className="style-picker__subtitle">
-          Pick up to <strong>6 styles</strong> that resonate with your brand.
+          Pick up to <strong>6 styles</strong> that feel right for your brand, share a Pinterest board, or drop an inspiration file. This step is entirely optional — skip ahead if you&apos;d rather let us lead.
         </p>
       </div>
 
