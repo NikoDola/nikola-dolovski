@@ -47,10 +47,9 @@ async function uploadFile(
 }
 
 export async function POST(req: NextRequest) {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
-  const { db } = getFirebase()
-
   try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+    const { db } = getFirebase()
     const formData = await req.formData()
     const sessionId = formData.get("sessionId") as string
     const companyName = formData.get("companyName") as string
