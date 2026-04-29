@@ -75,7 +75,7 @@ export default function ServiceSelection({ onSelect, submitRef, setNextDisabled 
         </div>
         <div className="hiw__note">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="hiw__note-icon"><circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.4"/><path d="M8 7v4M8 5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
-          Not happy with the result? If we can&apos;t get it right within the revision rounds, we&apos;ll make it right. Your satisfaction is the priority.
+        If it’s not hitting the mark after the included revisions, you’re free to cancel and only the deposit applies. Want to keep going? Extra revision rounds can be added for $15 each.
         </div>
       </div>
 
