@@ -19,14 +19,14 @@ export default function UnderConstruction() {
         <a href="mailto:nikodola@gmail.com" className={styles.email}>
           nikodola@gmail.com
         </a>
-        {/* <div className={styles.ctaSection}>
+        <div className={styles.ctaSection}>
           <p className={styles.ctaText}>
             Need a logo or brand identity? Browse available services, build your package, and submit your brief directly online.
           </p>
           <Link href="/branding-calculator" className={styles.ctaButton}>
             See Services &amp; Pricing →
           </Link>
-        </div> */}
+        </div>
       </div>
       <div className={styles.bar} />
     </section>
