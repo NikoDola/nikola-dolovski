@@ -8,7 +8,7 @@ import Button from "../shared/Button"
 import "./ColorPickerScreen.css"
 
 interface ColorInfo { colorFamilies: string[]; customColors: string[]; useSameColors: boolean }
-interface Props { onBack: () => void; onNext: (info: ColorInfo) => void; serviceType: ServiceType; submitRef?: { current: (() => void) | null } }
+interface Props { onBack: () => void; onNext: (info: ColorInfo) => void; serviceType: ServiceType; submitRef?: { current: (() => void) | null }; initialValue?: ColorInfo }
 
 function ColorPickerModal({ onAdd, onClose, initialHex, mode = "add" }: {
   onAdd: (hex: string) => void
@@ -142,11 +142,11 @@ function SwatchMenu({ onEdit, onDelete, onClose }: { onEdit: () => void; onDelet
   )
 }
 
-export default function ColorPickerScreen({ onBack, onNext, serviceType, submitRef }: Props) {
+export default function ColorPickerScreen({ onBack, onNext, serviceType, submitRef, initialValue }: Props) {
   const MAX_COLORS = 5
-  const [selected, setSelected]     = useState<string[]>([])
-  const [useSameColors, setUseSame] = useState(false)
-  const [customColors, setCustom]   = useState<string[]>([])
+  const [selected, setSelected]     = useState<string[]>(initialValue?.colorFamilies ?? [])
+  const [useSameColors, setUseSame] = useState(initialValue?.useSameColors ?? false)
+  const [customColors, setCustom]   = useState<string[]>(initialValue?.customColors ?? [])
   const [showPicker, setShowPicker] = useState(false)
   const [swatchMenu, setSwatchMenu] = useState<number | null>(null)
   const [editingIndex, setEditingIndex] = useState<number | null>(null)

@@ -9,7 +9,7 @@ import "./TypographyScreen.css"
 interface FontAsset extends FontDef { category: string; embedParam: string }
 
 interface TypoInfo { typographyType: "custom"|"free"|null; customPrice: number; selectedFonts: string[]; sameBrandFont: boolean; fontLinks: string[] }
-interface Props { onBack: () => void; onNext: (info: TypoInfo) => void; onChange?: (typographyType: "custom" | "free", customPrice: number) => void; serviceType: ServiceType; selectedVariations: string[]; submitRef?: { current: (() => void) | null } }
+interface Props { onBack: () => void; onNext: (info: TypoInfo) => void; onChange?: (typographyType: "custom" | "free", customPrice: number) => void; serviceType: ServiceType; selectedVariations: string[]; submitRef?: { current: (() => void) | null }; initialValue?: Partial<TypoInfo> }
 
 function FontCard({ font, selected, onClick, index, dimmed }: { font: FontDef; selected: boolean; onClick: () => void; index: number; dimmed?: boolean }) {
   const [visible, setVisible] = useState(false)
@@ -24,21 +24,25 @@ function FontCard({ font, selected, onClick, index, dimmed }: { font: FontDef; s
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </div>
       )}
-      <div style={{ fontFamily: font.family, fontWeight: font.weight, fontSize: "22px", color: "var(--color-text-primary)", lineHeight: 1.2, marginBottom: "var(--space-2)" }}>{font.name}</div>
-      <div style={{ fontFamily: font.family, fontWeight: 400, fontSize: "13px", color: "var(--color-text-secondary)", fontStyle: "italic", marginBottom: "var(--space-3)" }}>{font.sample}</div>
+      <div className="font-card__name" style={{ fontFamily: font.family, fontWeight: font.weight }}>{font.name}</div>
+      <div className="font-card__sample" style={{ fontFamily: font.family }}>{font.sample}</div>
       {font.sublabel && <div className="font-card__sublabel">{font.sublabel}</div>}
     </div>
   )
 }
 
-export default function TypographyScreen({ onBack, onNext, onChange, serviceType, selectedVariations, submitRef }: Props) {
+export default function TypographyScreen({ onBack, onNext, onChange, serviceType, selectedVariations, submitRef, initialValue }: Props) {
   const MAX_FONTS = 10
   const BATCH = 9
-  const [sameBrandFont, setSameBrand]       = useState(false)
-  const [fontLinks, setFontLinks]           = useState<string[]>([""])
-  const [typographyType, setTypoType]       = useState<"custom"|"free">("free")
-  const [selectedFonts, setSelectedFonts]   = useState<string[]>([])
-  const [activeCategory, setActiveCategory] = useState("designer")
+  const [sameBrandFont, setSameBrand]       = useState(initialValue?.sameBrandFont ?? false)
+  const [fontLinks, setFontLinks]           = useState<string[]>(initialValue?.fontLinks ?? [""])
+  const [typographyType, setTypoType]       = useState<"custom"|"free">(initialValue?.typographyType ?? "custom")
+  const [selectedFonts, setSelectedFonts]   = useState<string[]>(initialValue?.selectedFonts ?? [])
+  const [activeCategory, setActiveCategory] = useState("sans")
+  const [fontMode, setFontMode]             = useState<"designer"|"manual">(() => {
+    if (initialValue?.selectedFonts?.length || initialValue?.fontLinks?.some(l => l.trim())) return "manual"
+    return "designer"
+  })
   const [visibleCount, setVisible]          = useState(BATCH)
   const [loadingMore, setLoadingMore]       = useState(false)
   const [fontAssets, setFontAssets]         = useState<FontAsset[]>([])
@@ -91,15 +95,7 @@ export default function TypographyScreen({ onBack, onNext, onChange, serviceType
   const addLink    = () => setFontLinks(prev => [...prev, ""])
   const removeLink = (i: number) => setFontLinks(prev => prev.filter((_, j) => j !== i))
 
-  const TYPE_OPTIONS = [
-    { id: "custom" as const, label: "Custom Typography", sublabel: isWordmark ? "Included with your Wordmark logo" : "Professional custom lettering", price: customPrice },
-    ...(!isWordmark ? [{ id: "free" as const, label: "Free Font", sublabel: "Browse and pick from our curated font library", price: 0 }] : []),
-  ]
-
-  const FONT_TABS = [
-    ...Object.entries(assetCategories).map(([key, cat]) => ({ key, label: cat.label })),
-    { key: "designer", label: "Designer's Choice" },
-  ]
+  const FONT_TABS = Object.entries(assetCategories).map(([key, cat]) => ({ key, label: cat.label }))
 
   return (
     <div className="screen-enter">
@@ -126,96 +122,102 @@ export default function TypographyScreen({ onBack, onNext, onChange, serviceType
         </div>
       )}
 
-      <div className="typography__type-section">
-        <div className="typography__type-label">Typography type</div>
-        <div className="typography__type-options">
-          {TYPE_OPTIONS.map(opt => {
-            const sel = typographyType === opt.id
-            return (
-              <div
-                key={opt.id}
-                onClick={() => { setTypoType(opt.id); onChange?.(opt.id, customPrice) }}
-                className={`typography__type-option${sel ? " typography__type-option--selected" : ""}`}
-              >
-                {opt.id === "custom" && customPrice === 0 && (
-                  <div className="typography__type-badge">INCLUDED</div>
-                )}
-                <div className="typography__type-option-header">
-                  <div className={`typography__type-option-name${sel ? " typography__type-option-name--selected" : ""}`}>{opt.label}</div>
-                  <div className={`typography__type-option-price${sel ? " typography__type-option-price--selected" : ""}`}>
-                    {opt.id === "custom" && opt.price === 0 ? "" : opt.id === "free" ? "Included" : `+$${opt.price}`}
-                  </div>
-                </div>
-                <div className="typography__type-option-sublabel">{opt.sublabel}</div>
-              </div>
-            )
-          })}
+      <div className="typography__type-options">
+        <div
+          onClick={() => { setTypoType("custom"); onChange?.("custom", customPrice) }}
+          className={`typography__type-option${typographyType === "custom" ? " typography__type-option--selected" : ""}`}
+        >
+          <div className="typography__type-badge">{isWordmark ? "INCLUDED" : `+$${customPrice}`}</div>
+          <div className={`typography__type-option-name${typographyType === "custom" ? " typography__type-option-name--selected" : ""}`}>Custom Typography</div>
+          <div className="typography__type-option-sublabel">Let the designer choose the perfect typeface for your brand</div>
         </div>
+
+        {!isWordmark && (
+          <div
+            onClick={() => { setTypoType("free"); onChange?.("free", 0) }}
+            className={`typography__type-option${typographyType === "free" ? " typography__type-option--selected" : ""}`}
+          >
+            <div className="typography__type-badge typography__type-badge--free">FREE</div>
+            <div className={`typography__type-option-name${typographyType === "free" ? " typography__type-option-name--selected" : ""}`}>Free Font Included</div>
+            <div className="typography__type-option-sublabel">Browse and pick from our curated font library</div>
+          </div>
+        )}
       </div>
 
-      <div className="typography__font-links">
-        <div className="typography__font-links-label">
-          Link your fonts <span className="typography__upload-label-opt">Optional</span>
-        </div>
-        <div className="typography__font-links-hint">
-          Have a font you love? Paste the link and we&apos;ll use it as a reference — Google Fonts, Adobe Fonts, or anywhere else.
-        </div>
-        <div className="typography__font-links-list">
-          {fontLinks.map((link, i) => (
-            <div key={i} className="typography__font-link-row">
-              <TextInput
-                label=""
-                placeholder="https://fonts.google.com/specimen/Inter"
-                value={link}
-                onChange={val => updateLink(i, val)}
-              />
-              {fontLinks.length > 1 && (
-                <button onClick={() => removeLink(i)} className="typography__font-link-remove" aria-label="Remove link">
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-        <button onClick={addLink} className="typography__font-link-add">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v11M1 6.5h11" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
-          Add another font link
+      <div className="typography__mode-tabs">
+        <button
+          onClick={() => setFontMode("designer")}
+          className={`typography__mode-tab${fontMode === "designer" ? " typography__mode-tab--active" : ""}`}
+        >
+          Let the designer choose
+        </button>
+        <button
+          onClick={() => setFontMode("manual")}
+          className={`typography__mode-tab${fontMode === "manual" ? " typography__mode-tab--active" : ""}`}
+        >
+          I&apos;ll pick my own fonts
         </button>
       </div>
 
-      <div className="typography__browse-section">
-        <div className="typography__browse-label">
-          Browse type styles <span className="typography__browse-label-opt">Optional — skip if you&apos;d like us to choose</span>
-        </div>
-        <div className="typography__tabs">
-          {FONT_TABS.map(tab => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveCategory(tab.key)}
-              className={`typography__tab${activeCategory === tab.key ? " typography__tab--active" : ""}`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {activeCategory === "designer" ? (
-          <div className="typography__designer-message">
-            <div className="typography__designer-message-icon">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <path d="M14 4l2.2 6.7H23l-5.6 4.1 2.1 6.6L14 17.3l-5.5 4.1 2.1-6.6L5 10.7h6.8L14 4z" fill="var(--color-accent)" opacity="0.25"/>
-                <path d="M14 6l1.8 5.5H22l-5 3.6 1.9 5.8L14 17l-4.9 3.9 1.9-5.8-5-3.6h6.2L14 6z" stroke="var(--color-accent)" strokeWidth="1.4" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <div className="typography__designer-message-body">
-              <div className="typography__designer-message-title">Let us select the perfect typeface for your brand</div>
-              <p className="typography__designer-message-text">
-                No input needed. Our designer will study your brand, style direction, and audience to choose the typeface that fits best — just trust the process.
-              </p>
-            </div>
+      {fontMode === "designer" ? (
+        <div className="typography__designer-message">
+          <div className="typography__designer-message-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+              <path d="M14 4l2.2 6.7H23l-5.6 4.1 2.1 6.6L14 17.3l-5.5 4.1 2.1-6.6L5 10.7h6.8L14 4z" fill="var(--color-accent)" opacity="0.25"/>
+              <path d="M14 6l1.8 5.5H22l-5 3.6 1.9 5.8L14 17l-4.9 3.9 1.9-5.8-5-3.6h6.2L14 6z" stroke="var(--color-accent)" strokeWidth="1.4" strokeLinejoin="round"/>
+            </svg>
           </div>
-        ) : (
-          <>
+          <div className="typography__designer-message-body">
+            <div className="typography__designer-message-title">We&apos;ll handle the typography</div>
+            <p className="typography__designer-message-text">
+              No input needed. Our designer will study your brand, style direction, and audience to choose the typeface that fits best.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="typography__font-links">
+            <div className="typography__font-links-label">
+              Link your fonts <span className="typography__upload-label-opt">Optional</span>
+            </div>
+            <div className="typography__font-links-hint">
+              Have a font you love? Paste the link and we&apos;ll use it as a reference — Google Fonts, Adobe Fonts, or anywhere else.
+            </div>
+            <div className="typography__font-links-list">
+              {fontLinks.map((link, i) => (
+                <div key={i} className="typography__font-link-row">
+                  <TextInput
+                    label=""
+                    placeholder="https://fonts.google.com/specimen/Inter"
+                    value={link}
+                    onChange={val => updateLink(i, val)}
+                  />
+                  {fontLinks.length > 1 && (
+                    <button onClick={() => removeLink(i)} className="typography__font-link-remove" aria-label="Remove link">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            <button onClick={addLink} className="typography__font-link-add">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v11M1 6.5h11" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+              Add another font link
+            </button>
+          </div>
+
+          <div className="typography__browse-section">
+            <div className="typography__tabs">
+              {FONT_TABS.map(tab => (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveCategory(tab.key)}
+                  className={`typography__tab${activeCategory === tab.key ? " typography__tab--active" : ""}`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
             {selectedFonts.length > 0 && (
               <div className="typography__selection-bar">
                 <div className="typography__selection-badge">{selectedFonts.length} / {MAX_FONTS} selected</div>
@@ -225,7 +227,7 @@ export default function TypographyScreen({ onBack, onNext, onChange, serviceType
               {visibleFonts.map((font, i) => (
                 <FontCard key={font.id} font={font} selected={selectedFonts.includes(font.id)} onClick={() => toggleFont(font.id)} index={i} dimmed={selectedFonts.length >= MAX_FONTS && !selectedFonts.includes(font.id)} />
               ))}
-              {loadingMore && [...Array(BATCH)].map((_,i) => <div key={"sk"+i} className="skeleton" style={{ height: "120px", borderRadius: "12px" }} />)}
+              {loadingMore && [...Array(BATCH)].map((_,i) => <div key={"sk"+i} className="skeleton skeleton--font-card" />)}
             </div>
             {hasMore && !loadingMore && (
               <div className="typography__load-more">
@@ -243,9 +245,9 @@ export default function TypographyScreen({ onBack, onNext, onChange, serviceType
                 </button>
               </div>
             )}
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
 
     </div>
   )

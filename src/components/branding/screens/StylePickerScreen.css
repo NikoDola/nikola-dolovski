@@ -262,8 +262,9 @@
 
 .logo-style-card__img {
   width: 100%; height: 100%;
-  object-fit: contain;
-  padding: var(--space-4);
+
+ 
+
 }
 
 .logo-style-card__body {

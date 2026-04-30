@@ -6,13 +6,13 @@ import BackButton from "../shared/BackButton"
 import "./UploadScreen.css"
 
 interface UploadInfo { companyName: string; tagline: string; description: string; file: File | null }
-interface Props { onBack: () => void; onNext: (info: UploadInfo) => void; submitRef?: { current: (() => void) | null } }
+interface Props { onBack: () => void; onNext: (info: UploadInfo) => void; submitRef?: { current: (() => void) | null }; initialValue?: Partial<Omit<UploadInfo, "file">>; initialFile?: File | null }
 
-export default function UploadScreen({ onBack, onNext, submitRef }: Props) {
-  const [companyName, setCompany] = useState("")
-  const [tagline, setTagline]     = useState("")
-  const [description, setDesc]    = useState("")
-  const [file, setFile]           = useState<File | null>(null)
+export default function UploadScreen({ onBack, onNext, submitRef, initialValue, initialFile }: Props) {
+  const [companyName, setCompany] = useState(initialValue?.companyName ?? "")
+  const [tagline, setTagline]     = useState(initialValue?.tagline ?? "")
+  const [description, setDesc]    = useState(initialValue?.description ?? "")
+  const [file, setFile]           = useState<File | null>(initialFile ?? null)
 
   useEffect(() => {
     if (submitRef) submitRef.current = () => onNext({ companyName, tagline, description, file })

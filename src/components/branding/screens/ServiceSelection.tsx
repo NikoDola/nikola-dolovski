@@ -8,10 +8,11 @@ interface Props {
   onSelect: (type: "design" | "redesign") => void
   submitRef?: { current: (() => void) | null }
   setNextDisabled?: (v: boolean) => void
+  initialValue?: "design" | "redesign" | null
 }
 
-export default function ServiceSelection({ onSelect, submitRef, setNextDisabled }: Props) {
-  const [selected, setSelected] = useState<"design" | "redesign" | null>(null)
+export default function ServiceSelection({ onSelect, submitRef, setNextDisabled, initialValue }: Props) {
+  const [selected, setSelected] = useState<"design" | "redesign" | null>(initialValue ?? null)
 
   useEffect(() => {
     if (submitRef) submitRef.current = selected ? () => onSelect(selected) : null

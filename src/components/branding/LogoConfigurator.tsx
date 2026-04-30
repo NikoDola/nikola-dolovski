@@ -57,11 +57,11 @@ export default function LogoConfigurator() {
   const [screen, setScreen]           = useState<Screen>("service")
   const [serviceType, setServiceType] = useState<ServiceType>(null)
   const [variations, setVariations]   = useState<string[]>([])
-  const [companyInfo, setCompanyInfo] = useState({})
-  const [styleInfo, setStyleInfo]     = useState({})
-  const [uploadInfo, setUploadInfo]   = useState({})
-  const [colorInfo, setColorInfo]     = useState({})
-  const [typographyInfo, setTypoInfo] = useState({})
+  const [companyInfo, setCompanyInfo] = useState<{ companyName?: string; tagline?: string; description?: string }>({})
+  const [styleInfo, setStyleInfo]     = useState<{ styles?: string[]; pinterestUrl?: string; inspirationFile?: File | null }>({})
+  const [uploadInfo, setUploadInfo]   = useState<{ companyName?: string; tagline?: string; description?: string; file?: File | null }>({})
+  const [colorInfo, setColorInfo]     = useState<{ colorFamilies?: string[]; customColors?: string[]; useSameColors?: boolean }>({})
+  const [typographyInfo, setTypoInfo] = useState<{ typographyType?: "custom"|"free"|null; customPrice?: number; selectedFonts?: string[]; sameBrandFont?: boolean; fontLinks?: string[] }>({})
   const [files, setFiles]             = useState<{ logo: File | null; inspiration: File | null }>({ logo: null, inspiration: null })
   const [liveVariations, setLiveVariations] = useState<string[]>(variations)
   const [liveTypoPrice, setLiveTypoPrice]   = useState(0)
@@ -150,23 +150,25 @@ export default function LogoConfigurator() {
 
           {screen === "service" && (
             <ServiceSelection submitRef={submitRef} setNextDisabled={setNextDisabled}
+              initialValue={serviceType}
               onSelect={type => { setServiceType(type); navigateTo(type === "design" ? "brand-info" : "upload") }} />
           )}
 
           {screen === "brand-info" && (
-            <BrandInfoScreen submitRef={submitRef} onBack={() => window.history.back()} onNext={info => { setCompanyInfo(info); navigateTo("variations") }} />
+            <BrandInfoScreen submitRef={submitRef} onBack={() => window.history.back()} initialValue={companyInfo} onNext={info => { setCompanyInfo(info); navigateTo("variations") }} />
           )}
 
           {screen === "upload" && (
-            <UploadScreen submitRef={submitRef} onBack={() => window.history.back()} onNext={info => { setUploadInfo(info); setFiles(prev => ({ ...prev, logo: info.file || null })); navigateTo("style-red") }} />
+            <UploadScreen submitRef={submitRef} onBack={() => window.history.back()} initialValue={uploadInfo} initialFile={files.logo} onNext={info => { setUploadInfo(info); setFiles(prev => ({ ...prev, logo: info.file || null })); navigateTo("style-red") }} />
           )}
 
           {screen === "style-red" && (
-            <StylePickerScreen submitRef={submitRef} onBack={() => window.history.back()} onNext={info => { setStyleInfo(info); setFiles(prev => ({ ...prev, inspiration: info.inspirationFile })); navigateTo("variations") }} />
+            <StylePickerScreen submitRef={submitRef} onBack={() => window.history.back()} initialValue={{ styles: styleInfo.styles ?? [], pinterestUrl: styleInfo.pinterestUrl ?? "" }} onNext={info => { setStyleInfo(info); setFiles(prev => ({ ...prev, inspiration: info.inspirationFile })); navigateTo("variations") }} />
           )}
 
           {screen === "variations" && (
             <VariationsScreen submitRef={submitRef} onBack={() => window.history.back()}
+              initialValue={variations}
               onChange={vars => setLiveVariations(vars)}
               onNext={vars => {
                 setVariations(vars)
@@ -182,6 +184,7 @@ export default function LogoConfigurator() {
           {screen === "style-icon" && (
             <StylePickerScreen submitRef={submitRef}
               onBack={() => window.history.back()}
+              initialValue={{ styles: styleInfo.styles ?? [], pinterestUrl: styleInfo.pinterestUrl ?? "" }}
               onNext={info => { setStyleInfo(info); setFiles(prev => ({ ...prev, inspiration: info.inspirationFile })); navigateTo(variations.every(v => v === "icon") ? "colors" : "typography") }}
             />
           )}
@@ -189,6 +192,7 @@ export default function LogoConfigurator() {
           {screen === "typography" && (
             <TypographyScreen submitRef={submitRef} serviceType={serviceType} selectedVariations={variations}
               onBack={() => window.history.back()}
+              initialValue={typographyInfo}
               onChange={(type, price) => setLiveTypoPrice(type === "custom" ? price : 0)}
               onNext={info => { setTypoInfo(info); setLiveTypoPrice(info.typographyType === "custom" ? (info.customPrice ?? 0) : 0); navigateTo("colors") }}
             />
@@ -197,6 +201,7 @@ export default function LogoConfigurator() {
           {screen === "colors" && (
             <ColorPickerScreen submitRef={submitRef} serviceType={serviceType}
               onBack={() => window.history.back()}
+              initialValue={colorInfo.colorFamilies ? { colorFamilies: colorInfo.colorFamilies, customColors: colorInfo.customColors ?? [], useSameColors: colorInfo.useSameColors ?? false } : undefined}
               onNext={info => { setColorInfo(info); navigateTo("summary") }}
             />
           )}

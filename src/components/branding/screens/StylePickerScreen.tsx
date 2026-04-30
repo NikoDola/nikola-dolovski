@@ -7,7 +7,7 @@ import { STYLE_PRESETS } from "../data"
 import "./StylePickerScreen.css"
 
 interface StyleInfo { styles: string[]; pinterestUrl: string; inspirationFile: File | null }
-interface Props { onBack: () => void; onNext: (info: StyleInfo) => void; submitRef?: { current: (() => void) | null } }
+interface Props { onBack: () => void; onNext: (info: StyleInfo) => void; submitRef?: { current: (() => void) | null }; initialValue?: { styles: string[]; pinterestUrl: string } }
 
 interface LogoAsset {
   id: string; url: string; title: string; designer: string; displayInStyleScreen: boolean
@@ -77,15 +77,15 @@ const ALL_PRESETS = [
 
 function Spinner() {
   return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ animation: "spin 0.8s linear infinite" }}>
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="spinner">
       <circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeDasharray="20 14" opacity="0.6"/>
     </svg>
   )
 }
 
-export default function StylePickerScreen({ onBack, onNext, submitRef }: Props) {
-  const [selected, setSelected]               = useState<string[]>([])
-  const [pinterestUrl, setPinterestUrl]       = useState("")
+export default function StylePickerScreen({ onBack, onNext, submitRef, initialValue }: Props) {
+  const [selected, setSelected]               = useState<string[]>(initialValue?.styles ?? [])
+  const [pinterestUrl, setPinterestUrl]       = useState(initialValue?.pinterestUrl ?? "")
   const [inspirationFile, setInspirationFile] = useState<File | null>(null)
   const [dragging, setDragging]               = useState(false)
   const [loadingFirst, setLoadingFirst]       = useState(true)
@@ -215,7 +215,7 @@ export default function StylePickerScreen({ onBack, onNext, submitRef }: Props) 
 
       <div className="style-picker__grid">
         {loadingFirst
-          ? [...Array(BATCH_SIZE)].map((_, i) => <div key={i} className="skeleton" style={{ aspectRatio: "4/3", borderRadius: "12px" }} />)
+          ? [...Array(BATCH_SIZE)].map((_, i) => <div key={i} className="skeleton skeleton--logo-card" />)
           : useLogos
             ? visiblePresets.map(s => {
                 const logo = s as LogoAsset
@@ -234,7 +234,7 @@ export default function StylePickerScreen({ onBack, onNext, submitRef }: Props) 
                 )
               })
         }
-        {loadingMore && [...Array(BATCH_SIZE)].map((_, i) => <div key={"m"+i} className="skeleton" style={{ aspectRatio: "4/3", borderRadius: "12px" }} />)}
+        {loadingMore && [...Array(BATCH_SIZE)].map((_, i) => <div key={"m"+i} className="skeleton skeleton--logo-card" />)}
       </div>
 
       {!loadingFirst && hasMore && (

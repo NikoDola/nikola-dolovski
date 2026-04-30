@@ -5,7 +5,7 @@ import BackButton from "../shared/BackButton"
 import { VerticalLogoDemo, HorizontalLogoDemo, BadgeLogoDemo, IconOnlyDemo, WordmarkDemo } from "../demos/LogoDemos"
 import "./VariationsScreen.css"
 
-interface Props { onBack: () => void; onNext: (vars: string[]) => void; onChange?: (vars: string[]) => void; submitRef?: { current: (() => void) | null } }
+interface Props { onBack: () => void; onNext: (vars: string[]) => void; onChange?: (vars: string[]) => void; submitRef?: { current: (() => void) | null }; initialValue?: string[] }
 
 const VARIATIONS = [
   { id: "vertical",   title: "Vertical",     slug: "vertical-logo",     description: "Icon stacked above the brand name. Ideal for social profiles and square formats.",      demo: <VerticalLogoDemo /> },
@@ -15,8 +15,8 @@ const VARIATIONS = [
   { id: "wordmark",   title: "Wordmark",     slug: "wordmark-logo",     description: "Typography-only logo. The brand name itself becomes the visual identity.",               demo: <WordmarkDemo /> },
 ]
 
-export default function VariationsScreen({ onBack, onNext, onChange, submitRef }: Props) {
-  const [selected, setSelected] = useState<string[]>([])
+export default function VariationsScreen({ onBack, onNext, onChange, submitRef, initialValue }: Props) {
+  const [selected, setSelected] = useState<string[]>(initialValue ?? [])
   const [error, setError]       = useState(false)
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function VariationsScreen({ onBack, onNext, onChange, submitRef }
       <div className="variations__grid">
         {VARIATIONS.map(v => {
           const label  = getPriceLabel(v.id)
-          const isFree = label === "Included"
+          const isFree = label.includes("included")
           return (
             <div key={v.id} className="variations__card-wrap">
               {label && <div className={`variations__price-badge${isFree ? " variations__price-badge--free" : ""}`}>{label}</div>}
@@ -77,7 +77,7 @@ export default function VariationsScreen({ onBack, onNext, onChange, submitRef }
       </div>
 
       {error && (
-        <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-error)", marginTop: "calc(var(--space-2) * -1)", marginBottom: "var(--space-4)" }}>
+        <p className="form-error form-error--with-bottom-margin">
           Please select at least one logo variation to continue.
         </p>
       )}

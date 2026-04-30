@@ -41,7 +41,6 @@
 
 .text-input__field:focus {
   border-color: var(--color-accent);
-  box-shadow: var(--shadow-focus);
 }
 
 .text-input__field--error {

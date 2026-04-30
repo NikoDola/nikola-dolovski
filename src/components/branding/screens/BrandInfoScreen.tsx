@@ -5,12 +5,12 @@ import BackButton from "../shared/BackButton"
 import "./BrandInfoScreen.css"
 
 interface BrandInfo { companyName: string; tagline: string; description: string }
-interface Props { onBack: () => void; onNext: (info: BrandInfo) => void; submitRef?: { current: (() => void) | null } }
+interface Props { onBack: () => void; onNext: (info: BrandInfo) => void; submitRef?: { current: (() => void) | null }; initialValue?: Partial<BrandInfo> }
 
-export default function BrandInfoScreen({ onBack, onNext, submitRef }: Props) {
-  const [companyName, setCompany] = useState("")
-  const [tagline, setTagline]     = useState("")
-  const [description, setDesc]    = useState("")
+export default function BrandInfoScreen({ onBack, onNext, submitRef, initialValue }: Props) {
+  const [companyName, setCompany] = useState(initialValue?.companyName ?? "")
+  const [tagline, setTagline]     = useState(initialValue?.tagline ?? "")
+  const [description, setDesc]    = useState(initialValue?.description ?? "")
   const [error, setError]         = useState(false)
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function BrandInfoScreen({ onBack, onNext, submitRef }: Props) {
         <TextInput label="Company Name" placeholder="e.g. Apex Studio" value={companyName}
           onChange={v => { setCompany(v); if (v.trim()) setError(false) }} />
         {error && (
-          <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-error)", marginTop: "calc(var(--space-1) * -1)" }}>
+          <p className="form-error">
             Please enter your company name to continue.
           </p>
         )}

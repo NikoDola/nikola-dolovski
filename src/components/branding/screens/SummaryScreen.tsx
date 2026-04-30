@@ -158,7 +158,7 @@ export default function SummaryScreen({ order, onBack, files, onPriceChange }: {
   const dueNow          = payOption === "deposit" ? deposit : total
   const dueLater        = payOption === "deposit" ? total - deposit : 0
 
-  useEffect(() => { onPriceChange?.(total) }, [total])
+  useEffect(() => { onPriceChange?.(total) }, [total, onPriceChange])
 
   const allFonts = Object.values(FONT_CATEGORIES).flatMap(c => c.fonts)
   const rows: [string, string][] = [
@@ -264,7 +264,7 @@ export default function SummaryScreen({ order, onBack, files, onPriceChange }: {
       <div className="summary__submit-row">
         <Button onClick={handlePayment} size="lg" disabled={processing}
           icon={processing
-            ? <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ animation: "spin 0.8s linear infinite" }}><circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.8" strokeDasharray="20 14" opacity="0.7"/></svg>
+            ? <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="spinner"><circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.8" strokeDasharray="20 14" opacity="0.7"/></svg>
             : <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           }>
           {processing ? "Processing..." : `Pay $${dueNow} Now`}
